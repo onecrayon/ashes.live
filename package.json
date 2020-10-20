@@ -1,0 +1,23 @@
+{
+  "name": "Ashes.live",
+  "description": "Frontend application for a fan-developed deckbuilder and community website for the card game Ashes Reborn",
+  "license": "ISC",
+  "repository": "https://github.com/onecrayon/ashes.live-static",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0-0",
+    "vuex": "^4.0.0-0"
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "^3.0.0",
+    "autoprefixer": "^10.0.1",
+    "postcss": "^8.1.2",
+    "tailwindcss": "^1.9.5",
+    "vite": "^1.0.0-rc.1"
+  }
+}
