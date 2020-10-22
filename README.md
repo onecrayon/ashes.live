@@ -1,8 +1,7 @@
 # Ashes.live static front-end
 
-WIP. Currently using the following PostCSS plug-ins:
+WIP. Currently using the following PostCSS plug-in:
 
-* Autoprefixer
 * TailwindCSS: https://tailwindcss.com/docs
 
 Commands:
@@ -13,5 +12,7 @@ Commands:
 TODO:
 
 * Implement more PostCSS plug-ins as needed
-* Define a replacement color scheme for TailwindCSS to match original site
-* Start migrating stuff over!
+* Implement sensible component architecture
+* Update this README with actual information on how to run the site
+* Invite others to help out
+* Port over the card browser to get things rolling

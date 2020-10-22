@@ -1,3 +1,33 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+:root {
+  --color-black: #000;
+  --color-gray: #bfbfbf;
+  --color-gray-light: #dcdcdc;
+  --color-gray-dark: #939395;
+  --color-gray-darker: #6f6f6f;
+  --color-white: #fff;
+  --color-blue: #2770c1;
+  --color-blue-dark: #6178a2;
+  --color-red: #b00000;
+  --color-red-light: #b25864;
+  --color-orange: #b05000;
+  --color-green: #006600;
+  --color-green-light: #5e8664;
+  /* Special coloring schemes specific to Ashes card behavior */
+  --color-inexhaustible: #f7f5e8;
+  --color-inexhaustible-dark: #8d7b53l;
+  --color-reaction: #ecf1f4;
+  --color-reaction-dark: #a3c4d3;
+}
+
+@tailwind base;
+
+a {
+  @apply text-blue;
+}
+
+a:hover, a:active {
+  @apply underline;
+}
+
+@tailwind components;
+@tailwind utilities;
