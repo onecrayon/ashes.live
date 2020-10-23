@@ -29,5 +29,13 @@ a:hover, a:active {
   @apply underline;
 }
 
+h1 {
+  @apply text-3xl font-bold mb-4;
+}
+
+p {
+  @apply my-4;
+}
+
 @tailwind components;
 @tailwind utilities;
