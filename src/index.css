@@ -21,6 +21,10 @@
 
 @tailwind base;
 
+html, body {
+  min-width: 360px;
+}
+
 a {
   @apply text-blue;
 }

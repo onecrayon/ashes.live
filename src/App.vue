@@ -2,19 +2,29 @@
   <nav class="bg-inexhaustible" :class="[useFullHeader ? $style['full-header'] : '']">
     <!-- Referencing the style directly through an injected $style element is necessary for modular styles to function; otherwise, the template style name doesn't get rewritten -->
     <div :class="$style.banner">
-      <ul class="container mx-auto grid items-center text-center py-2 px-4 gap-x-10 grid-rows-2 md:grid-rows-1 lg:py-4" :class="$style['header-cols']">
+      <ul
+        class="container mx-auto grid items-center text-center py-2 px-4 gap-x-10 grid-rows-2 md:grid-rows-1"
+        :class="[$style['header-cols'], useFullHeader ? 'lg:py-4' : '']">
         <li class="col-start-1 col-span-3 row-start-1 md:col-start-2 md:col-span-1">
           <router-link to="/" :class="$style['home-link']">Ashes.live</router-link>
         </li>
-        <li class="col-start-1 row-start-2 justify-self-start md:row-start-1 lg:justify-self-end">
+        <li
+          class="col-start-1 row-start-2 justify-self-start md:row-start-1"
+          :class="[useFullHeader ? 'lg:justify-self-end' : '']">
           <router-link to="/decks" class="inline-block text-black leading-tight">
-            <i class="phg-main-action phg-standalone text-2xl pr-2 inline-block lg:block lg:pr-0"></i>
+            <i
+              class="phg-main-action phg-standalone text-2xl pr-2 inline-block"
+              :class="[useFullHeader ? 'lg:block lg:pr-0' : '']"></i>
             <span class="text-lg">Decks</span>
           </router-link>
         </li>
-        <li class="col-start-3 row-start-2 justify-self-end md:row-start-1 lg:justify-self-start">
+        <li
+          class="col-start-3 row-start-2 justify-self-end md:row-start-1"
+          :class="[useFullHeader ? 'lg:justify-self-start' : '']">
           <router-link to="/cards" class="inline-block text-black leading-tight">
-            <i class="phg-side-action phg-standalone text-2xl pr-2 inline-block lg:block lg:pr-0"></i>
+            <i
+              class="phg-side-action phg-standalone text-2xl pr-2 inline-block"
+              :class="[useFullHeader ? 'lg:block lg:pr-0' : '']"></i>
             <span class="text-lg">Cards</span>
           </router-link>
         </li>
