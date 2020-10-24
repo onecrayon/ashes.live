@@ -41,8 +41,17 @@
 </template>
 
 <script>
+function siteTitle(routeObject) {
+  // Returns the title that should be used based on the $route object
+  return routeObject.meta && routeObject.meta.title && `${routeObject.meta.title} - Ashes.live` || 'Ashes.live'
+}
+
 export default {
   name: 'App',
+  created () {
+    // Set the page title when the app is loaded for the first time
+    document.title = siteTitle(this.$route)
+  },
   computed: {
     useFullHeader () {
       return this.$route.name === 'Home' || this.$route.name === 'NotFound'
@@ -50,7 +59,13 @@ export default {
     thisYear () {
       return (new Date()).getFullYear()
     },
-  }
+  },
+  watch: {
+    $route(to, from) {
+      // Set the page title when we navigate to a new page
+      document.title = siteTitle(to)
+    },
+  },
 }
 </script>
 

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  export default {
-    name: 'DeckListing',
-  }
+export default {
+  name: 'DeckListing',
+}
 </script>

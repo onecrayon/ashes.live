@@ -9,12 +9,12 @@
 </template>
 
 <script>
-  export default {
-    name: 'Home',
-    computed: {
-      apiURL () {
-        return import.meta.env.VITE_API_URL
-      }
-    }
-  }
+export default {
+  name: 'Home',
+  computed: {
+    apiURL () {
+      return import.meta.env.VITE_API_URL
+    },
+  },
+}
 </script>

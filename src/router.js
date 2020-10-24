@@ -16,6 +16,7 @@ export default createRouter({
       path: '/cards',
       name: 'Cards',
       component: CardListing,
+      meta: { title: 'Browse Cards' },
     },
     {
       path: '/decks',
@@ -25,7 +26,8 @@ export default createRouter({
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
-      component: NotFound
+      component: NotFound,
+      meta: { title: 'Not Found' },
     },
   ],
   scrollBehavior(to, from, savedPosition) {
