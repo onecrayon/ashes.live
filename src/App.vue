@@ -34,6 +34,10 @@
   <div class="p-4 container mx-auto lg:pt-8">
     <router-view></router-view>
   </div>
+  <footer class="container mx-auto p-4 pt-10 text-center text-xs">
+    <p>All images, graphics, textual and game contents &copy; 2015-{{ thisYear }} Plaid Hat Games. All rights reserved.</p>
+    <p>Web developer? Contribute to the <a href="https://github.com/onecrayon/ashes.live" rel="external" target="_blank">Javascript app</a> or <a href="https://github.com/onecrayon/api.ashes.live" rel="external" target="_blank">Python API</a> on GitHub!</p>
+  </footer>
 </template>
 
 <script>
@@ -42,7 +46,10 @@ export default {
   computed: {
     useFullHeader () {
       return this.$route.name === 'Home' || this.$route.name === 'NotFound'
-    }
+    },
+    thisYear () {
+      return (new Date()).getFullYear()
+    },
   }
 }
 </script>
