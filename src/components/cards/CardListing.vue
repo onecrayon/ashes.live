@@ -1,11 +1,16 @@
 <template>
   <h1 class="phg-side-action">Browse cards</h1>
 
-  <p>This is the next feature on the docket!</p>
+  <card-browser></card-browser>
 </template>
 
 <script>
+import CardBrowser from '../shared/card_browser/CardBrowser.vue'
+
 export default {
   name: 'CardListing',
+  components: {
+    CardBrowser,
+  }
 }
 </script>
