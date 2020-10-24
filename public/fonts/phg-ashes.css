@@ -46,6 +46,8 @@
   padding-right: .375em;
 }
 
+.phg-standalone::before { padding-right: 0; }
+
 .phg-basic-magic:before { content: '\e800'; } /* '' */
 .phg-ceremonial-class:before { content: '\e801'; } /* '' */
 .phg-ceremonial-power:before { content: '\e802'; } /* '' */
