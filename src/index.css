@@ -42,9 +42,10 @@ p {
 }
 
 button, input {
+  @apply transition-opacity duration-200 ease-in-out;
+
   &[readonly], &[disabled] {
-    opacity: .4;
-    cursor: default;
+    @apply opacity-50 cursor-not-allowed;
 	}
 }
 
@@ -66,6 +67,10 @@ button, input {
 
 .btn-last {
   @apply rounded-l-none border-l;
+}
+
+.nanobar .bar {
+	@apply bg-blue opacity-50;
 }
 
 @tailwind components;

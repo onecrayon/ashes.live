@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-no-wrap">
     <input
-      class="appearance-none border-2 border-gray-darker border-r rounded-l-md h-full px-2 flex-auto"
+      class="appearance-none border-2 bg-white border-gray-darker border-r rounded-l-md h-full px-2 flex-auto"
       type="text"
       :placeholder="placeholder"
       :disabled="isDisabled"

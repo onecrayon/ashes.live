@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+import Nanobar from 'nanobar'
 import {watch} from 'vue'
 import {debounce, areSetsEqual, trimmed} from '/src/utils.js'
 import DiceFilter from './DiceFilter.vue'
@@ -101,12 +103,29 @@ export default {
   },
   methods: {
     filterList () {
-      // TODO: implement AJAX listing fetch logic
-      console.log('API call required with filters:', {
-        filterText: this.filterText,
-        diceFilterLogic: this.diceFilterLogic,
-        diceFilterList: this.diceFilterList,
+      // Query our list of cards
+      // TODO: don't query legacy by default
+      const params = {
+        show_legacy: true
+      }
+      const filterText = trimmed(this.filterText)
+      if (filterText) params.q = filterText
+      if (this.diceFilterList.length) {
+        params.dice_logic = this.diceFilterLogic
+        params.dice = this.diceFilterList
+      }
+      this.isDisabled = true
+      const nano = new Nanobar({ autoRun: true })
+      axios.get(`${import.meta.env.VITE_API_URL}/v2/cards`, {
+        params: params,
+      }).then((response) => {
+        // TODO: do something with the list
+        console.log('got listing:', response.data)
+      }).finally(() => {
+        this.isDisabled = false
+        nano.go(100)
       })
+      // TODO: add error handling and reporting (need some sort of global alert setup)
     },
   },
 }

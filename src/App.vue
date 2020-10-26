@@ -41,6 +41,13 @@
 </template>
 
 <script>
+import axios from 'axios'
+import qs from 'qs'
+
+// Set up sensible Axios defaults for query string array handling
+// (it uses bracketed property names, which the backend doesn't support)
+axios.defaults.paramsSerializer = params => qs.stringify(params, {arrayFormat: 'repeat'})
+
 function siteTitle(routeObject) {
   // Returns the title that should be used based on the $route object
   return routeObject.meta && routeObject.meta.title && `${routeObject.meta.title} - Ashes.live` || 'Ashes.live'

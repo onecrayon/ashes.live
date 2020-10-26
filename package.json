@@ -9,6 +9,9 @@
     "build": "vite build"
   },
   "dependencies": {
+    "axios": "^0.21.0",
+    "nanobar": "^0.4.2",
+    "qs": "^6.9.4",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
