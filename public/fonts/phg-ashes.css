@@ -46,7 +46,13 @@
   padding-right: .375em;
 }
 
-.phg-standalone::before { padding-right: 0; }
+.phg-standalone::before,
+i[class^="phg-"]::before,
+i[class*=" phg-"]::before,
+button[class^="phg-"]::before,
+button[class*=" phg-"]::before {
+  padding-right: 0;
+}
 
 .phg-basic-magic:before { content: '\e800'; } /* '' */
 .phg-ceremonial-class:before { content: '\e801'; } /* '' */

@@ -17,7 +17,7 @@ import PhoenixbornFilters from './PhoenixbornFilters.vue'
 
 export default {
   name: 'CardBrowser',
-  params: {
+  props: {
     isPhoenixbornPicker: Boolean,
   },
   components: {

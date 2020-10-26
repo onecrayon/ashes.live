@@ -41,5 +41,21 @@ p {
   @apply my-4;
 }
 
+.btn {
+  @apply appearance-none border-2 border-gray-darker bg-gray-light rounded-md px-2 text-gray-darker font-bold;
+}
+
+.btn-first {
+  @apply rounded-r-none border-r-0;
+}
+
+.btn-inner {
+  @apply rounded-none border-r-0;
+}
+
+.btn-last {
+  @apply rounded-l-none;
+}
+
 @tailwind components;
 @tailwind utilities;
