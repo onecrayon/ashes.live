@@ -41,8 +41,19 @@ p {
   @apply my-4;
 }
 
+button, input {
+  &[readonly], &[disabled] {
+    opacity: .4;
+    cursor: default;
+	}
+}
+
 .btn {
   @apply appearance-none border-2 border-gray-darker bg-gray-light rounded-md px-2 text-gray-darker font-bold;
+
+  &.active {
+    @apply bg-gray-darker text-gray-light;
+  }
 }
 
 .btn-first {

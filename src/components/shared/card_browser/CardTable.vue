@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'CardListing',
+  name: 'CardTable',
   props: {
 	  isPhoenixbornPicker: Boolean,
   },
