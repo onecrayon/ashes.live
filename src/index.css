@@ -46,15 +46,15 @@ p {
 }
 
 .btn-first {
-  @apply rounded-r-none border-r-0;
+  @apply rounded-r-none border-r;
 }
 
 .btn-inner {
-  @apply rounded-none border-r-0;
+  @apply rounded-none border-r border-l;
 }
 
 .btn-last {
-  @apply rounded-l-none;
+  @apply rounded-l-none border-l;
 }
 
 @tailwind components;
