@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="sm:flex sm:flex-no-wrap">
+    <div class="sm:flex sm:flex-no-wrap mb-4">
       <dice-filter
         class="flex-none mb-4 h-10 sm:pr-4 md:mb-0"
         v-model:filter-logic="diceFilterLogic"
@@ -13,13 +13,18 @@
         :is-disabled="isDisabled"></clearable-search>
     </div>
     <!-- TODO: implement the rest of the filters -->
-    <card-table :is-phoenixborn-picker="isPhoenixbornPicker"></card-table>
+    <card-table
+      :is-disabled="isDisabled"
+      :is-phoenixborn-picker="isPhoenixbornPicker"
+      :cards="cards"
+      @reset-filters="clearFilters"></card-table>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import Nanobar from 'nanobar'
+import Noty from 'noty'
 import {watch} from 'vue'
 import {debounce, areSetsEqual, trimmed} from '/src/utils.js'
 import DiceFilter from './DiceFilter.vue'
@@ -37,6 +42,10 @@ export default {
       diceFilterLogic: 'any',
       diceFilterList: [],
       filterText: '',
+      // This is the list of cards currently shown
+      cards: null,
+      // This is the URL necessary to load the next "page"
+      nextCardsURL: null,
     }
   },
   components: {
@@ -63,6 +72,8 @@ export default {
      *   don't want to trigger filters on arbirtrary other changes (like toggling `isDisabled`)
      */
     let firstPreviousProps = null
+    // We use this to shortcut out when an AJAX failure occurs (otherwise could loop on failing lookups)
+    let resettingFailedValues = false
     // Both arguments are arrays with the current/next values in the same order as the watch array below
     this.debouncedFilterCall = debounce((curProps, prevProps) => {
       // Check if we have changes to make; wrapped in a closure to ensure we perform as little
@@ -76,10 +87,25 @@ export default {
         if (!areSetsEqual(new Set(curProps[2]), new Set(firstPreviousProps[2]))) return true
         return false
       })()
+      // We cache the original values in case of failure
+      const cachedValues = {
+        filterText: String(trimmed(firstPreviousProps[0])),
+        diceFilterLogic: String(firstPreviousProps[1]),
+        diceFilterList: Array.from(new Set(firstPreviousProps[2])),
+      }
       // Reset our first previous props before exiting
       firstPreviousProps = null
-      if (!haveChanges) return
-      this.filterList()
+      if (!haveChanges || resettingFailedValues) {
+        resettingFailedValues = false
+        return
+      }
+      // Filter the list, and on failure revert to the previous filters
+      this.filterList(() => {
+        resettingFailedValues = true
+        for (const key of Object.keys(cachedValues)) {
+          this[key] = cachedValues[key]
+        }
+      })
     }, 750)
     watch(
       // All filter properties that can trigger a new API call
@@ -96,17 +122,25 @@ export default {
         this.debouncedFilterCall(curProps, prevProps)
       }
     )
+
+    // And finally, trigger our first listing load
+    this.filterList()
   },
   unmounted () {
     // Cancel pending debounces, if necessary
     this.debouncedFilterCall.cancel()
   },
   methods: {
-    filterList () {
+    clearFilters () {
+      this.filterText = ''
+      this.diceFilterLogic = 'any'
+      this.diceFilterList = []
+    },
+    filterList (failureCallback) {
       // Query our list of cards
       // TODO: don't query legacy by default
       const params = {
-        show_legacy: true
+        show_legacy: true,
       }
       const filterText = trimmed(this.filterText)
       if (filterText) params.q = filterText
@@ -119,13 +153,43 @@ export default {
       axios.get(`${import.meta.env.VITE_API_URL}/v2/cards`, {
         params: params,
       }).then((response) => {
-        // TODO: do something with the list
-        console.log('got listing:', response.data)
+        // Clear everything out if we have no actual results (makes logical comparisons easier)
+        if (response.data.count === 0) {
+          this.cards = null
+          this.nextCardsURL = null
+          return
+        }
+        // Ensure we have a list to work with
+        if (!this.cards) this.cards = []
+        // If we have a previous link, then that means we are loading paginated results (so concat)
+        if (response.data.previous) {
+          this.cards = this.cards.concat(response.data.results)
+        } else {
+          // Otherwise, we're loading a newly filtered list
+          this.cards = response.data.results
+        }
+        this.nextCardsURL = response.data.next
+        // TODO: populate Vuex store with card data, so that we can bypass individual lookups on hover
+      }).catch((error) => {
+        let errorMessage = 'Failed to fetch card listing. Please report if this fails repeatedly!'
+        if (error.response.status === 422) {
+          // TODO: write a generic function to parse the validation response from FastAPI
+          errorMessage = 'Failed to fetch card listing (validation failure)!'
+        } else if (error.data && error.data.detail) {
+          errorMessage = error.response.data.detail
+        }
+        new Noty({
+          type: 'error',
+          text: errorMessage,
+          timeout: 30000,
+          theme: 'metroui'
+        }).show()
+        // Reset the filters, if necessary
+        if (failureCallback) failureCallback()
       }).finally(() => {
         this.isDisabled = false
         nano.go(100)
       })
-      // TODO: add error handling and reporting (need some sort of global alert setup)
     },
   },
 }

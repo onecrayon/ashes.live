@@ -7,6 +7,7 @@
   --color-white: #fff;
   --color-blue: #2770c1;
   --color-blue-dark: #6178a2;
+  --color-blue-light: #d4e2f3;
   --color-red: #b00000;
   --color-red-light: #b25864;
   --color-orange: #b05000;
@@ -14,7 +15,7 @@
   --color-green-light: #5e8664;
   /* Special coloring schemes specific to Ashes card behavior */
   --color-inexhaustible: #f7f5e8;
-  --color-inexhaustible-dark: #8d7b53l;
+  --color-inexhaustible-dark: #8d7b53;
   --color-reaction: #ecf1f4;
   --color-reaction-dark: #a3c4d3;
 }
@@ -35,6 +36,10 @@ a:hover, a:active {
 
 h1 {
   @apply text-3xl font-bold mb-4;
+}
+
+h2 {
+  @apply text-2xl font-bold mb-4;
 }
 
 p {
@@ -67,6 +72,10 @@ button, input {
 
 .btn-last {
   @apply rounded-l-none border-l;
+}
+
+.btn-blue {
+  @apply border-blue text-blue bg-blue-light;
 }
 
 .nanobar .bar {
