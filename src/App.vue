@@ -32,7 +32,8 @@
     </div>
   </nav>
   <div class="p-4 container mx-auto lg:pt-8">
-    <router-view></router-view>
+    <!-- Keying to the route path is necessary, because legacy routes tend to share the same components, and without keying against the path they won't receive standard router lifecycle calls -->
+    <router-view :key="$route.path"></router-view>
   </div>
   <footer class="container mx-auto p-4 pt-10 text-center text-xs">
     <p>All images, graphics, textual and game contents &copy; 2015-{{ thisYear }} Plaid Hat Games. All rights reserved.</p>

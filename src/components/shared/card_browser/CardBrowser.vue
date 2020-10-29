@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="sm:flex sm:flex-no-wrap mb-4">
+    <div class="md:flex md:flex-no-wrap mb-4">
       <dice-filter
-        class="flex-none mb-4 h-10 sm:pr-4 md:mb-0"
+        class="flex-none mb-4 h-10 md:pr-4 md:mb-0"
         v-model:filter-logic="diceFilterLogic"
         v-model:filter-list="diceFilterList"
         :is-disabled="isDisabled"></dice-filter>
@@ -35,6 +35,7 @@ export default {
   name: 'CardBrowser',
   props: {
     isPhoenixbornPicker: Boolean,
+    showLegacy: Boolean,
   },
   data: () => {
     return {
@@ -138,9 +139,10 @@ export default {
     },
     filterList (failureCallback) {
       // Query our list of cards
-      // TODO: don't query legacy by default
-      const params = {
-        show_legacy: true,
+      const params = {}
+      // Show legacy cards, if necessary
+      if (this.showLegacy) {
+        params['show_legacy'] = true
       }
       const filterText = trimmed(this.filterText)
       if (filterText) params.q = filterText

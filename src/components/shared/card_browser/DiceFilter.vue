@@ -1,20 +1,20 @@
 <template>
   <div class="flex flex-wrap-none">
-    <button class="btn btn-first px-1 text-l w-16 md:px-2"
+    <button class="btn btn-first px-1 text-l w-16 sm:px-2"
       :class="{active: isDiceLogicAll}"
       :title="diceLogicTooltip"
       :disabled="isDisabled"
       @click="toggleFilterLogic">
       {{ diceLogicText }}:
     </button
-    ><button class="phg-basic-magic btn btn-inner text-2xl px-1 md:px-2"
+    ><button class="phg-basic-magic btn btn-inner text-2xl px-1 sm:px-2"
       title="Basic Magic"
       :class="{active: isDieActive('basic')}"
       :disabled="isDiceLogicAll || isDisabled"
       @click="toggleDie('basic')"></button
     ><button
       v-for="(dieType, index) of diceList" :key="dieType"
-      class="appearance-none btn text-2xl px-1 md:px-2"
+      class="appearance-none btn text-2xl px-1 sm:px-2"
       :class="[
         'phg-' + dieType + '-power',
         index === diceList.length - 1 ? 'btn-last' : 'btn-inner',
