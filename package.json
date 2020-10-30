@@ -9,19 +9,19 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@popperjs/core": "^2.5.3",
+    "@popperjs/core": "^2.5.4",
     "axios": "^0.21.0",
     "nanobar": "^0.4.2",
-    "noty": "^3.2.0-beta",
     "qs": "^6.9.4",
-    "vue": "^3.0.0",
-    "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vue": "^3.0.2",
+    "vue-router": "^4.0.0-rc.1",
+    "vue-toastification": "^2.0.0-beta.7",
+    "vuex": "^4.0.0-rc.1"
   },
   "devDependencies": {
-    "@vue/compiler-sfc": "^3.0.0",
+    "@vue/compiler-sfc": "^3.0.2",
     "postcss-nesting": "^7.0.1",
-    "tailwindcss": "^1.9.5",
-    "vite": "^1.0.0-rc.1"
+    "tailwindcss": "^1.9.6",
+    "vite": "^1.0.0-rc.8"
   }
 }

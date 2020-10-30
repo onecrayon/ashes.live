@@ -26,9 +26,9 @@
 <script>
 import axios from 'axios'
 import Nanobar from 'nanobar'
-import Noty from 'noty'
-import {watch} from 'vue'
-import {debounce, areSetsEqual, trimmed} from '/src/utils.js'
+import { watch } from 'vue'
+import { useToast } from 'vue-toastification'
+import { debounce, areSetsEqual, trimmed } from '/src/utils.js'
 import DiceFilter from './DiceFilter.vue'
 import ClearableSearch from '../ClearableSearch.vue'
 import CardTable from './CardTable.vue'
@@ -38,6 +38,11 @@ export default {
   props: {
     isPhoenixbornPicker: Boolean,
     showLegacy: Boolean,
+  },
+  setup () {
+    // Expose toasts for use in other portions of this component
+    const toast = useToast()
+    return { toast }
   },
   data: () => {
     return {
@@ -182,12 +187,7 @@ export default {
         } else if (error.data && error.data.detail) {
           errorMessage = error.response.data.detail
         }
-        new Noty({
-          type: 'error',
-          text: errorMessage,
-          timeout: 30000,
-          theme: 'metroui'
-        }).show()
+        this.toast.error(errorMessage)
         // Reset the filters, if necessary
         if (failureCallback) failureCallback()
       }).finally(() => {
