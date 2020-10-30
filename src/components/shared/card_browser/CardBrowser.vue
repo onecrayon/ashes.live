@@ -17,7 +17,9 @@
       :is-disabled="isDisabled"
       :is-phoenixborn-picker="isPhoenixbornPicker"
       :cards="cards"
-      @reset-filters="clearFilters"></card-table>
+      :have-next-cards="!!nextCardsURL"
+      @reset-filters="clearFilters"
+      @load-more="loadNext"></card-table>
   </div>
 </template>
 
@@ -132,29 +134,29 @@ export default {
     this.debouncedFilterCall.cancel()
   },
   methods: {
+    // Clear out filters; this will automatically cause the card listing to be refreshed due to the
+    // `watch` logic above
     clearFilters () {
       this.filterText = ''
       this.diceFilterLogic = 'any'
       this.diceFilterList = []
     },
-    filterList (failureCallback) {
-      // Query our list of cards
-      const params = {}
-      // Show legacy cards, if necessary
-      if (this.showLegacy) {
-        params['show_legacy'] = true
-      }
-      const filterText = trimmed(this.filterText)
-      if (filterText) params.q = filterText
-      if (this.diceFilterList.length) {
-        params.dice_logic = this.diceFilterLogic
-        params.dice = this.diceFilterList
+    /**
+     * Perform the actual AJAX call to the API.
+     *
+     * Accepts a single object with the following keys:
+     *
+     * * `options`: options object to be handed through to `axios.request`. If not specified,
+     *     `url` will be automatically set. See https://github.com/axios/axios#request-config
+     * * `failureCallback`: an optional callback that will be invoked on failure
+     */
+    fetchCards ({options = {}, failureCallback = null} = {}) {
+      if (!options.url) {
+        options.url = `${import.meta.env.VITE_API_URL}/v2/cards`
       }
       this.isDisabled = true
       const nano = new Nanobar({ autoRun: true })
-      axios.get(`${import.meta.env.VITE_API_URL}/v2/cards`, {
-        params: params,
-      }).then((response) => {
+      axios.request(options).then((response) => {
         // Clear everything out if we have no actual results (makes logical comparisons easier)
         if (response.data.count === 0) {
           this.cards = null
@@ -192,6 +194,28 @@ export default {
         this.isDisabled = false
         nano.go(100)
       })
+    },
+    // Default method for running a new filter using the current filter settings
+    filterList (failureCallback) {
+      // Query our list of cards
+      const params = {
+        'limit': 50,
+      }
+      // Show legacy cards, if necessary
+      if (this.showLegacy) {
+        params['show_legacy'] = true
+      }
+      const filterText = trimmed(this.filterText)
+      if (filterText) params.q = filterText
+      if (this.diceFilterList.length) {
+        params.dice_logic = this.diceFilterLogic
+        params.dice = this.diceFilterList
+      }
+      this.fetchCards({ options: { params }, failureCallback })
+    },
+    // Load the next page of cards
+    loadNext () {
+      this.fetchCards({ options: { url: this.nextCardsURL }})
     },
   },
 }

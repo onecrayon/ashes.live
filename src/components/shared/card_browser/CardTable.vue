@@ -24,12 +24,22 @@
         </div>
       </li>
     </ul>
-    <!-- TODO: add button to load more on demand, and hook up automatic loading on scroll -->
+    <div v-show="haveNextCards" class="my-4 text-center" ref="scrollLoader">
+      <button class="btn btn-blue py-2 px-4" :disabled="isDisabled" @click="$emit('load-more')">
+        <span v-if="isDisabled">
+          <i class="fas fa-circle-notch fa-spin"></i> Loading...
+        </span>
+        <span v-if="!isDisabled">
+          Load more cards...
+        </span>
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
 import {typeToFontAwesome} from '/src/constants.js'
+import {debounce} from '/src/utils.js'
 
 export default {
   name: 'CardTable',
@@ -37,13 +47,30 @@ export default {
     isPhoenixbornPicker: Boolean,
     isDisabled: Boolean,
     cards: Array,
+    haveNextCards: Boolean,
   },
-  emits: ['reset-filters'],
+  emits: ['reset-filters', 'load-more'],
+  mounted () {
+    this.debouncedScrollListener = debounce(this.scrollLoadCheck, 100)
+    window.addEventListener('scroll', this.debouncedScrollListener)
+  },
+  beforeUnmount () {
+    window.removeEventListener('scroll', this.debouncedScrollListener)
+  },
   methods: {
     typeIcon (card) {
       const typeClass = typeToFontAwesome[card.type]
       return typeClass ? typeClass : 'fa-question-circle'
-    }
+    },
+    scrollLoadCheck () {
+      // Don't process scroll checks when we're already loading stuff
+      if (this.isDisabled || !this.haveNextCards) return
+      // Check if our scrolling element is within 300 pixels of the bottom of the scroll view (or has passed it)
+      const elementBounding = this.$refs.scrollLoader.getBoundingClientRect()
+      if (elementBounding.top <= window.innerHeight + 500) {
+        this.$emit('load-more')
+      }
+    },
   },
 }
 </script>
