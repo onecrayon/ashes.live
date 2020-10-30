@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from './components/Home.vue'
 import NotFound from './components/NotFound.vue'
 import CardListing from './components/cards/CardListing.vue'
+import CardDetails from './components/cards/CardDetails.vue'
 import DeckListing from './components/decks/DeckListing.vue'
 
 export default createRouter({
@@ -26,6 +27,18 @@ export default createRouter({
             title: 'Browse Legacy Cards',
             showLegacy: true,
           },
+          children: [
+            {
+              path: ':stub',
+              name: 'CardDetailsLegacy',
+              component: CardDetails,
+            },
+          ]
+        },
+        {
+          path: ':stub',
+          name: 'CardDetails',
+          component: CardDetails,
         },
       ],
     },

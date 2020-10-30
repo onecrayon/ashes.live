@@ -9,6 +9,7 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@popperjs/core": "^2.5.3",
     "axios": "^0.21.0",
     "nanobar": "^0.4.2",
     "noty": "^3.2.0-beta",

@@ -15,8 +15,7 @@
           <i class="fas" :class="[typeIcon(card)]"></i>
         </div>
         <div class="flex-grow p-1 border-b border-gray-light">
-          <!-- TODO: switch this to a standard `card-link` component -->
-          <strong>{{ card.name }}</strong>
+          <card-link :card="card"></card-link>
           <span v-if="card.phoenixborn" class="text-gray" :title="card.phoenixborn">
             ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
           </span>
@@ -40,6 +39,7 @@
 <script>
 import {typeToFontAwesome} from '/src/constants.js'
 import {debounce} from '/src/utils.js'
+import CardLink from '../CardLink.vue'
 
 export default {
   name: 'CardTable',
@@ -50,6 +50,9 @@ export default {
     haveNextCards: Boolean,
   },
   emits: ['reset-filters', 'load-more'],
+  components: {
+    CardLink,
+  },
   mounted () {
     this.debouncedScrollListener = debounce(this.scrollLoadCheck, 100)
     window.addEventListener('scroll', this.debouncedScrollListener)
