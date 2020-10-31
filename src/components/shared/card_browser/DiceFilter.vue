@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import {diceList} from '/src/constants.js'
+import { diceList } from '/src/constants.js'
 
 export default {
   name: 'DiceFilter',

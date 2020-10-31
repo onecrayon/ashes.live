@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import {createPopper} from '@popperjs/core'
+import { createPopper } from '@popperjs/core'
 import { request } from '/src/utils.js'
 import Card from './Card.vue'
 

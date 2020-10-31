@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import {typeToFontAwesome} from '/src/constants.js'
-import {debounce} from '/src/utils.js'
+import { typeToFontAwesome } from '/src/constants.js'
+import { debounce } from '/src/utils.js'
 import CardLink from '../CardLink.vue'
 
 export default {
