@@ -20,15 +20,26 @@
       :src="legacyCardURL"
       :alt="card.name">
   </div>
+  <card
+    v-else
+    ref="popup"
+    class="absolute inset-0"
+    :class="{hidden: !hovering}"
+    :is-visible="hovering"
+    :data="card"></card>
 </template>
 
 <script>
-import {createPopper} from '/src/utils.js'
+import {createPopper} from '@popperjs/core'
+import Card from './Card.vue'
 
 export default {
   name: 'CardLink',
   // `card` must be an object with at minimum `name` and `stub` properties
   props: ['card'],
+  components: {
+    Card,
+  },
   data () {
     return {
       hovering: false,
@@ -44,12 +55,13 @@ export default {
     },
     legacyCardURL () {
       if (!this.hovering) return ''
-      return `https://cdn.ashes.live/legacy/images/cards/${this.card.stub}.png`
+      return `${import.meta.env.VITE_CDN_URL}/legacy/images/cards/${this.card.stub}.png`
     },
   },
   methods: {
     hoverOpen ({ clientX: x, clientY: y }) {
-      this.popper = createPopper(this.$refs.link.$el, this.$refs.popup, {
+      const popupEl = this.$refs.popup.$el ? this.$refs.popup.$el : this.$refs.popup
+      this.popper = createPopper(this.$refs.link.$el, popupEl, {
         placement: 'right',
         modifiers: [
           {

@@ -10,9 +10,12 @@
         You are viewing <strong class="text-red">Ashes Reborn</strong> cards. <router-link :to="{name: 'LegacyCards'}">View Ashes Legacy cards instead</router-link>.
       </p>
 
-      <p v-else class="text-l border-2 border-orange rounded bg-inexhaustible px-4 py-2 m-0">
-        You are viewing <strong class="text-gray-darker">Ashes Legacy</strong> cards. <router-link to="/cards">View Ashes Reborn cards instead</router-link>.
-      </p>
+      <div v-else>
+        <p class="text-l border-2 border-orange rounded bg-inexhaustible px-4 py-2 m-0">
+          You are viewing <strong class="text-gray-darker">Ashes Legacy</strong> cards. <router-link to="/cards">View Ashes Reborn cards instead</router-link>.
+        </p>
+        <p><span class="text-gray pr-1">†</span>Fan-made cards.</p>
+      </div>
     </div>
     <div class="lg:order-1 lg:flex-grow">
       <card-browser :show-legacy="showLegacy"></card-browser>

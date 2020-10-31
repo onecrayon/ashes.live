@@ -1,9 +1,10 @@
 <template>
-  <h1>Coming soon.</h1>
+  <h1>Details for {{ stub}} coming soon.</h1>
 </template>
 
 <script>
 export default {
   name: 'CardDetails',
+  props: ['stub'],
 }
 </script>

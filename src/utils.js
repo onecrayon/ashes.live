@@ -44,21 +44,3 @@ export function trimmed(stringOrFalsey) {
   if (!stringOrFalsey) return ''
   return stringOrFalsey.trim()
 }
-
-/**
- * createPopper(options)
- *
- * Generates a standard popper creation function to use around the site.
- * See: https://popper.js.org/docs/v2/constructors/#createpopper
- */
-import {
-  popperGenerator,
-  defaultModifiers,
-} from '@popperjs/core/lib/popper-lite'
-import flip from '@popperjs/core/lib/modifiers/flip'
-import offset from '@popperjs/core/lib/modifiers/offset'
-import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow'
-
-export const createPopper = popperGenerator({
-  defaultModifiers: [...defaultModifiers, flip, offset, preventOverflow],
-})

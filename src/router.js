@@ -18,29 +18,27 @@ export default createRouter({
       name: 'Cards',
       component: CardListing,
       meta: { title: 'Browse Cards' },
-      children: [
-        {
-          path: 'legacy',
-          name: 'LegacyCards',
-          component: CardListing,
-          meta: {
-            title: 'Browse Legacy Cards',
-            showLegacy: true,
-          },
-          children: [
-            {
-              path: ':stub',
-              name: 'CardDetailsLegacy',
-              component: CardDetails,
-            },
-          ]
-        },
-        {
-          path: ':stub',
-          name: 'CardDetails',
-          component: CardDetails,
-        },
-      ],
+    },
+    {
+      path: '/cards/legacy',
+      name: 'LegacyCards',
+      component: CardListing,
+      meta: {
+        title: 'Browse Legacy Cards',
+        showLegacy: true,
+      },
+    },
+    {
+      path: '/cards/:stub',
+      name: 'CardDetails',
+      component: CardDetails,
+      props: true
+    },
+    {
+      path: '/cards/legacy/:stub',
+      name: 'CardDetailsLegacy',
+      component: CardDetails,
+      props: true,
     },
     {
       path: '/decks',
