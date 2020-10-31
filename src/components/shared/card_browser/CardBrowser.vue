@@ -24,11 +24,9 @@
 </template>
 
 <script>
-import axios from 'axios'
-import Nanobar from 'nanobar'
 import { watch } from 'vue'
 import { useToast } from 'vue-toastification'
-import { debounce, areSetsEqual, trimmed } from '/src/utils.js'
+import { debounce, areSetsEqual, trimmed, request } from '/src/utils.js'
 import DiceFilter from './DiceFilter.vue'
 import ClearableSearch from '../ClearableSearch.vue'
 import CardTable from './CardTable.vue'
@@ -151,17 +149,17 @@ export default {
      *
      * Accepts a single object with the following keys:
      *
-     * * `options`: options object to be handed through to `axios.request`. If not specified,
-     *     `url` will be automatically set. See https://github.com/axios/axios#request-config
+     * * `endpoint`: full URL to fetch, or leave null for a default endpoint call
+     * * `options`: options object to be handed through to `axios.request`.
+     *   See https://github.com/axios/axios#request-config
      * * `failureCallback`: an optional callback that will be invoked on failure
      */
-    fetchCards ({options = {}, failureCallback = null} = {}) {
-      if (!options.url) {
-        options.url = `${import.meta.env.VITE_API_URL}/v2/cards`
+    fetchCards ({endpoint = null, options = {}, failureCallback = null} = {}) {
+      if (!endpoint) {
+        endpoint = '/v2/cards'
       }
       this.isDisabled = true
-      const nano = new Nanobar({ autoRun: true })
-      axios.request(options).then((response) => {
+      request(endpoint, options).then((response) => {
         // Clear everything out if we have no actual results (makes logical comparisons easier)
         if (response.data.count === 0) {
           this.cards = null
@@ -192,7 +190,6 @@ export default {
         if (failureCallback) failureCallback()
       }).finally(() => {
         this.isDisabled = false
-        nano.go(100)
       })
     },
     // Default method for running a new filter using the current filter settings
@@ -215,7 +212,7 @@ export default {
     },
     // Load the next page of cards
     loadNext () {
-      this.fetchCards({ options: { url: this.nextCardsURL }})
+      this.fetchCards({ endpoint: this.nextCardsURL })
     },
   },
 }

@@ -3,13 +3,13 @@
     class="font-bold text-black"
     ref="link"
     :to="cardTarget"
-    @mouseover="hoverOpen"
-    @mouseleave="hoverClose">{{ card.name }}</router-link>
+    @mouseover="showDetails"
+    @mouseleave="closeDetails">{{ card.name }}</router-link>
   <div
     v-if="card.is_legacy"
     class="border-8 border-gray-light bg-gray-light text-gray rounded-lg absolute inset-0"
     ref="popup"
-    :class="{hidden: !hovering}">
+    :class="{hidden: !areDetailsShowing}">
     <i
       class="fas fa-circle-notch fa-spin text-2xl"
       :class="[$style['center-position']]"></i>
@@ -24,13 +24,14 @@
     v-else
     ref="popup"
     class="absolute inset-0"
-    :class="{hidden: !hovering}"
-    :is-visible="hovering"
-    :data="card"></card>
+    :class="{hidden: !areDetailsShowing}"
+    :is-visible="areDetailsShowing"
+    :card="card"></card>
 </template>
 
 <script>
 import {createPopper} from '@popperjs/core'
+import { request } from '/src/utils.js'
 import Card from './Card.vue'
 
 export default {
@@ -42,7 +43,7 @@ export default {
   },
   data () {
     return {
-      hovering: false,
+      areDetailsShowing: false,
     }
   },
   computed: {
@@ -54,12 +55,13 @@ export default {
       }
     },
     legacyCardURL () {
-      if (!this.hovering) return ''
+      if (!this.areDetailsShowing) return ''
       return `${import.meta.env.VITE_CDN_URL}/legacy/images/cards/${this.card.stub}.png`
     },
   },
   methods: {
-    hoverOpen ({ clientX: x, clientY: y }) {
+    async showDetails ({ clientX: x, clientY: y }) {
+      // TODO: figure out how to handle card links when we only have the title (might not even have the stub)
       const popupEl = this.$refs.popup.$el ? this.$refs.popup.$el : this.$refs.popup
       this.popper = createPopper(this.$refs.link.$el, popupEl, {
         placement: 'right',
@@ -92,15 +94,15 @@ export default {
           },
         ],
       })
-      this.hovering = true
+      this.areDetailsShowing = true
       // If we don't run an update on the next tick, the popper treats its size as 0 width/height
       // No idea why; even setting an explicit size in the styling doesn't help
       this.$nextTick(() => {
         this.popper.forceUpdate()
       })
     },
-    hoverClose () {
-      this.hovering = false
+    closeDetails () {
+      this.areDetailsShowing = false
       this.popper.destroy()
     },
   },

@@ -1,3 +1,30 @@
+import axios from 'axios'
+import Nanobar from 'nanobar'
+
+/**
+ * request(options)
+ *
+ * A light wrapper around Axios.request() that ensures each request is accompanied by
+ * a progress bar.
+ *
+ * See https://github.com/axios/axios#request-config for options
+ *
+ * TODO: add support for generic error handling
+ */
+export function request(endpoint, options = {}) {
+  // No need to prefix the endpoint if we have a full URL
+  if (endpoint.startsWith('http')) {
+    options.url = endpoint
+  } else {
+    if (endpoint.startsWith('/')) endpoint = endpoint.substr(1)
+    options.url = `${import.meta.env.VITE_API_URL}/${endpoint}`
+  }
+  const nano = new Nanobar({ autoRun: true })
+  return axios.request(options).finally(() => {
+    nano.go(100)
+  })
+}
+
 /**
  * debounce(callback, wait)
  *
