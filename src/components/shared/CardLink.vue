@@ -5,28 +5,27 @@
     :to="cardTarget"
     @mouseover="showDetails"
     @mouseleave="closeDetails">{{ card.name }}</router-link>
-  <div
-    v-if="card.is_legacy"
-    class="border-8 border-gray-light bg-gray-light text-gray rounded-lg absolute inset-0"
-    ref="popup"
-    :class="{hidden: !areDetailsShowing}">
-    <i
-      class="fas fa-circle-notch fa-spin text-2xl"
-      :class="[$style['center-position']]"></i>
-    <img
-      width="299"
-      height="418"
-      class="relative"
-      :src="legacyCardURL"
-      :alt="card.name">
+  <div ref="popup" class="absolute">
+    <div
+      v-if="card.is_legacy && areDetailsShowing"
+      class="border-8 border-gray-light bg-gray-light text-gray rounded-lg shadow relative"
+      ref="popup">
+      <i
+        class="fas fa-circle-notch fa-spin text-2xl"
+        :class="[$style['center-position']]"></i>
+      <img
+        width="299"
+        height="418"
+        class="relative"
+        :src="legacyCardURL"
+        :alt="card.name">
+    </div>
+    <card
+      v-else-if="areDetailsShowing"
+      ref="popup"
+      class="shadow"
+      :card="card"></card>
   </div>
-  <card
-    v-else
-    ref="popup"
-    class="absolute inset-0"
-    :class="{hidden: !areDetailsShowing}"
-    :is-visible="areDetailsShowing"
-    :card="card"></card>
 </template>
 
 <script>
@@ -55,15 +54,13 @@ export default {
       }
     },
     legacyCardURL () {
-      if (!this.areDetailsShowing) return ''
       return `${import.meta.env.VITE_CDN_URL}/legacy/images/cards/${this.card.stub}.png`
     },
   },
   methods: {
     async showDetails ({ clientX: x, clientY: y }) {
       // TODO: figure out how to handle card links when we only have the title (might not even have the stub)
-      const popupEl = this.$refs.popup.$el ? this.$refs.popup.$el : this.$refs.popup
-      this.popper = createPopper(this.$refs.link.$el, popupEl, {
+      this.popper = createPopper(this.$refs.link.$el, this.$refs.popup, {
         placement: 'right',
         modifiers: [
           {
