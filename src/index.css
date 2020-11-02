@@ -51,7 +51,7 @@ button, input {
 
   &[readonly], &[disabled] {
     @apply opacity-50 cursor-not-allowed;
-	}
+  }
 }
 
 .btn {
@@ -79,22 +79,56 @@ button, input {
 }
 
 .nanobar .bar {
-	@apply bg-blue opacity-50;
+  @apply bg-blue opacity-50;
 }
 
 .divider {
-	background: url('./assets/icon-diamond-bullet.png') no-repeat center center;
-	display: inline-block;
-	height: 7px;
-	width: 7px;
-	vertical-align: middle;
+  background: url('./assets/icon-diamond-bullet.png') no-repeat center center;
+  display: inline-block;
+  height: 7px;
+  width: 7px;
+  vertical-align: middle;
 }
 
 .alt-text {
-	display: inline-block;
-	width: 0px;
-	height: 1px;
-	overflow: hidden;
+  display: inline-block;
+  width: 0px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.inexhaustible-effects {
+  @apply bg-inexhaustible border border-inexhaustible-dark px-2 relative;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.inexhaustible-effects::before {
+  content: '';
+  background: url('./assets/icon-inexhaustible.png') no-repeat left top;
+  width: 11px;
+  height: 11px;
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  margin-left: -6px;
+}
+
+.reaction-effects {
+  @apply bg-reaction border border-reaction-dark px-2 relative;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.reaction-effects::before {
+  content: '';
+  background: url('./assets/icon-reaction.png') no-repeat left top;
+  width: 19px;
+  height: 11px;
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  margin-left: -10px;
 }
 
 @tailwind components;

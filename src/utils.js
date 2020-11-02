@@ -79,7 +79,7 @@ export function trimmed(stringOrFalsey) {
  * @param {string} text
  */
 export function parseCardText (text) {
-  // First make sure that we don't have any HTML in our string
+  // First make sure that we don't have any HTML in our string; no XSS, thanks
   const unescapedHTML = /[&<"']/g
   const escapeMap = {
     '&': '&amp;',
@@ -110,15 +110,9 @@ export function parseCardText (text) {
       })
       text = text ? text.trim() : null
       if (isImage) {
-        return [
-          '<a href="', textUrl, '"', !internalLink ? ' rel="nofollow external"' : '',
-          ' target="_blank">', '<img class="object-contain" src="', textUrl, '" alt=""></a>'
-        ].join('')
+        return `<a href="${textUrl}"${!internalLink ? ' rel="nofollow external"' : ''} target="_blank"><img class="object-contain" src="${textUrl}" alt=""></a>`
       }
-      return [
-        '<a href="', parsedUrl, '"', !internalLink ? ' rel="nofollow"' : '', '>',
-        text || textUrl, '</a>'
-      ].join('')
+      return `<a href="${parsedUrl}"${!internalLink ? ' rel="nofollow"' : ''}>${text || textUrl}</a>`
     }
   )
   // Parse card codes
@@ -129,7 +123,7 @@ export function parseCardText (text) {
     let lowerPrimary = primary.toLowerCase().replace('&#39;', '')
     secondary = secondary && secondary.toLowerCase()
     if (['discard', 'exhaust'].indexOf(lowerPrimary) > -1) {
-      return ['<span class="phg-', lowerPrimary, '" title="', primary, '"></span>'].join('')
+      return `<span class="phg-${lowerPrimary}" title="${primary}"></span>`
     }
 
     // Alias "nature" => "natural" (common mistake)
@@ -147,19 +141,11 @@ export function parseCardText (text) {
     } else if (lowerPrimary === 'side') {
       secondary = 'action'
     } else if (secondary) {
-      return ['<i>', lowerPrimary, ' ', secondary, '</i>'].join('')
+      return `<i>${lowerPrimary} ${secondary}</i>`
     } else {
-      return [
-        '<strong data-stub="', lowerPrimary.replace(/ +/g, '-'), '">',
-        primary,
-        '</strong>'
-      ].join('')
+      return `<strong data-stub="${lowerPrimary.replace(/ +/g, '-')}">${primary}</strong>`
     }
-    return [
-      '<span class="phg-', lowerPrimary, '-', secondary, '" title="',
-      primary, (secondary ? ' ' + secondary : ''), '"><span class="alt-text">', input,
-      '</span></span>'
-    ].join('')
+    return `<span class="phg-${lowerPrimary}-${secondary}" title="${primary}${secondary ? ' ' + secondary : ''}"><span class="alt-text">${input}</span></span>`
   })
   // Parse blockquotes
   text = text.replace(/(^> ?.+?)(?=\n[^>\n])/gm, (match) => {
@@ -168,27 +154,34 @@ export function parseCardText (text) {
   text = text.replace('\n</blockquote>', '</blockquote>\n')
   // Parse star formatting
   // * list item
-  // TODO: LEFT OFF HERE
+  text = text.replace(/(^|\n|<blockquote>)\*[ ]+(.+)/g, '$1<li>$2</li>')
+    .replace('</blockquote></li>', '</li></blockquote>')
+    .replace(/(^|\n|<blockquote>)((?:<li>.+?<\/li>\n?)+)(<\/blockquote>|\n|$)/g, '$1<ul>$2</ul>$3')
+    .replace(/<\/li>\n+<li>/g, '</li><li>')
+    .replace(/<\/li>\n+<\/ul>/g, '</li></ul>\n')
+    .replace(/<\/li><\/ul>\n+<li>|<\/li>\n+<ul><li>/g, '</li><li>')
+  // ~ ordered list item (not typically used for posts, but allows easy conversion between post
+  //  syntax and card syntax)
+  // Routes through fake element `<oli>` to ensure that we don't screw with unordered lists
+  text = text.replace(/(^|\n|<blockquote>)~[ ]+(.+)/g, '$1<oli>$2</oli>')
+    .replace('</blockquote></oli>', '</oli></blockquote>')
+    .replace(/(^|\n|<blockquote>)((?:<oli>.+?<\/oli>\n?)+)(<\/blockquote>|\n|$)/g, '$1<ol>$2</ol>$3')
+    .replace(/<\/oli>\n+<oli>/g, '</oli><oli>')
+    .replace(/<\/oli>\n+<\/ol>/g, '</oli></ol>\n')
+    .replace(/<\/oli><\/ol>\n+<oli>|<\/oli>\n+<ol><oli>/g, '</oli><oli>')
+    .replace(/<(\/?)oli>/g, '<$1li>')
+  // Fix single linebreaks after a block level element (these break the paragraph logic further down)
+  text = text.replace(/(<\/(?:blockquote|ul|ol)>\n)(?=[^\n])/g, '$1\n')
   // lone star: *
-  text = text.replace(/(^| )\*( |$)/g, (_, leading, trailing) => {
-    return [leading, '&#42;', trailing].join('')
-  })
+  text = text.replace(/(^| )\*( |$)/g, '$1&#42;$2')
   // ***emstrong*** or ***em*strong**
-  text = text.replace(/\*{3}(.+?)\*(.*?)\*{2}/g, (_, first, second) => {
-    return ['<b><i>', first, '</i>', second, '</b>'].join('')
-  })
+  text = text.replace(/\*{3}(.+?)\*(.*?)\*{2}/g, '<b><i>$1</i>$2</b>')
   // ***strong**em*
-  text = text.replace(/\*{3}(.+?)\*{2}(.*?)\*/g, (_, first, second) => {
-    return ['<i><b>', first, '</b>', second, '</i>'].join('')
-  })
+  text = text.replace(/\*{3}(.+?)\*{2}(.*?)\*/g, '<i><b>$1</b>$2</i>')
   // **strong**
-  text = text.replace(/\*{2}(.+?)\*{2}/g, (_, text) => {
-    return ['<b>', text, '</b>'].join('')
-  })
+  text = text.replace(/\*{2}(.+?)\*{2}/g, '<b>$1</b>')
   // *emphasis*
-  text = text.replace(/\*([^*\n\r]+)\*/g, (_, text) => {
-    return ['<i>', text, '</i>'].join('')
-  })
+  text = text.replace(/\*([^*\n\r]+)\*/g, '<i>$1</i>')
   // Check if we need to further process into paragraphs
   const paragraphs = text.trim().split(/(?:\r\n|\r|\n){2,}/)
   if (paragraphs.length === 1) return text
@@ -200,9 +193,9 @@ export function parseCardText (text) {
   text = composedParagraphs.join('\n\n')
   // Correct wrapped lists and blockquotes
   text = text.replace(/<p>((?:<blockquote>)?<ul>)/g, '$1')
-               .replace(/(<\/ul>(?:<\/blockquote>)?)<\/p>/g, '$1')
-               .replace('<p><blockquote>', '<blockquote><p>')
-               .replace('</blockquote></p>', '</p></blockquote>')
+    .replace(/(<\/ul>(?:<\/blockquote>)?)<\/p>/g, '$1')
+    .replace('<p><blockquote>', '<blockquote><p>')
+    .replace('</blockquote></p>', '</p></blockquote>')
   // Automatically center lone images
   text = text.replace(/<p>(<a class="inline-image".*?<\/a>(?=<\/p>|<br>))/g, '<p style="text-align:center;">$1')
   return text
@@ -221,6 +214,11 @@ export function parseCardText (text) {
  */
 export function parseEffectText (text) {
   text = parseCardText(text)
+  // Convert lists to inexhaustible and blue blocks
+  text = text.replace('<ul>', '<div class="inexhaustible-effects">')
+    .replace('<ol>', '<div class="reaction-effects">')
+    .replace(/<\/(?:ul|ol)>/g, '</div>')
+    .replace(/<(\/?)li>/g, '<$1p>')
   // Bold ability names
   text = text.replace(/(?:<p>|^)([a-z 0-9]+:)/ig, '<p><strong>$1</strong>')
   return text
