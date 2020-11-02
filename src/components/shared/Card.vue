@@ -22,7 +22,7 @@
           <card-codes v-else :content="cost"></card-codes>
         </li>
       </ol>
-      <div class="p-2">
+      <div class="px-2 py-px text-xs">
         <p class="m-0 font-bold text-lg">
           {{ card.name }}
           <span v-if="card.phoenixborn" class="text-gray font-normal" :title="card.phoenixborn">
@@ -36,14 +36,46 @@
             {{ card.placement }}
           </span>
         </p>
+        <div v-if="isPhoenixborn" class="text-center my-2">
+          <strong
+            v-if="card.battlefield !== undefined"
+            class="inline-block border border-red-light px-1">Battlefield {{ card.battlefield }}</strong>
+          <strong
+            v-if="card.life !== undefined"
+            class="inline-block border border-green-light px-1 mx-1">Life {{ card.life }}</strong>
+          <strong
+            v-if="card.spellboard !== undefined"
+            class="inline-block border border-blue-dark px-1">Spellboard {{ card.spellboard }}</strong>
+        </div>
         <div v-if="card.text">
-          <hr class="my-2 border-gray-light">
+          <hr v-if="!isPhoenixborn" class="my-2 border-gray-light">
           <div
             v-html="parsedEffects"
-            class="text-xs leading-snug"
+            class="leading-snug"
             :class="$style['effect-text']"></div>
-          </div>
         </div>
+        <div v-if="hasStats && !isPhoenixborn" class="text-center my-2 clear-fix">
+          <!-- Placeholders ensure that our stats are always in about the same locations -->
+          <span
+            v-if="card.copies !== undefined"
+            class="border border-gray-dark float-right px-1">{{ card.copies }}</span>
+
+          <strong
+            v-if="card.attack !== undefined"
+            class="inline-block border border-red-light px-1">Attack {{ card.attack }}</strong>
+          <span v-else class="inline-block invisible">Attack --</span>
+
+          <strong
+            v-if="card.life !== undefined"
+            class="inline-block border border-green-light px-1 mx-1">Life {{ card.life }}</strong>
+          <span v-else class="inline-block invisible mx-1">Life --</span>
+
+          <strong
+            v-if="card.recover !== undefined"
+            class="inline-block border border-blue-dark px-1">Recover {{ card.recover }}</strong>
+          <span v-else class="inline-block invisible">Recover --</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -73,7 +105,19 @@ export default {
     },
     parsedEffects () {
       return parseEffectText(this.card.text)
-    }
+    },
+    isPhoenixborn () {
+      return this.card.type === 'Phoenixborn'
+    },
+    hasStats () {
+      // This covers Phoenixborn, too, because they always have a life value
+      return (
+        this.card.attack !== undefined
+        || this.card.life !== undefined
+        || this.card.recover !== undefined
+        || this.card.copies !== undefined
+      )
+    },
   },
 }
 </script>

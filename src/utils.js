@@ -78,7 +78,7 @@ export function trimmed(stringOrFalsey) {
  *
  * @param {string} text
  */
-export function parseCardText (text) {
+export function parseCardText (text, ensureParagraphs=false) {
   // First make sure that we don't have any HTML in our string; no XSS, thanks
   const unescapedHTML = /[&<"']/g
   const escapeMap = {
@@ -184,7 +184,7 @@ export function parseCardText (text) {
   text = text.replace(/\*([^*\n\r]+)\*/g, '<i>$1</i>')
   // Check if we need to further process into paragraphs
   const paragraphs = text.trim().split(/(?:\r\n|\r|\n){2,}/)
-  if (paragraphs.length === 1) return text
+  if (paragraphs.length === 1) return ensureParagraphs ? `<p>${text}</p>` : text
   const composedParagraphs = []
   paragraphs.forEach(paragraph => {
     paragraph = paragraph.replace('\n', '<br>\n')
@@ -213,7 +213,7 @@ export function parseCardText (text) {
  * @param {str} text Card effect text to parse
  */
 export function parseEffectText (text) {
-  text = parseCardText(text)
+  text = parseCardText(text, true)
   // Convert lists to inexhaustible and blue blocks
   text = text.replace('<ul>', '<div class="inexhaustible-effects">')
     .replace('<ol>', '<div class="reaction-effects">')

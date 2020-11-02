@@ -98,9 +98,7 @@ button, input {
 }
 
 .inexhaustible-effects {
-  @apply bg-inexhaustible border border-inexhaustible-dark px-2 relative clear-both;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  @apply bg-inexhaustible border border-inexhaustible-dark px-2 py-px my-2 relative clear-both;
 }
 
 .inexhaustible-effects::before {
@@ -115,9 +113,7 @@ button, input {
 }
 
 .reaction-effects {
-  @apply bg-reaction border border-reaction-dark px-2 relative clear-both;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  @apply bg-reaction border border-reaction-dark px-2 py-px my-2 relative clear-both;
 }
 
 .reaction-effects::before {
