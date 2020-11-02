@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO: figure out how to show details instead of visiting page in touch environments -->
   <router-link
     class="font-bold text-black"
     ref="link"

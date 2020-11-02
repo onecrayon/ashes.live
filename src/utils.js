@@ -118,12 +118,12 @@ export function parseCardText (text) {
   // Parse card codes
   text = text.replace(/\[\[(\*?)((?:[a-z -]|&#39;)+)(?::([a-z]+))?\]\]|( - )/ig, (input, isImage, primary, secondary, dash) => {
     if (dash) {
-      return ' <span class="divider"><span class="alt-text">-</span></span> '
+      return ' <i class="divider"><span class="alt-text">-</span></i> '
     }
     let lowerPrimary = primary.toLowerCase().replace('&#39;', '')
     secondary = secondary && secondary.toLowerCase()
     if (['discard', 'exhaust'].indexOf(lowerPrimary) > -1) {
-      return `<span class="phg-${lowerPrimary}" title="${primary}"></span>`
+      return `<i class="phg-${lowerPrimary}" title="${primary}"></i>`
     }
 
     // Alias "nature" => "natural" (common mistake)
@@ -145,7 +145,7 @@ export function parseCardText (text) {
     } else {
       return `<strong data-stub="${lowerPrimary.replace(/ +/g, '-')}">${primary}</strong>`
     }
-    return `<span class="phg-${lowerPrimary}-${secondary}" title="${primary}${secondary ? ' ' + secondary : ''}"><span class="alt-text">${input}</span></span>`
+    return `<i class="phg-${lowerPrimary}-${secondary}" title="${primary}${secondary ? ' ' + secondary : ''}"><span class="alt-text">${input}</span></i>`
   })
   // Parse blockquotes
   text = text.replace(/(^> ?.+?)(?=\n[^>\n])/gm, (match) => {
@@ -219,7 +219,7 @@ export function parseEffectText (text) {
     .replace('<ol>', '<div class="reaction-effects">')
     .replace(/<\/(?:ul|ol)>/g, '</div>')
     .replace(/<(\/?)li>/g, '<$1p>')
-  // Bold ability names
-  text = text.replace(/(?:<p>|^)([a-z 0-9]+:)/ig, '<p><strong>$1</strong>')
+  // Bold ability names (&#39; is apostrophe)
+  text = text.replace(/(?:<p>|^)((?:[a-z 0-9]|&#39;)+:)(?= \w| <i class="phg-)/ig, '<p><strong>$1</strong>')
   return text
 }

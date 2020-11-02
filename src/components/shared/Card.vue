@@ -114,26 +114,29 @@ export default {
   & .cost {
     display: block;
     padding: 0 0 7px;
+    position: relative;
 
     &::after {
       content: '';
+      box-sizing: content-box;
+      display: block;
       height: 7px;
       width: 2px;
       border: none;
       border-left: 2px solid var(--color-gray);
       border-right: 2px solid var(--color-gray);
-      top: auto;
+      position: absolute;
       right: 7px;
       bottom: 0px;
       margin-left: -3px;
     }
+  }
 
-    &::last-of-type {
-      padding: 0;
+  & .cost:last-of-type {
+    padding: 0;
 
-      &::after {
-        display: none;
-      }
+    &::after {
+      display: none;
     }
   }
 }
