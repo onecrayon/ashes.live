@@ -12,16 +12,7 @@
         :src="cardImageURL">
     </div>
     <div class="clearfix">
-      <ol class="p-2 float-right text-right">
-        <li v-for="(cost, index) of card.cost" :class="$style.cost" :key="index">
-          <span v-if="Array.isArray(cost)" :class="$style['parallel-costs']">
-            <span v-for="(splitCost, splitIndex) of cost" :class="$style.cost" :key="splitIndex">
-              <card-codes :content="splitCost"></card-codes>
-            </span>
-          </span>
-          <card-codes v-else :content="cost"></card-codes>
-        </li>
-      </ol>
+      <card-costs class="p-2 float-right text-right" :costs="card.cost"></card-costs>
       <div class="px-2 py-px text-xs">
         <p class="m-0 font-bold text-lg">
           {{ card.name }}
@@ -58,7 +49,7 @@
           <!-- Placeholders ensure that our stats are always in about the same locations -->
           <span
             v-if="card.copies !== undefined"
-            class="border border-gray-dark float-right px-1">{{ card.copies }}</span>
+            class="border border-gray-dark float-left px-1">{{ card.copies }}</span>
 
           <strong
             v-if="card.attack !== undefined"
@@ -84,6 +75,7 @@
 import { typeToFontAwesome } from '/src/constants.js'
 import { parseEffectText } from '/src/utils.js'
 import CardCodes from './CardCodes.vue'
+import CardCosts from './CardCosts.vue'
 
 export default {
   name: 'Card',
@@ -94,6 +86,7 @@ export default {
   },
   components: {
     CardCodes,
+    CardCosts,
   },
   computed: {
     cardImageURL () {
@@ -133,56 +126,6 @@ export default {
   left: 50%;
   /* Darn thing is about 25px square, so adjust by hand; transform -50% isn't working for some reason */
   margin: -13px 0 0 -13px;
-}
-
-
-.cost {
-  & [class^="phg-"], & [class*=" phg-"] {
-    display: inline-block;
-    min-width: 20px;
-    text-align: center;
-  }
-
-  & [class^="phg-"]::before, & [class*=" phg-"]::before {
-    padding: 0;
-  }
-
-  /* If this is a normal class selector, it gets scoped to the module */
-  & [class="phg-basic-magic"]::before {
-    position: relative;
-    top: -2px;
-  }
-}
-
-.parallel-costs {
-  & .cost {
-    display: block;
-    padding: 0 0 7px;
-    position: relative;
-
-    &::after {
-      content: '';
-      box-sizing: content-box;
-      display: block;
-      height: 7px;
-      width: 2px;
-      border: none;
-      border-left: 2px solid var(--color-gray);
-      border-right: 2px solid var(--color-gray);
-      position: absolute;
-      right: 7px;
-      bottom: 0px;
-      margin-left: -3px;
-    }
-  }
-
-  & .cost:last-of-type {
-    padding: 0;
-
-    &::after {
-      display: none;
-    }
-  }
 }
 
 .effect-text {

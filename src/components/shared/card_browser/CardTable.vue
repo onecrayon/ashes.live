@@ -21,6 +21,9 @@
           </span>
           <span v-if="card.release.is_phg === false" class="text-gray pl-1">†</span>
         </div>
+        <div class="flex-grow-0 p-1 border-b border-gray-light">
+          <card-costs :costs="card.cost" is-horizontal></card-costs>
+        </div>
       </li>
     </ul>
     <div v-show="haveNextCards" class="my-4 text-center" ref="scrollLoader">
@@ -40,6 +43,7 @@
 import { typeToFontAwesome } from '/src/constants.js'
 import { debounce } from '/src/utils.js'
 import CardLink from '../CardLink.vue'
+import CardCosts from '../CardCosts.vue'
 
 export default {
   name: 'CardTable',
@@ -51,6 +55,7 @@ export default {
   },
   emits: ['reset-filters', 'load-more'],
   components: {
+    CardCosts,
     CardLink,
   },
   mounted () {
@@ -70,7 +75,7 @@ export default {
       if (this.isDisabled || !this.haveNextCards) return
       // Check if our scrolling element is within 300 pixels of the bottom of the scroll view (or has passed it)
       const elementBounding = this.$refs.scrollLoader.getBoundingClientRect()
-      if (elementBounding.top <= window.innerHeight + 500) {
+      if (elementBounding.top <= window.innerHeight + 350) {
         this.$emit('load-more')
       }
     },
