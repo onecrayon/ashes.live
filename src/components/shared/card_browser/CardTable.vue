@@ -21,7 +21,21 @@
           </span>
           <span v-if="card.release.is_phg === false" class="text-gray pl-1">†</span>
         </div>
-        <div class="flex-grow-0 p-1 border-b border-gray-light">
+        <div v-if="hasStats(card)" class="flex-grow-0 p-1 border-b border-gray-light text-gray-light">
+          <span v-if="card.attack !== undefined || card.battlefield !== undefined" class="text-red-light">
+            {{ card.attack || card.battlefield || '0' }}
+          </span>
+          <span v-else>&ndash;</span> /
+          <span v-if="card.life !== undefined" class="text-green-light">
+            {{ card.life || '0' }}
+          </span>
+          <span v-else>&ndash;</span> /
+          <span v-if="card.recover !== undefined || card.spellboard !== undefined" class="text-blue-dark">
+            {{ card.recover || card.spellboard || '0' }}
+          </span>
+          <span v-else>&ndash;</span>
+        </div>
+        <div v-if="card.cost && card.cost.length" class="flex-grow-0 p-1 border-b border-gray-light">
           <card-costs :costs="card.cost" is-horizontal></card-costs>
         </div>
       </li>
@@ -79,6 +93,14 @@ export default {
         this.$emit('load-more')
       }
     },
+    hasStats (card) {
+      return (
+        card.attack !== undefined
+        || card.life !== undefined
+        || card.recover !== undefined
+        || card.copies !== undefined
+      )
+    }
   },
 }
 </script>
