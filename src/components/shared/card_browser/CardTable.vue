@@ -7,39 +7,9 @@
     </p>
   </div>
   <div v-else-if="cards && cards.length">
-    <ul>
-      <li
-        v-for="card of cards" :key="card.stub"
-        class="flex flex-no-wrap">
-        <div class="flex-grow-0 flex-shrink-0 w-8 p-1 text-center border-b border-gray-light" :title="card.type">
-          <i class="fas" :class="[typeIcon(card)]"></i>
-        </div>
-        <div class="flex-grow p-1 border-b border-gray-light">
-          <card-link :card="card"></card-link>
-          <span v-if="card.phoenixborn" class="text-gray" :title="card.phoenixborn">
-            ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
-          </span>
-          <span v-if="card.release.is_phg === false" class="text-gray pl-1">†</span>
-        </div>
-        <div v-if="hasStats(card)" class="flex-grow-0 p-1 border-b border-gray-light text-gray-light">
-          <span v-if="card.attack !== undefined || card.battlefield !== undefined" class="text-red-light">
-            {{ card.attack || card.battlefield || '0' }}
-          </span>
-          <span v-else>&ndash;</span> /
-          <span v-if="card.life !== undefined" class="text-green-light">
-            {{ card.life || '0' }}
-          </span>
-          <span v-else>&ndash;</span> /
-          <span v-if="card.recover !== undefined || card.spellboard !== undefined" class="text-blue-dark">
-            {{ card.recover || card.spellboard || '0' }}
-          </span>
-          <span v-else>&ndash;</span>
-        </div>
-        <div v-if="card.cost && card.cost.length" class="flex-grow-0 p-1 border-b border-gray-light">
-          <card-costs :costs="card.cost" is-horizontal></card-costs>
-        </div>
-      </li>
-    </ul>
+    <div class="grid gap-0" :class="[$style['list-columns']]">
+      <card-table-row v-for="card of cards" :key="card.stub" :card="card"></card-table-row>
+    </div>
     <div v-show="haveNextCards" class="my-4 text-center" ref="scrollLoader">
       <button class="btn btn-blue py-2 px-4" :disabled="isDisabled" @click="$emit('load-more')">
         <span v-if="isDisabled">
@@ -54,10 +24,8 @@
 </template>
 
 <script>
-import { typeToFontAwesome } from '/src/constants.js'
 import { debounce } from '/src/utils.js'
-import CardLink from '../CardLink.vue'
-import CardCosts from '../CardCosts.vue'
+import CardTableRow from './CardTableRow.vue'
 
 export default {
   name: 'CardTable',
@@ -69,8 +37,7 @@ export default {
   },
   emits: ['reset-filters', 'load-more'],
   components: {
-    CardCosts,
-    CardLink,
+    CardTableRow,
   },
   mounted () {
     this.debouncedScrollListener = debounce(this.scrollLoadCheck, 100)
@@ -80,10 +47,6 @@ export default {
     window.removeEventListener('scroll', this.debouncedScrollListener)
   },
   methods: {
-    typeIcon (card) {
-      const typeClass = typeToFontAwesome[card.type]
-      return typeClass ? typeClass : 'fa-question-circle'
-    },
     scrollLoadCheck () {
       // Don't process scroll checks when we're already loading stuff
       if (this.isDisabled || !this.haveNextCards) return
@@ -93,14 +56,12 @@ export default {
         this.$emit('load-more')
       }
     },
-    hasStats (card) {
-      return (
-        card.attack !== undefined
-        || card.life !== undefined
-        || card.recover !== undefined
-        || card.copies !== undefined
-      )
-    }
   },
 }
 </script>
+
+<style lang="postcss" module>
+.list-columns {
+  grid-template-columns: auto 1fr auto max-content;
+}
+</style>
