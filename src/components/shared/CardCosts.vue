@@ -1,5 +1,5 @@
 <template>
-  <ol :class="[isHorizontal ? $style.horizontal : '']">
+  <ol v-if="costs && costs.length" :class="[isHorizontal ? $style.horizontal : '']">
     <li v-for="(cost, index) of costs" :class="$style.cost" :key="index">
       <span v-if="Array.isArray(cost)" :class="$style['parallel-costs']">
         <span v-for="(splitCost, splitIndex) of cost" :class="$style.cost" :key="splitIndex">
