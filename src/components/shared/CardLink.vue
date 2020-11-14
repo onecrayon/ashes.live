@@ -5,7 +5,9 @@
     ref="link"
     :to="cardTarget"
     @mouseover="showDetails"
-    @mouseleave="closeDetails">{{ card.name }}</router-link>
+    @mouseleave="closeDetails">
+    <slot>{{ card.name }}</slot>
+  </router-link>
   <div ref="popup" class="absolute">
     <div
       v-if="card.is_legacy && areDetailsShowing"
