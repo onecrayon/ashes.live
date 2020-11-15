@@ -66,8 +66,9 @@ export default {
     async showDetails ({ clientX: x, clientY: y }) {
       if (this.loadingDetails) return
       this.loadingDetails = true
-      // If we have more than two keys, that means we have a full details object so we can just render it
-      if (Object.keys(this.card).length > 2) {
+      // If we have more than three keys, that means we have a full details object so we can just render it
+      // (Looking for only two keys could fail for legacy cards)
+      if (Object.keys(this.card).length > 3) {
         this.details = this.card
       } else if (!this.details) {
         // Otherwise, we need to fetch the card details
