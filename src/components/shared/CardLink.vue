@@ -26,8 +26,8 @@
     <card
       v-else-if="areDetailsShowing"
       ref="popup"
-      class="shadow"
-      :card="card"></card>
+      class="shadow text-left text-black"
+      :card="details"></card>
   </div>
 </template>
 
@@ -46,6 +46,8 @@ export default {
   data () {
     return {
       areDetailsShowing: false,
+      loadingDetails: false,
+      details: null,
     }
   },
   computed: {
@@ -62,7 +64,19 @@ export default {
   },
   methods: {
     async showDetails ({ clientX: x, clientY: y }) {
-      // TODO: figure out how to handle card links when we only have the title (might not even have the stub)
+      if (this.loadingDetails) return
+      this.loadingDetails = true
+      // If we have more than two keys, that means we have a full details object so we can just render it
+      if (Object.keys(this.card).length > 2) {
+        this.details = this.card
+      } else if (!this.details) {
+        // Otherwise, we need to fetch the card details
+        // TODO: fetch these from the store instead of always hitting the API!
+        // TODO: figure out how to handle errors
+        const response = await request(`/v2/cards/${this.card.stub}`)
+        this.details = response.data
+      }
+      this.loadingDetails = false
       this.popper = createPopper(this.$refs.link.$el, this.$refs.popup, {
         placement: 'right',
         modifiers: [
