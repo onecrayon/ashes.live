@@ -3,7 +3,7 @@
     class="border border-gray bg-white"
     :class="[$style.card]">
     <div class="bg-gray-light text-gray text-center relative border-b border-gray-light">
-      <i class="fas text-2xl" :class="[typeIcon, $style['center-icon']]"></i>
+      <i class="text-2xl" :class="[typeIcon, $style['center-icon']]"></i>
       <img
         class="relative"
         width="300"

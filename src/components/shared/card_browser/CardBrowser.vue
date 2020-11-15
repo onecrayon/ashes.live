@@ -12,7 +12,10 @@
         v-model:search="filterText"
         :is-disabled="isDisabled"></clearable-search>
     </div>
-    <!-- TODO: implement the rest of the filters -->
+    <type-filter
+      class="mb-4"
+      v-model:filter-list="typeFilterList"
+      :is-disabled="isDisabled"></type-filter>
     <card-table
       :is-disabled="isDisabled"
       :is-phoenixborn-picker="isPhoenixbornPicker"
@@ -28,6 +31,7 @@ import { watch } from 'vue'
 import { useToast } from 'vue-toastification'
 import { debounce, areSetsEqual, trimmed, request } from '/src/utils.js'
 import DiceFilter from './DiceFilter.vue'
+import TypeFilter from './TypeFilter.vue'
 import ClearableSearch from '../ClearableSearch.vue'
 import CardTable from './CardTable.vue'
 
@@ -48,6 +52,7 @@ export default {
       diceFilterLogic: 'any',
       diceFilterList: [],
       filterText: '',
+      typeFilterList: [],
       // This is the list of cards currently shown
       cards: null,
       // This is the URL necessary to load the next "page"
@@ -58,6 +63,7 @@ export default {
     DiceFilter,
     ClearableSearch,
     CardTable,
+    TypeFilter,
   },
   created () {
     /**
@@ -91,6 +97,8 @@ export default {
         if (trimmed(curProps[1]) !== trimmed(firstPreviousProps[1])) return true
         // Check diceFilterList (list of strings)
         if (!areSetsEqual(new Set(curProps[2]), new Set(firstPreviousProps[2]))) return true
+        // Check typeFilterList (list of strings)
+        if (!areSetsEqual(new Set(curProps[3]), new Set(firstPreviousProps[3]))) return true
         return false
       })()
       // We cache the original values in case of failure
@@ -98,6 +106,7 @@ export default {
         filterText: String(trimmed(firstPreviousProps[0])),
         diceFilterLogic: String(firstPreviousProps[1]),
         diceFilterList: Array.from(new Set(firstPreviousProps[2])),
+        typeFilterList: Array.from(new Set(firstPreviousProps[3])),
       }
       // Reset our first previous props before exiting
       firstPreviousProps = null
@@ -115,11 +124,12 @@ export default {
     }, 750)
     watch(
       // All filter properties that can trigger a new API call
-      // DO NOT REORDER THESE! If you do, you must change the indexlogic in `debouncedFilterCall` above
+      // DO NOT REORDER THESE! If you do, you must change the index logic in `debouncedFilterCall` above
       [
         () => this.filterText,
         () => this.diceFilterLogic,
         () => this.diceFilterList,
+        () => this.typeFilterList,
       ],
       (curProps, prevProps) => {
         if (firstPreviousProps === null) {
@@ -143,6 +153,7 @@ export default {
       this.filterText = ''
       this.diceFilterLogic = 'any'
       this.diceFilterList = []
+      this.typeFilterList = []
     },
     /**
      * Perform the actual AJAX call to the API.
@@ -207,6 +218,16 @@ export default {
       if (this.diceFilterList.length) {
         params.dice_logic = this.diceFilterLogic
         params.dice = this.diceFilterList
+      }
+      if (this.typeFilterList.length) {
+        // Clone our array, so we can modify it without messing with the original
+        const filterList = this.typeFilterList.slice(0)
+        const summonIndex = filterList.indexOf('summon')
+        if (summonIndex > -1) {
+          filterList.splice(summonIndex, 1)
+          params.show_summons = true
+        }
+        params.types = filterList
       }
       this.fetchCards({ options: { params }, failureCallback })
     },

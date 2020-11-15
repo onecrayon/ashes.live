@@ -1,6 +1,6 @@
 <template>
   <div class="w-8 text-center p-1 sm:border-b border-gray-light" :title="card.type">
-    <i class="fas" :class="[typeIcon(card)]"></i>
+    <i :class="[typeIcon(card)]"></i>
   </div>
   <div class="p-1 sm:border-b border-gray-light">
     <card-link :card="card"></card-link>

@@ -40,7 +40,7 @@ export default {
     filterList: {
       default: [],
       type: Array,
-    }
+    },
   },
   emits: ['update:filterLogic', 'update:filterList'],
   computed: {
