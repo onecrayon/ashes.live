@@ -21,6 +21,9 @@
       </button>
     </div>
   </div>
+  <div v-else class="text-center text-gray text-2xl py-8 px-4">
+    <i class="fas fa-circle-notch fa-spin"></i> Loading...
+  </div>
 </template>
 
 <script>
