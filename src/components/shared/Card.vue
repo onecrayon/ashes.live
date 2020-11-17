@@ -73,7 +73,7 @@
 
 <script>
 import { typeToFontAwesome } from '/src/constants.js'
-import { parseEffectText } from '/src/utils.js'
+import { debounce, parseEffectText } from '/src/utils.js'
 import CardCodes from './CardCodes.vue'
 import CardCosts from './CardCosts.vue'
 
@@ -88,9 +88,22 @@ export default {
     CardCodes,
     CardCosts,
   },
+  data () {
+    return {
+      showImage: false,
+    }
+  },
+  mounted () {
+    this.scrollCheck()
+    this.debouncedScrollListener = debounce(this.scrollCheck, 100)
+    window.addEventListener('scroll', this.debouncedScrollListener)
+  },
+  beforeUnmount () {
+    window.removeEventListener('scroll', this.debouncedScrollListener)
+  },
   computed: {
     cardImageURL () {
-      return `${import.meta.env.VITE_CDN_URL}/images/slices/${this.card.stub}.jpg`
+      return this.showImage ? `${import.meta.env.VITE_CDN_URL}/images/slices/${this.card.stub}.jpg` : ''
     },
     typeIcon () {
       const typeClass = typeToFontAwesome[this.card.type]
@@ -110,6 +123,17 @@ export default {
         || this.card.recover !== undefined
         || this.card.copies !== undefined
       )
+    },
+  },
+  methods: {
+    scrollCheck () {
+      // Check if our scrolling element is visible or within 100 pixels of being visible
+      const elementBounding = this.$el.getBoundingClientRect()
+      if (elementBounding.top <= window.innerHeight + 100 && elementBounding.bottom >= -100) {
+        this.showImage = true
+      } else {
+        this.showImage = false
+      }
     },
   },
 }

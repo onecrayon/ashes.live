@@ -16,17 +16,25 @@
       class="mb-4"
       v-model:filter-list="typeFilterList"
       :is-disabled="isDisabled"></type-filter>
-    <card-sort
-      class="mb-4"
-      v-model:sort="sort"
-      v-model:order="order"
-      :is-phoenixborn-picker="isPhoenixbornPicker"
-      :is-disabled="isDisabled"></card-sort>
+    <div class="flex flex-no-wrap">
+      <card-sort
+        class="mb-4 flex-auto"
+        v-model:sort="sort"
+        v-model:order="order"
+        :is-phoenixborn-picker="isPhoenixbornPicker"
+        :is-disabled="isDisabled"></card-sort>
+      <gallery-picker
+        v-if="!showLegacy"
+        class="mb-4 flex-none"
+        v-model:gallery-style="galleryStyle"
+        :is-disabled="isDisabled"></gallery-picker>
+    </div>
     <card-table
       :is-disabled="isDisabled"
       :is-phoenixborn-picker="isPhoenixbornPicker"
       :cards="cards"
       :have-next-cards="!!nextCardsURL"
+      :gallery-style="galleryStyle"
       @reset-filters="clearFilters"
       @load-more="loadNext"></card-table>
   </div>
@@ -39,8 +47,9 @@ import { debounce, areSetsEqual, trimmed, request } from '/src/utils.js'
 import DiceFilter from './DiceFilter.vue'
 import TypeFilter from './TypeFilter.vue'
 import ClearableSearch from '../ClearableSearch.vue'
-import CardTable from './CardTable.vue'
 import CardSort from './CardSort.vue'
+import GalleryPicker from './GalleryPicker.vue'
+import CardTable from './CardTable.vue'
 
 export default {
   name: 'CardBrowser',
@@ -62,6 +71,8 @@ export default {
       typeFilterList: [],
       sort: 'name',
       order: 'asc',
+      // This is the style of listing
+      galleryStyle: 'table',
       // This is the list of cards currently shown
       cards: null,
       // This is the URL necessary to load the next "page"
@@ -71,9 +82,10 @@ export default {
   components: {
     DiceFilter,
     ClearableSearch,
-    CardTable,
     TypeFilter,
     CardSort,
+    GalleryPicker,
+    CardTable,
   },
   created () {
     /**

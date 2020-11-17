@@ -7,8 +7,11 @@
     </p>
   </div>
   <div v-else-if="cards && cards.length">
-    <div class="grid gap-0" :class="[$style['list-columns']]">
+    <div v-if="galleryStyle === 'table'" class="grid gap-0" :class="[$style['list-columns']]">
       <card-table-row v-for="card of cards" :key="card.stub" :card="card"></card-table-row>
+    </div>
+    <div v-else class="grid gap-4 grid-flow-row auto-cols-auto" :class="[$style['card-columns']]">
+      <card v-for="card of cards" :key="card.stub" :card="card"></card>
     </div>
     <div v-show="haveNextCards" class="my-4 text-center" ref="scrollLoader">
       <button class="btn btn-blue py-2 px-4" :disabled="isDisabled" @click="$emit('load-more')">
@@ -29,6 +32,7 @@
 <script>
 import { debounce } from '/src/utils.js'
 import CardTableRow from './CardTableRow.vue'
+import Card from '../Card.vue'
 
 export default {
   name: 'CardTable',
@@ -37,10 +41,12 @@ export default {
     isDisabled: Boolean,
     cards: Array,
     haveNextCards: Boolean,
+    galleryStyle: String,
   },
   emits: ['reset-filters', 'load-more'],
   components: {
     CardTableRow,
+    Card,
   },
   mounted () {
     this.debouncedScrollListener = debounce(this.scrollLoadCheck, 100)
@@ -66,5 +72,9 @@ export default {
 <style lang="postcss" module>
 .list-columns {
   grid-template-columns: auto 1fr auto max-content;
+}
+
+.card-columns {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 </style>
