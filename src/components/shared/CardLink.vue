@@ -8,7 +8,7 @@
     @mouseleave="closeDetails">
     <slot>{{ card.name }}</slot>
   </router-link>
-  <div ref="popup" class="absolute">
+  <div ref="popup" class="absolute z-50">
     <div
       v-if="card.is_legacy && areDetailsShowing"
       class="border-8 border-gray-light bg-gray-light text-gray rounded-lg shadow relative"
