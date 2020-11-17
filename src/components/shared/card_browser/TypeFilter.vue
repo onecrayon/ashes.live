@@ -12,7 +12,7 @@
       :disabled="isDisabled"
       :title="curType[0]"
       @click="toggleType(curType[1])">
-      <i :class="typeIcon(curType[0])"></i> <span class="hidden lg:inline">{{ curType[0].split(' ')[0] }}</span>
+      <i :class="typeIcon(curType[0])"></i> <span class="hidden xl:inline">{{ curType[0].split(' ')[0] }}</span>
     </button>
   </div>
 </template>

@@ -16,15 +16,15 @@
       </card-link>
     </div>
     <div v-if="hasStats(card)" class="px-2">
-      <span v-if="card.attack !== undefined || card.battlefield !== undefined" class="text-red-light">
+      <span v-if="card.attack !== undefined || card.battlefield !== undefined" class="text-red-light font-bold">
         {{ card.attack || card.battlefield || '0' }}
       </span>
       <span v-else>&ndash;</span> /
-      <span v-if="card.life !== undefined" class="text-green-light">
+      <span v-if="card.life !== undefined" class="text-green-light font-bold">
         {{ card.life || '0' }}
       </span>
       <span v-else>&ndash;</span> /
-      <span v-if="card.recover !== undefined || card.spellboard !== undefined" class="text-blue-dark">
+      <span v-if="card.recover !== undefined || card.spellboard !== undefined" class="text-blue-dark font-bold">
         {{ card.recover || card.spellboard || '0' }}
       </span>
       <span v-else>&ndash;</span>

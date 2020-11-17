@@ -16,6 +16,12 @@
       class="mb-4"
       v-model:filter-list="typeFilterList"
       :is-disabled="isDisabled"></type-filter>
+    <card-sort
+      class="mb-4"
+      v-model:sort="sort"
+      v-model:order="order"
+      :is-phoenixborn-picker="isPhoenixbornPicker"
+      :is-disabled="isDisabled"></card-sort>
     <card-table
       :is-disabled="isDisabled"
       :is-phoenixborn-picker="isPhoenixbornPicker"
@@ -34,6 +40,7 @@ import DiceFilter from './DiceFilter.vue'
 import TypeFilter from './TypeFilter.vue'
 import ClearableSearch from '../ClearableSearch.vue'
 import CardTable from './CardTable.vue'
+import CardSort from './CardSort.vue'
 
 export default {
   name: 'CardBrowser',
@@ -53,6 +60,8 @@ export default {
       diceFilterList: [],
       filterText: '',
       typeFilterList: [],
+      sort: 'name',
+      order: 'asc',
       // This is the list of cards currently shown
       cards: null,
       // This is the URL necessary to load the next "page"
@@ -64,6 +73,7 @@ export default {
     ClearableSearch,
     CardTable,
     TypeFilter,
+    CardSort,
   },
   created () {
     /**
@@ -99,6 +109,8 @@ export default {
         if (!areSetsEqual(new Set(curProps[2]), new Set(firstPreviousProps[2]))) return true
         // Check typeFilterList (list of strings)
         if (!areSetsEqual(new Set(curProps[3]), new Set(firstPreviousProps[3]))) return true
+        if (curProps[4] !== firstPreviousProps[4]) return true
+        if (curProps[5] !== firstPreviousProps[5]) return true
         return false
       })()
       // We cache the original values in case of failure
@@ -107,6 +119,8 @@ export default {
         diceFilterLogic: String(firstPreviousProps[1]),
         diceFilterList: Array.from(new Set(firstPreviousProps[2])),
         typeFilterList: Array.from(new Set(firstPreviousProps[3])),
+        sort: firstPreviousProps[4],
+        order: firstPreviousProps[5],
       }
       // Reset our first previous props before exiting
       firstPreviousProps = null
@@ -130,6 +144,8 @@ export default {
         () => this.diceFilterLogic,
         () => this.diceFilterList,
         () => this.typeFilterList,
+        () => this.sort,
+        () => this.order,
       ],
       (curProps, prevProps) => {
         if (firstPreviousProps === null) {
@@ -208,6 +224,8 @@ export default {
       // Query our list of cards
       const params = {
         'limit': 50,
+        'sort': this.sort,
+        'order': this.order,
       }
       // Show legacy cards, if necessary
       if (this.showLegacy) {
