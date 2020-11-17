@@ -11,7 +11,7 @@
   </div>
   <div class="py-1 sm:border-b sm:border-r border-gray-light text-gray-light text-right">
     <div v-if="card.conjurations && card.conjurations.length" class="px-2">
-      <card-link v-for="conjuration of card.conjurations" :key="conjuration.stub" :card="conjuration">
+      <card-link v-for="conjuration of card.conjurations" :key="conjuration.stub" :card="legacyConjuration(conjuration)">
         <i class="fas fa-plus-square"></i>
       </card-link>
     </div>
@@ -63,6 +63,14 @@ export default {
         || card.recover !== undefined
         || card.copies !== undefined
       )
+    },
+    legacyConjuration (conjuration) {
+      // Ensures that we have the `is_legacy` flag in the conjuration if the card is a legacy card
+      if (!this.card.is_legacy) return conjuration
+      return {
+        is_legacy: true,
+        ...conjuration
+      }
     },
   }
 }
