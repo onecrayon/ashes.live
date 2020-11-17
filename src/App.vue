@@ -11,7 +11,7 @@
         <li
           class="col-start-1 row-start-2 justify-self-start md:row-start-1"
           :class="[useFullHeader ? 'lg:justify-self-end' : '']">
-          <router-link to="/decks" class="inline-block text-black leading-tight">
+          <router-link to="/decks/" class="inline-block text-black leading-tight">
             <i
               class="phg-main-action phg-standalone text-2xl pr-2 inline-block"
               :class="[useFullHeader ? 'lg:block lg:pr-0' : '']"></i>
@@ -21,7 +21,7 @@
         <li
           class="col-start-3 row-start-2 justify-self-end md:row-start-1"
           :class="[useFullHeader ? 'lg:justify-self-start' : '']">
-          <router-link to="/cards" class="inline-block text-black leading-tight">
+          <router-link to="/cards/" class="inline-block text-black leading-tight">
             <i
               class="phg-side-action phg-standalone text-2xl pr-2 inline-block"
               :class="[useFullHeader ? 'lg:block lg:pr-0' : '']"></i>

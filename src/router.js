@@ -14,13 +14,13 @@ export default createRouter({
       component: Home,
     },
     {
-      path: '/cards',
+      path: '/cards/',
       name: 'Cards',
       component: CardListing,
       meta: { title: 'Browse Cards' },
     },
     {
-      path: '/cards/legacy',
+      path: '/cards/legacy/',
       name: 'LegacyCards',
       component: CardListing,
       meta: {
@@ -29,19 +29,19 @@ export default createRouter({
       },
     },
     {
-      path: '/cards/:stub',
+      path: '/cards/:stub/',
       name: 'CardDetails',
       component: CardDetails,
       props: true
     },
     {
-      path: '/cards/legacy/:stub',
+      path: '/cards/legacy/:stub/',
       name: 'CardDetailsLegacy',
       component: CardDetails,
       props: true,
     },
     {
-      path: '/decks',
+      path: '/decks/',
       name: 'Decks',
       component: DeckListing,
     },
