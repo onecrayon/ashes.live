@@ -2,7 +2,7 @@
   "name": "Ashes.live",
   "description": "Frontend application for a fan-developed deckbuilder and community website for the card game Ashes Reborn",
   "license": "ISC",
-  "repository": "https://github.com/onecrayon/ashes.live-static",
+  "repository": "https://github.com/onecrayon/ashes.live",
   "version": "0.1.0",
   "scripts": {
     "dev": "vite",
