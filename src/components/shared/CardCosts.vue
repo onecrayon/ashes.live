@@ -2,17 +2,19 @@
   <ol v-if="costs && costs.length" :class="[isHorizontal ? $style.horizontal : '']">
     <li v-for="(cost, index) of costs" :class="$style.cost" :key="index">
       <span v-if="Array.isArray(cost)" :class="$style['parallel-costs']">
-        <span v-for="(splitCost, splitIndex) of cost" :class="$style.cost" :key="splitIndex">
-          <card-codes :content="splitCost"></card-codes>
-        </span>
+        <span
+          v-for="(splitCost, splitIndex) of cost"
+          :class="$style.cost"
+          :key="splitIndex"
+          v-html="parseCardText(splitCost)"></span>
       </span>
-      <card-codes v-else :content="cost"></card-codes>
+      <span v-else v-html="parseCardText(cost)"></span>
     </li>
   </ol>
 </template>
 
 <script>
-import CardCodes from './CardCodes.vue'
+import { parseCardText } from '/src/utils.js'
 
 export default {
   name: 'CardCosts',
@@ -25,7 +27,9 @@ export default {
       default: false,
     }
   },
-  components: { CardCodes, },
+  methods: {
+    parseCardText,
+  },
 }
 </script>
 

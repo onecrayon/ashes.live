@@ -34,7 +34,7 @@
 <script>
 import { createPopper } from '@popperjs/core'
 import { request } from '/src/utils.js'
-import Card from './Card.vue'
+import Card from '../shared/Card.vue'
 
 export default {
   name: 'CardLink',

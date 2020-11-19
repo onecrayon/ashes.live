@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import Toast from 'vue-toastification'
 import router from './router.js'
 import App from './App.vue'
+import CardLink from '/src/components/global/CardLink.vue'
 // And import styles
 import 'vue-toastification/dist/index.css'
 import './index.css'
@@ -33,6 +34,10 @@ const toastOptions = {
 }
 
 const vue = createApp(App)
+// CardLink needs to be a global component because otherwise circular imports break things
+vue.component('card-link', CardLink)
+// Setup plug-ins
 vue.use(router)
 vue.use(Toast, toastOptions)
+// And finally mount up and get running!
 vue.mount('#app')

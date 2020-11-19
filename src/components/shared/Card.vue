@@ -40,10 +40,11 @@
         </div>
         <div v-if="card.text">
           <hr v-if="!isPhoenixborn" class="my-2 border-gray-light">
-          <div
-            v-html="parsedEffects"
-            class="leading-snug"
-            :class="$style['effect-text']"></div>
+          <div class="leading-snug" :class="$style['effect-text']">
+            <card-codes
+              :content="card.text"
+              is-card-effect></card-codes>
+          </div>
         </div>
         <div v-if="hasStats && !isPhoenixborn" class="text-center my-2 clear-fix">
           <!-- Placeholders ensure that our stats are always in about the same locations -->
@@ -73,7 +74,7 @@
 
 <script>
 import { typeToFontAwesome } from '/src/constants.js'
-import { debounce, parseEffectText } from '/src/utils.js'
+import { debounce } from '/src/utils.js'
 import CardCodes from './CardCodes.vue'
 import CardCosts from './CardCosts.vue'
 
@@ -108,9 +109,6 @@ export default {
     typeIcon () {
       const typeClass = typeToFontAwesome[this.card.type]
       return typeClass ? typeClass : 'fa-question-circle'
-    },
-    parsedEffects () {
-      return parseEffectText(this.card.text)
     },
     isPhoenixborn () {
       return this.card.type === 'Phoenixborn'

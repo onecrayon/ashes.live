@@ -143,7 +143,8 @@ export function parseCardText (text, ensureParagraphs=false) {
     } else if (secondary) {
       return `<i>${lowerPrimary} ${secondary}</i>`
     } else {
-      return `<strong data-stub="${lowerPrimary.replace(/ +/g, '-')}">${primary}</strong>`
+      // TODO: figure out how to support legacy links here
+      return `<card-link :card="{name: '${primary}', stub: '${lowerPrimary.replace(/ +/g, '-')}'}"></card-link>`
     }
     return `<i class="phg-${lowerPrimary}-${secondary}" title="${primary}${secondary ? ' ' + secondary : ''}"><span class="alt-text">${input}</span></i>`
   })
@@ -160,6 +161,7 @@ export function parseCardText (text, ensureParagraphs=false) {
     .replace(/<\/li>\n+<li>/g, '</li><li>')
     .replace(/<\/li>\n+<\/ul>/g, '</li></ul>\n')
     .replace(/<\/li><\/ul>\n+<li>|<\/li>\n+<ul><li>/g, '</li><li>')
+    .replace(/<\/li>$/, '</li></ul>')
   // ~ ordered list item (not typically used for posts, but allows easy conversion between post
   //  syntax and card syntax)
   // Routes through fake element `<oli>` to ensure that we don't screw with unordered lists
@@ -170,6 +172,7 @@ export function parseCardText (text, ensureParagraphs=false) {
     .replace(/<\/oli>\n+<\/ol>/g, '</oli></ol>\n')
     .replace(/<\/oli><\/ol>\n+<oli>|<\/oli>\n+<ol><oli>/g, '</oli><oli>')
     .replace(/<(\/?)oli>/g, '<$1li>')
+    .replace(/<\/oli>$/, '</oli></ol>')
   // Fix single linebreaks after a block level element (these break the paragraph logic further down)
   text = text.replace(/(<\/(?:blockquote|ul|ol)>\n)(?=[^\n])/g, '$1\n')
   // lone star: *
@@ -184,16 +187,18 @@ export function parseCardText (text, ensureParagraphs=false) {
   text = text.replace(/\*([^*\n\r]+)\*/g, '<i>$1</i>')
   // Check if we need to further process into paragraphs
   const paragraphs = text.trim().split(/(?:\r\n|\r|\n){2,}/)
-  if (paragraphs.length === 1) return ensureParagraphs ? `<p>${text}</p>` : text
+  if (paragraphs.length === 1 && !/^<(?:ul|ol|blockquote)>/.test(paragraphs)) {
+    return ensureParagraphs ? `<p>${text}</p>` : text
+  }
   const composedParagraphs = []
   paragraphs.forEach(paragraph => {
     paragraph = paragraph.replace('\n', '<br>\n')
     composedParagraphs.push(`<p>${paragraph}</p>`)
   })
   text = composedParagraphs.join('\n\n')
-  // Correct wrapped lists and blockquotes
-  text = text.replace(/<p>((?:<blockquote>)?<ul>)/g, '$1')
-    .replace(/(<\/ul>(?:<\/blockquote>)?)<\/p>/g, '$1')
+  // Correct wrapped lists, blockquotes, and divs
+  text = text.replace(/<p>((?:<blockquote>)?<(?:u|o)l>)/g, '$1')
+    .replace(/(<\/(?:u|o)l>(?:<\/blockquote>)?)<\/p>/g, '$1')
     .replace('<p><blockquote>', '<blockquote><p>')
     .replace('</blockquote></p>', '</p></blockquote>')
   // Automatically center lone images

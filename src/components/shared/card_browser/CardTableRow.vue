@@ -38,7 +38,6 @@
 <script>
 import { typeToFontAwesome } from '/src/constants.js'
 import CardCosts from '../CardCosts.vue'
-import CardLink from '../CardLink.vue'
 
 export default {
   name: 'CardTableRow',
@@ -49,7 +48,6 @@ export default {
   },
   components: {
     CardCosts,
-    CardLink,
   },
   methods: {
     typeIcon (card) {
