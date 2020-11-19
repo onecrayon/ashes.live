@@ -7,7 +7,7 @@
     </p>
   </div>
   <div v-else-if="cards && cards.length">
-    <div v-if="galleryStyle === 'table'" class="grid gap-0" :class="[$style['list-columns']]">
+    <div v-if="galleryStyle === 'list'" class="grid gap-0" :class="[$style['list-columns']]">
       <card-table-row v-for="card of cards" :key="card.stub" :card="card"></card-table-row>
     </div>
     <div v-else class="grid gap-4 grid-flow-row auto-cols-auto" :class="[$style['card-columns']]">

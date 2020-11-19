@@ -2,17 +2,17 @@
   <div class="flex flex-wrap-none text-sm">
     <button
       class="btn btn-first py-1 px-2"
-      :class="{active: galleryStyle === 'table'}"
+      :class="{active: galleryStyle === 'list'}"
       title="List view"
       :disabled="isDisabled"
-      @click="$emit('update:galleryStyle', 'table')">
+      @click="$emit('update:galleryStyle', 'list')">
       <i class="fas fa-bars"></i>
     </button><button
       class="btn btn-last py-1 px-2"
-      title="Card view"
-      :class="{active: galleryStyle === 'cards'}"
+      title="Binder view"
+      :class="{active: galleryStyle === 'binder'}"
       :disabled="isDisabled"
-      @click="$emit('update:galleryStyle', 'cards')">
+      @click="$emit('update:galleryStyle', 'binder')">
       <i class="fas fa-th"></i>
     </button>
   </div>

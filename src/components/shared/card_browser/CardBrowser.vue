@@ -72,7 +72,7 @@ export default {
       sort: 'name',
       order: 'asc',
       // This is the style of listing
-      galleryStyle: 'table',
+      galleryStyle: 'list',
       // This is the list of cards currently shown
       cards: null,
       // This is the URL necessary to load the next "page"
