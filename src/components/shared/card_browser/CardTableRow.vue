@@ -10,12 +10,12 @@
     <span v-if="card.release.is_phg === false" class="text-gray pl-1">†</span>
   </div>
   <div class="py-1 sm:border-b sm:border-r border-gray-light text-gray-light text-right">
-    <div v-if="card.conjurations && card.conjurations.length" class="px-2">
+    <div v-if="card.conjurations && card.conjurations.length" class="px-2 inline-block">
       <card-link v-for="conjuration of card.conjurations" :key="conjuration.stub" :card="legacyConjuration(conjuration)">
         <i class="fas fa-plus-square"></i>
       </card-link>
     </div>
-    <div v-if="hasStats(card)" class="px-2">
+    <div v-if="hasStats(card)" class="px-2 inline-block">
       <span v-if="card.attack !== undefined || card.battlefield !== undefined" class="text-red-light font-bold">
         {{ card.attack || card.battlefield || '0' }}
       </span>
