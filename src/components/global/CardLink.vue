@@ -1,14 +1,14 @@
 <template>
-  <!-- TODO: figure out how to show details instead of visiting page in touch environments -->
   <router-link
     class="font-bold text-black"
     ref="link"
     :to="cardTarget"
     @mouseover="showDetails"
-    @mouseleave="closeDetails">
+    @mouseleave="closeDetails"
+    @click="linkClick">
     <slot>{{ card.name }}</slot>
   </router-link>
-  <div ref="popup" class="absolute z-50">
+  <div ref="popup" class="absolute z-50" @mouseleave="closeDetails">
     <div
       v-if="card.is_legacy && areDetailsShowing"
       class="border-8 border-gray-light bg-gray-light text-gray rounded-lg shadow relative"
@@ -63,7 +63,19 @@ export default {
     },
   },
   methods: {
-    async showDetails ({ clientX: x, clientY: y }) {
+    linkClick (event) {
+      event.preventDefault()
+      event.stopPropagation()
+      if (this.areDetailsShowing) {
+        // If we already have the details showing, then do the default behavior
+        return this.$router.push(this.cardTarget)
+      }
+      // Looks like someone's impatient...
+      if (this.loadingDetails) return
+      // TODO: figure out how to handle "click anywhere else to close" behavior
+      this.showDetails()
+    },
+    async showDetails () {
       if (this.loadingDetails) return
       this.loadingDetails = true
       // If we have more than three keys, that means we have a full details object so we can just render it
@@ -116,9 +128,15 @@ export default {
         this.popper.forceUpdate()
       })
     },
-    closeDetails () {
-      this.areDetailsShowing = false
-      this.popper.destroy()
+    closeDetails (event) {
+      if (this.checkCloseTimeout) clearTimeout(this.checkCloseTimeout)
+      // Delay our close check to allow them time to move into the hovering element
+      this.checkCloseTimeout = setTimeout(() => {
+        // Don't close if we're still over either the link or the popup
+        if (this.$refs.link.$el.matches(':hover') || this.$refs.popup.matches(':hover')) return
+        this.areDetailsShowing = false
+        this.popper.destroy()
+      }, 100)
     },
   },
 }
