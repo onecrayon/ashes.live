@@ -78,7 +78,7 @@ export function trimmed(stringOrFalsey) {
  *
  * @param {string} text
  */
-export function parseCardText (text, ensureParagraphs=false) {
+export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
   // First make sure that we don't have any HTML in our string; no XSS, thanks
   const unescapedHTML = /[&<"']/g
   const escapeMap = {
@@ -143,7 +143,9 @@ export function parseCardText (text, ensureParagraphs=false) {
     } else if (secondary) {
       return `<i>${lowerPrimary} ${secondary}</i>`
     } else {
-      // TODO: figure out how to support legacy links here
+      if (isLegacy) {
+        return `<card-link :card="{name: '${primary}', stub: '${lowerPrimary.replace(/ +/g, '-')}', is_legacy: true}"></card-link>`
+      }
       return `<card-link :card="{name: '${primary}', stub: '${lowerPrimary.replace(/ +/g, '-')}'}"></card-link>`
     }
     return `<i class="phg-${lowerPrimary}-${secondary}" title="${primary}${secondary ? ' ' + secondary : ''}"><span class="alt-text">${input}</span></i>`
@@ -217,8 +219,8 @@ export function parseCardText (text, ensureParagraphs=false) {
  *
  * @param {str} text Card effect text to parse
  */
-export function parseEffectText (text) {
-  text = parseCardText(text, true)
+export function parseEffectText (text, isLegacy=false) {
+  text = parseCardText(text, true, isLegacy)
   // Convert lists to inexhaustible and blue blocks
   text = text.replace('<ul>', '<div class="inexhaustible-effects">')
     .replace('<ol>', '<div class="reaction-effects">')
