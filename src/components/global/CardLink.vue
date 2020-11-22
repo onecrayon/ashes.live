@@ -50,6 +50,10 @@ export default {
       details: null,
     }
   },
+  beforeUnmount () {
+    // Ensure that we don't have any lingering listeners
+    this.cleanupEventListeners()
+  },
   computed: {
     cardTarget () {
       const routeName = !this.card.is_legacy ? 'CardDetails' : 'CardDetailsLegacy'
@@ -72,8 +76,8 @@ export default {
       }
       // Looks like someone's impatient...
       if (this.loadingDetails) return
-      // TODO: figure out how to handle "click anywhere else to close" behavior
       this.showDetails()
+      document.addEventListener('click', this.closeOnClick, true)
     },
     async showDetails () {
       if (this.loadingDetails) return
@@ -137,6 +141,20 @@ export default {
         this.areDetailsShowing = false
         this.popper.destroy()
       }, 100)
+    },
+    closeOnClick (event) {
+      // If the click was outside our open element, then close the popper
+      if (!this.$refs.link.$el.contains(event.target) && !this.$refs.popup.contains(event.target)) {
+        event.stopPropagation()
+        event.preventDefault()
+        this.areDetailsShowing = false
+        this.popper.destroy()
+        this.cleanupEventListeners()
+      }
+      // Otherwise, just leave things well enough alone
+    },
+    cleanupEventListeners () {
+      document.removeEventListener('click', this.closeOnClick, true)
     },
   },
 }
