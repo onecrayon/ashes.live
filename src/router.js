@@ -32,18 +32,22 @@ export default createRouter({
       path: '/cards/:stub/',
       name: 'CardDetails',
       component: CardDetails,
-      props: true
+      props: true,
     },
     {
       path: '/cards/legacy/:stub/',
       name: 'CardDetailsLegacy',
       component: CardDetails,
       props: true,
+      meta: {
+        showLegacy: true,
+      }
     },
     {
       path: '/decks/',
       name: 'Decks',
       component: DeckListing,
+      meta: { title: 'Decks' },
     },
     {
       path: '/:pathMatch(.*)*',

@@ -29,6 +29,6 @@ export default {
     showLegacy () {
       return !!this.$route.meta.showLegacy
     }
-  }
+  },
 }
 </script>
