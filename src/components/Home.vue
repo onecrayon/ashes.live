@@ -12,7 +12,7 @@
       <h3 class="font-bold my-4">Community</h3>
 
       <ul class="list-disc pl-4">
-        <li><a href="https://discord.gg/UU5bduq">Community Discord</a> <span class="text-gray">(TTS matchmaking + general discussion)</span>
+        <li><a href="https://discord.gg/UU5bduq">Community Discord</a> <span class="text-gray">(TTS matchmaking + general discussion)</span></li>
         <li><a href="https://www.reddit.com/r/AshesGame/">Ashes on reddit</a></li>
         <li><a href="https://boardgamegeek.com/boardgame/167400/ashes-rise-phoenixborn/forums/0">Ashes on BoardGameGeek</a></li>
       </ul>
@@ -27,7 +27,7 @@
 
       <ul class="list-disc pl-4">
         <li><a href="https://cdn.ashes.live/legacy/files/ashes-core-rules.pdf">Legacy Rules</a> <span class="text-gray">(PDF)</span></li>
-        <li><a href="https://cdn.ashes.live/legacy/files/ashes-raven-rules.pdf">Raven Rules</a> <span class="text-gray">(PDF; fan-made replacement for official FAQ)</span>
+        <li><a href="https://cdn.ashes.live/legacy/files/ashes-raven-rules.pdf">Raven Rules</a> <span class="text-gray">(PDF; fan-made replacement for official FAQ)</span></li>
         <li><a href="https://cdn.ashes.live/legacy/files/ashes-rules-reference.pdf">Legacy Rules Reference</a> <span class="text-gray">(PDF; all official rules, one document)</span></li>
         <li><a href="https://steamcommunity.com/sharedfiles/filedetails/?id=1717839303">TableTop Simulator: Ashes Custom Workshop</a> <span class="text-gray">(legacy TTS mod; includes Project Phoenix fan-made content)</span></li>
       </ul>
