@@ -70,7 +70,7 @@
         </li>
       </ul>
 
-      <p>If you a web developer interested in contributing, please <a href="https://github.com/onecrayon/ashes.live">visit the GitHub repo</a>.</p>
+      <p>If you are a web developer interested in contributing, please <a href="https://github.com/onecrayon/ashes.live">visit the GitHub repo</a>.</p>
     </div>
   </div>
 </template>
