@@ -17,9 +17,12 @@
     <div class="md:flex md:flex-no-wrap">
       <div class="md:flex-none md:mr-8 mb-8">
         <img
+          class="bg-gray-light"
           :class="[!showLegacy ? 'rounded-lg shadow-lg' : '']"
           :src="imageURL"
-          alt="">
+          alt=""
+          width="300"
+          height="420">
       </div>
       <div class="md:flex-grow">
         <h2 class="mt-6">Card text</h2>
