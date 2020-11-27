@@ -11,7 +11,7 @@
       <card-table-row v-for="card of cards" :key="card.stub" :card="card"></card-table-row>
     </div>
     <div v-else class="grid gap-4 grid-flow-row auto-cols-auto" :class="[$style['card-columns']]">
-      <card v-for="card of cards" :key="card.stub" :card="card" is-name-linked></card>
+      <card v-for="card of cards" :key="card.stub" :card="card"></card>
     </div>
     <div v-show="haveNextCards" class="my-4 text-center" ref="scrollLoader">
       <button class="btn btn-blue py-2 px-4" :disabled="isDisabled" @click="$emit('load-more')">
