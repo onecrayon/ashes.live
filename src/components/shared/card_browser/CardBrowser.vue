@@ -26,7 +26,6 @@
       <gallery-picker
         v-if="!showLegacy"
         class="mb-4 flex-none"
-        v-model:gallery-style="galleryStyle"
         :is-disabled="isDisabled"></gallery-picker>
     </div>
     <card-table
@@ -71,8 +70,6 @@ export default {
       typeFilterList: [],
       sort: 'name',
       order: 'asc',
-      // This is the style of listing
-      galleryStyle: 'list',
       // This is the list of cards currently shown
       cards: null,
       // This is the URL necessary to load the next "page"
@@ -173,6 +170,12 @@ export default {
   unmounted () {
     // Cancel pending debounces, if necessary
     this.debouncedFilterCall.cancel()
+  },
+  computed: {
+    galleryStyle () {
+      if (this.showLegacy) return 'list'
+      return this.$store.state.options.galleryStyle
+    }
   },
   methods: {
     // Clear out filters; this will automatically cause the card listing to be refreshed due to the

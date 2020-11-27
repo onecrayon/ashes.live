@@ -5,14 +5,14 @@
       :class="{active: galleryStyle === 'list'}"
       title="List view"
       :disabled="isDisabled"
-      @click="$emit('update:galleryStyle', 'list')">
+      @click="galleryStyle = 'list'">
       <i class="fas fa-bars"></i>
     </button><button
       class="btn btn-last py-1 px-2"
       title="Binder view"
       :class="{active: galleryStyle === 'binder'}"
       :disabled="isDisabled"
-      @click="$emit('update:galleryStyle', 'binder')">
+      @click="galleryStyle = 'binder'">
       <i class="fas fa-th"></i>
     </button>
   </div>
@@ -26,11 +26,16 @@ export default {
       type: Boolean,
       default: false,
     },
-    galleryStyle: {
-      type: String,
-      default: 'table',
-    },
   },
-  emits: ['update:galleryStyle'],
+  computed: {
+    galleryStyle: {
+      get () {
+        return this.$store.state.options.galleryStyle
+      },
+      set (value) {
+        this.$store.commit('options/setGalleryStyle', value)
+      }
+    }
+  },
 }
 </script>

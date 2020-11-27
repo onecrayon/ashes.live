@@ -15,7 +15,8 @@
       <card-costs class="p-2 float-right text-right" :costs="card.cost"></card-costs>
       <div class="px-2 py-px text-xs">
         <p class="m-0 font-bold text-lg">
-          {{ card.name }}
+          <router-link v-if="isNameLinked" :to="linkTarget" class="text-black">{{ card.name }}</router-link>
+          <span v-else>{{ card.name }}</span>
           <span v-if="card.phoenixborn" class="text-gray font-normal" :title="card.phoenixborn">
             ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
           </span>
@@ -84,6 +85,10 @@ export default {
     card: {
       required: true,
     },
+    isNameLinked: {
+      type: Boolean,
+      default: false,
+    }
   },
   components: {
     CardCodes,
@@ -121,6 +126,13 @@ export default {
         || this.card.recover !== undefined
         || this.card.copies !== undefined
       )
+    },
+    linkTarget () {
+      const routeName = !this.card.is_legacy ? 'CardDetails' : 'CardDetailsLegacy'
+      return {
+        name: routeName,
+        params: { stub: this.card.stub },
+      }
     },
   },
   methods: {
