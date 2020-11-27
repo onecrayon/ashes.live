@@ -1,9 +1,9 @@
 /**
  * cards Vuex store
- * 
+ *
  * This store caches basic card details over the course of a single session, ensuring that a
  * minimum of lookups to the server is necessary to display card hovers.
- * 
+ *
  * Only save Reborn (non-legacy) cards because legacy cards simply show the card image on hover.
  */
 
@@ -29,7 +29,8 @@ const actions = {
         commit('addCard', card)
         resolve(card)
       }).catch(() => {
-        this._vm.toast.error(`Unable to load data for ${card.name ? card.name : card.stub}!`)
+        // TODO: figure out how to send this to a toast
+        //toast.error(`Unable to load data for ${card.name ? card.name : card.stub}!`)
         reject()
       })
     })
