@@ -50,6 +50,11 @@ import CardSort from './CardSort.vue'
 import GalleryPicker from './GalleryPicker.vue'
 import CardTable from './CardTable.vue'
 
+function ensureArray (value) {
+  if (value === undefined) return []
+  return Array.isArray(value) ? value : [value]
+}
+
 export default {
   name: 'CardBrowser',
   props: {
@@ -107,15 +112,13 @@ export default {
       this.filterText = this.$route.query.q
     }
     if (this.$route.query.dice) {
-      const dice = this.$route.query.dice
-      this.diceFilterList = Array.isArray(dice) ? dice : [dice]
+      this.diceFilterList = ensureArray(this.$route.query.dice)
     }
     if (this.$route.query.dice_logic !== 'any') {
       this.diceFilterLogic = this.$route.query.dice_logic
     }
     if (this.$route.query.types) {
-      const types = this.$route.query.types
-      this.typeFilterList = Array.isArray(types) ? types : [types]
+      this.typeFilterList = ensureArray(this.$route.query.types)
     }
     if (this.$route.query.sort) {
       this.sort = this.$route.query.sort
@@ -192,6 +195,34 @@ export default {
   unmounted () {
     // Cancel pending debounces, if necessary
     this.debouncedFilterCall.cancel()
+  },
+  watch: {
+    '$route.query' (to, from) {
+      // TODO: Figure out a better way to handle this; this code gets called extraneously every
+      // time the query string is updated (even when we're updating due to in-page controls).
+      // I tried to use beforeRouteUpdate guard, but it never triggered on query string changes.
+      // Checking for `this.isDisabled` doesn't work because the timing doesn't line up.
+
+      // Make sure to update our filters if we navigate here via browser back/forward
+      if (to.q !== from.q) {
+        this.filterText = to.q === undefined ? '' : to.q
+      }
+      if (to.dice_logic !== from.dice_logic) {
+        this.diceFilterLogic = to.dice_logic === undefined ? 'any' : to.dice_logic
+      }
+      if (to.dice !== from.dice) {
+        this.diceFilterList = ensureArray(to.dice)
+      }
+      if (to.types !== from.types) {
+        this.typeFilterList = ensureArray(to.types)
+      }
+      if (to.sort !== from.sort) {
+        this.sort = to.sort === undefined ? 'name' : to.sort
+      }
+      if (to.order !== from.order) {
+        this.order = to.order === undefined ? 'asc' : to.order
+      }
+    },
   },
   computed: {
     galleryStyle () {
