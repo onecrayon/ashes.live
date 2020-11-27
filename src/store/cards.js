@@ -1,9 +1,17 @@
+/**
+ * cards Vuex store
+ * 
+ * This store caches basic card details over the course of a single session, ensuring that a
+ * minimum of lookups to the server is necessary to display card hovers.
+ * 
+ * Only save Reborn (non-legacy) cards because legacy cards simply show the card image on hover.
+ */
+
 import { request } from '/src/utils.js'
 
 // Initial state
 const state = () => ({
   stubMap: {},
-  legacyStubMap: {},
 })
 
 // Getters
@@ -13,15 +21,10 @@ const getters = {}
 const actions = {
   fetchCard ({ commit, state }, partialCard) {
     return new Promise((resolve, reject) => {
-      const stubMap = partialCard.is_legacy ? state.legacyStubMap : state.stubMap
       // Exit with stored version, if we already have it
-      if (stubMap[partialCard.stub]) return resolve(stubMap[partialCard.stub])
+      if (state.stubMap[partialCard.stub]) return resolve(state.stubMap[partialCard.stub])
       // Otherwise, fetch the card
-      request(`/v2/cards/${partialCard.stub}`, {
-        params: {
-          show_legacy: !!partialCard.is_legacy,
-        }
-      }).then(response => {
+      request(`/v2/cards/${partialCard.stub}`).then(response => {
         const card = response.data
         commit('addCard', card)
         resolve(card)
@@ -36,19 +39,11 @@ const actions = {
 // Mutations
 const mutations = {
   addCard (state, card) {
-    if (card.is_legacy) {
-      state.legacyStubMap[card.stub] = card
-    } else {
-      state.stubMap[card.stub] = card
-    }
+    state.stubMap[card.stub] = card
   },
   addCards (state, cards) {
     for (const card of cards) {
-      if (card.is_legacy) {
-        state.legacyStubMap[card.stub] = card
-      } else {
-        state.stubMap[card.stub] = card
-      }
+      state.stubMap[card.stub] = card
     }
   },
 }
