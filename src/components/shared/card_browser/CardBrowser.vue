@@ -102,6 +102,28 @@ export default {
      *   working for some reason, and while the `this.$data` reactive object is accepted, we
      *   don't want to trigger filters on arbirtrary other changes (like toggling `isDisabled`)
      */
+    // Before we do anything, we need to translate any query parameters into filters
+    if (this.$route.query.q) {
+      this.filterText = this.$route.query.q
+    }
+    if (this.$route.query.dice) {
+      const dice = this.$route.query.dice
+      this.diceFilterList = Array.isArray(dice) ? dice : [dice]
+    }
+    if (this.$route.query.dice_logic !== 'any') {
+      this.diceFilterLogic = this.$route.query.dice_logic
+    }
+    if (this.$route.query.types) {
+      const types = this.$route.query.types
+      this.typeFilterList = Array.isArray(types) ? types : [types]
+    }
+    if (this.$route.query.sort) {
+      this.sort = this.$route.query.sort
+    }
+    if (this.$route.query.order) {
+      this.order = this.$route.query.order
+    }
+
     let firstPreviousProps = null
     // We use this to shortcut out when an AJAX failure occurs (otherwise could loop on failing lookups)
     let resettingFailedValues = false
@@ -202,6 +224,30 @@ export default {
       }
       this.isDisabled = true
       request(endpoint, options).then((response) => {
+        // Update our query string with the currently set filters
+        const query = {}
+        if (this.filterText) {
+          query.q = this.filterText
+        }
+        if (this.diceFilterList.length) {
+          query.dice = this.diceFilterList
+        }
+        if (this.diceFilterLogic && this.diceFilterLogic !== 'any') {
+          query.dice_logic = this.diceFilterLogic
+        }
+        if (this.typeFilterList.length) {
+          query.types = this.typeFilterList
+        }
+        if (this.sort !== 'name') {
+          query.sort = this.sort
+        }
+        if (this.order !== 'asc') {
+          query.order = this.order
+        }
+        this.$router.push({
+          path: this.$route.path,
+          query: query,
+        })
         // Clear everything out if we have no actual results (makes logical comparisons easier)
         if (response.data.count === 0) {
           this.cards = null
