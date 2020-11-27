@@ -215,7 +215,9 @@ export default {
           this.cards = response.data.results
         }
         this.nextCardsURL = response.data.next
-        // TODO: populate Vuex store with card data, so that we can bypass individual lookups on hover
+        // Add cards to the Vuex store so that we don't need to fetch individual cards via AJAX
+        // when viewing their details around the site (during this session, at least)
+        this.$store.commit('cards/addCards', response.data.results)
       }).catch((error) => {
         let errorMessage = 'Failed to fetch card listing. Please report if this fails repeatedly!'
         if (error.response.status === 422) {
