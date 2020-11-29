@@ -77,8 +77,7 @@ export default {
       // Looks like someone's impatient...
       if (this.loadingDetails) return
       this.showDetails()
-      document.addEventListener('touchstart', this.closeOnClick)
-      document.addEventListener('click', this.closeOnClick, true)
+      document.addEventListener('mousedown', this.closeOnClick, true)
     },
     async showDetails () {
       if (this.loadingDetails) return
@@ -153,8 +152,7 @@ export default {
       // Otherwise, just leave things well enough alone
     },
     cleanupEventListeners () {
-      document.removeEventListener('touchstart', this.closeOnClick)
-      document.removeEventListener('click', this.closeOnClick, true)
+      document.removeEventListener('mousedown', this.closeOnClick, true)
     },
   },
 }
