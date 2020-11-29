@@ -26,7 +26,6 @@
       <gallery-picker
         v-if="!showLegacy"
         class="mb-4 flex-none"
-        v-model:gallery-style="galleryStyle"
         :is-disabled="isDisabled"></gallery-picker>
     </div>
     <card-table
@@ -51,6 +50,11 @@ import CardSort from './CardSort.vue'
 import GalleryPicker from './GalleryPicker.vue'
 import CardTable from './CardTable.vue'
 
+function ensureArray (value) {
+  if (value === undefined) return []
+  return Array.isArray(value) ? value : [value]
+}
+
 export default {
   name: 'CardBrowser',
   props: {
@@ -71,8 +75,6 @@ export default {
       typeFilterList: [],
       sort: 'name',
       order: 'asc',
-      // This is the style of listing
-      galleryStyle: 'list',
       // This is the list of cards currently shown
       cards: null,
       // This is the URL necessary to load the next "page"
@@ -105,6 +107,26 @@ export default {
      *   working for some reason, and while the `this.$data` reactive object is accepted, we
      *   don't want to trigger filters on arbirtrary other changes (like toggling `isDisabled`)
      */
+    // Before we do anything, we need to translate any query parameters into filters
+    if (this.$route.query.q) {
+      this.filterText = this.$route.query.q
+    }
+    if (this.$route.query.dice) {
+      this.diceFilterList = ensureArray(this.$route.query.dice)
+    }
+    if (this.$route.query.dice_logic !== 'any') {
+      this.diceFilterLogic = this.$route.query.dice_logic
+    }
+    if (this.$route.query.types) {
+      this.typeFilterList = ensureArray(this.$route.query.types)
+    }
+    if (this.$route.query.sort) {
+      this.sort = this.$route.query.sort
+    }
+    if (this.$route.query.order) {
+      this.order = this.$route.query.order
+    }
+
     let firstPreviousProps = null
     // We use this to shortcut out when an AJAX failure occurs (otherwise could loop on failing lookups)
     let resettingFailedValues = false
@@ -174,6 +196,40 @@ export default {
     // Cancel pending debounces, if necessary
     this.debouncedFilterCall.cancel()
   },
+  watch: {
+    '$route.query' (to, from) {
+      // TODO: Figure out a better way to handle this; this code gets called extraneously every
+      // time the query string is updated (even when we're updating due to in-page controls).
+      // I tried to use beforeRouteUpdate guard, but it never triggered on query string changes.
+      // Checking for `this.isDisabled` doesn't work because the timing doesn't line up.
+
+      // Make sure to update our filters if we navigate here via browser back/forward
+      if (to.q !== from.q) {
+        this.filterText = to.q === undefined ? '' : to.q
+      }
+      if (to.dice_logic !== from.dice_logic) {
+        this.diceFilterLogic = to.dice_logic === undefined ? 'any' : to.dice_logic
+      }
+      if (to.dice !== from.dice) {
+        this.diceFilterList = ensureArray(to.dice)
+      }
+      if (to.types !== from.types) {
+        this.typeFilterList = ensureArray(to.types)
+      }
+      if (to.sort !== from.sort) {
+        this.sort = to.sort === undefined ? 'name' : to.sort
+      }
+      if (to.order !== from.order) {
+        this.order = to.order === undefined ? 'asc' : to.order
+      }
+    },
+  },
+  computed: {
+    galleryStyle () {
+      if (this.showLegacy) return 'list'
+      return this.$store.state.options.galleryStyle
+    }
+  },
   methods: {
     // Clear out filters; this will automatically cause the card listing to be refreshed due to the
     // `watch` logic above
@@ -199,6 +255,30 @@ export default {
       }
       this.isDisabled = true
       request(endpoint, options).then((response) => {
+        // Update our query string with the currently set filters
+        const query = {}
+        if (this.filterText) {
+          query.q = this.filterText
+        }
+        if (this.diceFilterList.length) {
+          query.dice = this.diceFilterList
+        }
+        if (this.diceFilterLogic && this.diceFilterLogic !== 'any') {
+          query.dice_logic = this.diceFilterLogic
+        }
+        if (this.typeFilterList.length) {
+          query.types = this.typeFilterList
+        }
+        if (this.sort !== 'name') {
+          query.sort = this.sort
+        }
+        if (this.order !== 'asc') {
+          query.order = this.order
+        }
+        this.$router.push({
+          path: this.$route.path,
+          query: query,
+        })
         // Clear everything out if we have no actual results (makes logical comparisons easier)
         if (response.data.count === 0) {
           this.cards = null
@@ -215,7 +295,9 @@ export default {
           this.cards = response.data.results
         }
         this.nextCardsURL = response.data.next
-        // TODO: populate Vuex store with card data, so that we can bypass individual lookups on hover
+        // Add cards to the Vuex store so that we don't need to fetch individual cards via AJAX
+        // when viewing their details around the site (during this session, at least)
+        this.$store.commit('cards/addCards', response.data.results)
       }).catch((error) => {
         let errorMessage = 'Failed to fetch card listing. Please report if this fails repeatedly!'
         if (error.response.status === 422) {

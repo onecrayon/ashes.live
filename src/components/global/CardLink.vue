@@ -88,10 +88,8 @@ export default {
         this.details = this.card
       } else if (!this.details) {
         // Otherwise, we need to fetch the card details
-        // TODO: fetch these from the store instead of always hitting the API!
         // TODO: figure out how to handle errors
-        const response = await request(`/v2/cards/${this.card.stub}`)
-        this.details = response.data
+        this.details = await this.$store.dispatch('cards/fetchCard', this.card)
       }
       this.loadingDetails = false
       this.popper = createPopper(this.$refs.link.$el, this.$refs.popup, {
