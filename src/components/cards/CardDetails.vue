@@ -21,8 +21,8 @@
           :class="[!showLegacy ? 'rounded-lg shadow-lg' : '']"
           :src="imageURL"
           alt=""
-          width="300"
-          height="420">
+          :width="showLegacy ? 332 : 300"
+          :height="showLegacy ? 452 : 420">
       </div>
       <div class="md:flex-grow">
         <h2 class="mt-6">Card text</h2>
