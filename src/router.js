@@ -50,6 +50,15 @@ export default createRouter({
       meta: { title: 'Decks' },
     },
     {
+      path: '/decks/legacy/',
+      name: 'LegacyDecks',
+      component: DeckListing,
+      meta: {
+        title: 'Browse Legacy Decks',
+        showLegacy: true,
+      },
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: NotFound,
