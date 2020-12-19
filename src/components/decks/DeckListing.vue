@@ -11,6 +11,14 @@
     </p>
   </div>
 
+  <div class="md:flex md:flex-no-wrap mb-4">
+    <clearable-search
+      class="flex-auto h-10"
+      placeholder="Filter by name or text..."
+      v-model:search="filterText"
+      :is-disabled="isDisabled"></clearable-search>
+  </div>
+
   <deck-table
     :is-disabled="isDisabled"
     :decks="decks"
@@ -20,14 +28,17 @@
 </template>
 
 <script>
+import { watch } from 'vue'
 import DeckTable from './DeckTable.vue'
-import { request } from '/src/utils.js'
+import ClearableSearch from '../shared/ClearableSearch.vue'
+import { debounce, trimmed, request } from '/src/utils.js'
 
 export default {
   name: 'DeckListing',
   data: () => {
     return {
       isDisabled: false,
+      filterText: '',
       // This is the list of decks currently shown
       decks: null,
       // This is the URL necessary to load the next "page"
@@ -35,7 +46,8 @@ export default {
     }
   },
   components: {
-    DeckTable
+    DeckTable,
+    ClearableSearch,
   },
   computed: {
     showLegacy () {
@@ -43,6 +55,54 @@ export default {
     }
   },
   created () {
+    // Before we do anything, we need to translate any query parameters into filters
+    if (this.$route.query.q) {
+      this.filterText = this.$route.query.q
+    }
+
+    let firstPreviousProps = null
+    // We use this to shortcut out when an AJAX failure occurs (otherwise could loop on failing lookups)
+    let resettingFailedValues = false
+
+    this.debouncedFilterCall = debounce((curProps, prevProps) => {
+      // Check if we have changes to make; wrapped in a closure to ensure we perform as little
+      // logic as necessary
+      const haveChanges = (() => {
+        // Check filterText (string)
+        if (trimmed(curProps[0]) !== trimmed(firstPreviousProps[0])) return true
+        return false
+      })()
+      // We cache the original values in case of failure
+      const cachedValues = {
+        filterText: String(trimmed(firstPreviousProps[0])),
+      }
+      // Reset our first previous props before exiting
+      firstPreviousProps = null
+      if (!haveChanges || resettingFailedValues) {
+        resettingFailedValues = false
+        return
+      }
+      // Filter the list, and on failure revert to the previous filters
+      this.filterList(() => {
+        resettingFailedValues = true
+        for (const key of Object.keys(cachedValues)) {
+          this[key] = cachedValues[key]
+        }
+      })
+    }, 750)
+    watch(
+      // All filter properties that can trigger a new API call
+      // DO NOT REORDER THESE! If you do, you must change the index logic in `debouncedFilterCall` above
+      [
+        () => this.filterText,
+      ],
+      (curProps, prevProps) => {
+        if (firstPreviousProps === null) {
+          firstPreviousProps = prevProps
+        }
+        this.debouncedFilterCall(curProps, prevProps)
+      }
+    )
     // Trigger initial listing load
     this.filterList()
   },
@@ -109,6 +169,8 @@ export default {
       if (this.showLegacy) {
         params['show_legacy'] = true
       }
+      const filterText = trimmed(this.filterText)
+      if (filterText) params.q = filterText
       this.fetchDecks({ options: { params }, failureCallback })
     },
     // Load the next page of decks
