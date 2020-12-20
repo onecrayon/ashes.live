@@ -61,6 +61,7 @@
           <div class="leading-snug text-sm">
             <card-codes
               :content="details.text"
+              :is-legacy="showLegacy"
               is-card-effect></card-codes>
           </div>
         </div>
