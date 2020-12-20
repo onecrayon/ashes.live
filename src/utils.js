@@ -113,7 +113,7 @@ export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
     '&': '&amp;',
     '<': '&lt;',
     '"': '&quot;',
-    "'": '&#39;'
+    "'": '\\&#39;'
   }
   if (unescapedHTML.test(text)) {
     text = text.replace(unescapedHTML, (char) => {
@@ -144,11 +144,11 @@ export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
     }
   )
   // Parse card codes
-  text = text.replace(/\[\[(\*?)((?:[a-z -]|&#39;)+)(?::([a-z]+))?\]\]|( - )/ig, (input, isImage, primary, secondary, dash) => {
+  text = text.replace(/\[\[(\*?)((?:[a-z -]|\\&#39;)+)(?::([a-z]+))?\]\]|( - )/ig, (input, isImage, primary, secondary, dash) => {
     if (dash) {
       return ' <i class="divider"><span class="alt-text">-</span></i> '
     }
-    let lowerPrimary = primary.toLowerCase().replace('&#39;', '')
+    let lowerPrimary = primary.toLowerCase().replace('\\&#39;', '')
     secondary = secondary && secondary.toLowerCase()
     if (['discard', 'exhaust'].indexOf(lowerPrimary) > -1) {
       return `<i class="phg-${lowerPrimary}" title="${primary}"></i>`
@@ -171,10 +171,7 @@ export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
     } else if (secondary) {
       return `<i>${lowerPrimary} ${secondary}</i>`
     } else {
-      if (isLegacy) {
-        return `<card-link :card="{name: '${primary}', stub: '${lowerPrimary.replace(/ +/g, '-')}', is_legacy: true}"></card-link>`
-      }
-      return `<card-link :card="{name: '${primary}', stub: '${lowerPrimary.replace(/ +/g, '-')}'}"></card-link>`
+      return `<card-link :card="{name: '${primary}', stub: '${lowerPrimary.replace(/ +/g, '-')}', is_legacy: ${isLegacy}}"></card-link>`
     }
     return `<i class="phg-${lowerPrimary}-${secondary}" title="${primary}${secondary ? ' ' + secondary : ''}"><span class="alt-text">${input}</span></i>`
   })
