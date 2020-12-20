@@ -43,6 +43,7 @@
           <div class="leading-snug" :class="$style['effect-text']">
             <card-codes
               :content="card.text"
+              :is-legacy="card.is_legacy"
               is-card-effect></card-codes>
           </div>
         </div>

@@ -13,12 +13,17 @@ export default {
       type: Boolean,
       default: false,
     },
+    isLegacy: {
+      type: Boolean,
+      default: false,
+    }
   },
   setup (props) {
     // Setup accepts a reactive `props` object and can return a render function, so this
     // functionally allows us to compile arbitrary HTML into Vue components
+    const cardText = props.isCardEffect ? parseEffectText(props.content, props.isLegacy) : parseCardText(props.content, false, props.isLegacy)
     return compile(
-      props.isCardEffect ? parseEffectText(props.content) : parseCardText(props.content)
+      cardText
     )
   },
 }
