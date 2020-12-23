@@ -14,7 +14,7 @@
   <div class="md:flex md:flex-no-wrap mb-4">
     <clearable-search
       class="flex-auto h-10"
-      placeholder="Filter by name or text..."
+      placeholder="Filter by title..."
       v-model:search="filterText"
       :is-disabled="isDisabled"></clearable-search>
   </div>

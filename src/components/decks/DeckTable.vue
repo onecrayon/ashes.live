@@ -7,7 +7,7 @@
     </p>
   </div>
   <div v-else-if="decks && decks.length">
-    {{ decks.length }} decks retrieved.
+    <deck v-for="deck of decks" :key="deck.id" :deck="deck"></deck>
     <div v-show="haveNextDecks" class="my-4 text-center" ref="scrollLoader">
       <button class="btn btn-blue py-2 px-4" :disabled="isDisabled" @click="$emit('load-more')">
         <span v-if="isDisabled">
@@ -26,6 +26,7 @@
 
 <script>
 import { debounce } from '/src/utils.js'
+import Deck from './Deck.vue'
 
 export default {
   name: 'DeckTable',
@@ -36,6 +37,7 @@ export default {
   },
   emits: ['reset-filters', 'load-more'],
   components: {
+    Deck,
   },
   mounted () {
     this.debouncedScrollListener = debounce(this.scrollLoadCheck, 100)
