@@ -1,7 +1,7 @@
 <template>
   <div
     class="border border-gray bg-white mt-4 mb-4">
-    <div class="px-2 py-px text-xs">
+    <div class="p-2 text-xs">
       <div class="m-0 font-bold text-xl">
         <router-link :to="linkTarget" class="text-black">{{ deck.title }}</router-link>
         <span class="float-right">
@@ -17,12 +17,14 @@
         </span>
       </div>
       <hr />
-      <span class="text-lg">
-        {{ deck.phoenixborn.name }}
-      </span>
-      <span class="text-sm float-right">
-        {{ cardsCount }}/30
-      </span>
+      <div class="mt-1 mb-1">
+        <span class="text-lg">
+          <card-link :card="deck.phoenixborn"></card-link>
+        </span>
+        <span class="text-sm float-right">
+          {{ cardsCount }}/30
+        </span>
+      </div>
       <deck-cards-preview :cards="deck.cards" :conjurations="deck.conjurations" />
     </div>
   </div>
