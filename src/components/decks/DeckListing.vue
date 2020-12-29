@@ -17,6 +17,9 @@
       placeholder="Filter by title..."
       v-model:search="filterText"
       :is-disabled="isDisabled"></clearable-search>
+      <phoenixborn-picker 
+        v-model:filter="phoenixborn"
+      />
   </div>
 
   <deck-table
@@ -32,6 +35,7 @@ import { watch } from 'vue'
 import DeckTable from './DeckTable.vue'
 import ClearableSearch from '../shared/ClearableSearch.vue'
 import { debounce, trimmed, request } from '/src/utils.js'
+import PhoenixbornPicker from '../shared/PhoenixbornPicker.vue'
 
 export default {
   name: 'DeckListing',
@@ -39,6 +43,7 @@ export default {
     return {
       isDisabled: false,
       filterText: '',
+      phoenixborn: null,
       // This is the list of decks currently shown
       decks: null,
       // This is the URL necessary to load the next "page"
@@ -48,6 +53,7 @@ export default {
   components: {
     DeckTable,
     ClearableSearch,
+    PhoenixbornPicker,
   },
   computed: {
     showLegacy () {
@@ -58,6 +64,7 @@ export default {
     // Before we do anything, we need to translate any query parameters into filters
     if (this.$route.query.q) {
       this.filterText = this.$route.query.q
+      this.phoenixborn = this.$route.query.phoenixborn
     }
 
     let firstPreviousProps = null
@@ -70,11 +77,13 @@ export default {
       const haveChanges = (() => {
         // Check filterText (string)
         if (trimmed(curProps[0]) !== trimmed(firstPreviousProps[0])) return true
+        if (curProps[1] !== firstPreviousProps[1]) return true
         return false
       })()
       // We cache the original values in case of failure
       const cachedValues = {
         filterText: String(trimmed(firstPreviousProps[0])),
+        phoenixborn: String(firstPreviousProps[1]),
       }
       // Reset our first previous props before exiting
       firstPreviousProps = null
@@ -101,6 +110,17 @@ export default {
           firstPreviousProps = prevProps
         }
         this.debouncedFilterCall(curProps, prevProps)
+      }
+    )
+    watch(
+      [
+        () => this.phoenixborn,
+      ],
+      (curProps, prevProps) => {
+        if (firstPreviousProps === null) {
+          firstPreviousProps = prevProps
+        }
+        this.filterList(() => { /* TODO: implement failed callback */ })
       }
     )
     // Trigger initial listing load
@@ -161,15 +181,17 @@ export default {
     },
     // Default method for running a new filter using the current filter settings
     filterList (failureCallback) {
+      console.log('Filter list')
       // Query our list of decks
       const params = {
-        'limit': 50,
+        'limit': 10,
       }
       // Show legacy cards, if necessary
       if (this.showLegacy) {
         params['show_legacy'] = true
       }
       const filterText = trimmed(this.filterText)
+      if (this.phoenixborn) params.phoenixborn = this.phoenixborn
       if (filterText) params.q = filterText
       this.fetchDecks({ options: { params }, failureCallback })
     },
