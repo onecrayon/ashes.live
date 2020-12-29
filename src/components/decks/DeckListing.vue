@@ -13,13 +13,15 @@
 
   <div class="md:flex md:flex-no-wrap mb-4">
     <clearable-search
-      class="flex-auto h-10"
+      class="flex-auto h-10 mb-4 md:pr-4 md:mb-0"
       placeholder="Filter by title..."
       v-model:search="filterText"
       :is-disabled="isDisabled"></clearable-search>
-      <phoenixborn-picker 
-        v-model:filter="phoenixborn"
-      />
+    <phoenixborn-picker 
+      class="flex-auto h-10 mb-4 md:mb-0"
+      placeholder="Filter by Phoenixborn..."
+      v-model:filter="phoenixborn"
+    />
   </div>
 
   <deck-table
@@ -32,6 +34,7 @@
 
 <script>
 import { watch } from 'vue'
+import deepEqual from 'deep-equal'
 import DeckTable from './DeckTable.vue'
 import ClearableSearch from '../shared/ClearableSearch.vue'
 import { debounce, trimmed, request } from '/src/utils.js'
@@ -138,10 +141,21 @@ export default {
       request(endpoint, options).then((response) => {
         // Update our query string with the currently set filters
         const query = {}
-        this.$router.push({
-          path: this.$route.path,
-          query: query,
-        })
+        
+        if (this.filterText) {
+          query.q = this.filterText
+        }
+        if (this.phoenixborn) {
+          query.phoenixborn = this.phoenixborn
+        }
+        // Only push to router is query has changed. In the case of scrolling, we don't want to push as
+        // it's the same url but pushing to the router will make it scroll back to top
+        if (!deepEqual(this.$route.query, query)) {
+          this.$router.push({
+            path: this.$route.path,
+            query: query,
+          })
+        }
         // Clear everything out if we have no actual results (makes logical comparisons easier)
         if (response.data.count === 0) {
           this.decks = null

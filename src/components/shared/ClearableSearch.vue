@@ -23,11 +23,11 @@ export default {
     search: {
       default: '',
       type: String,
-	},
-	placeholder: {
-		type: String,
-		required: true,
-	},
+    },
+    placeholder: {
+      type: String,
+      required: true,
+    },
   },
   emits: ['update:search'],
 }

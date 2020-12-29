@@ -20,15 +20,18 @@ export default {
   margin: 4px 0;
 }
 .die {
-  font-size: 1rem;
-  line-height: 1.5rem;
+  font-size: 1em;
+  line-height: 1.5em;
   flex: 0 0 auto;
   border-radius: 3px;
   margin: 0 0 0 2px;
-  height: 24px;
-  width: 24px;
+  height: 32px;
+  width: 32px;
   text-align: center;
-  padding-left: .25em;
+  padding-left: 2px;
+}
+.die:before {
+  padding: 0;
 }
 .ceremonial {
   color: #ee3342;

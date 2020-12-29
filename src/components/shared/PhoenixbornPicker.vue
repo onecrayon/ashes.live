@@ -1,7 +1,13 @@
 <template>
   <div class="flex flex-no-wrap">
-    <select name="Phoenixborn" id="phoenixborn" @change="$emit('update:filter', $event.target.value)">
-      <option value="">All phoenixborn</option>
+    <select
+      id="phoenixborn"
+      name="Phoenixborn"
+      class="border-2 bg-white border-gray-darker rounded h-full px-2 flex-auto"
+     :placeholder="placeholder"
+      @change="$emit('update:filter', $event.target.value)">
+      <option value="" disabled selected>{{ placeholder }}</option>
+      <option value="">All Phoenixborn</option>
       <option value="james-endersight">Aradel Summergaard</option>
       <option value="astrea">Astrea</option>
       <option value="brennen-blackcloud">Brennen Blackcloud</option>
@@ -31,6 +37,7 @@
 export default {
   name: 'PhoenixbornPicker',
   props: {
+    placeholder: '',
 	},
   emits: ['update:filter'],
 }
