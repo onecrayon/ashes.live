@@ -21,7 +21,7 @@
         <span class="text-lg">
           <card-link :card="deck.phoenixborn"></card-link>
         </span>
-        <span class="text-sm float-right">
+        <span class="text-sm float-right font-bold" :class="[ cardsCount != 30 ? 'deck-not-full' : '']">
           {{ cardsCount }}/30
         </span>
       </div>
@@ -63,7 +63,10 @@ export default {
       }, 0)
     }
   },
-  methods: {
-  },
 }
 </script>
+<style scoped>
+.deck-not-full {
+  color: var(--color-red);
+}
+</style>

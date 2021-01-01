@@ -195,7 +195,6 @@ export default {
     },
     // Default method for running a new filter using the current filter settings
     filterList (failureCallback) {
-      console.log('Filter list')
       // Query our list of decks
       const params = {
         'limit': 30,
