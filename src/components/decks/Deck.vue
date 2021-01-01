@@ -10,7 +10,7 @@
       </div>
       <div class="clear-right">
         <span class="text-sm">
-          {{ deck.user.username }}
+          <user-badge :user="deck.user" />
         </span>
         <span class="text-sm float-right">
           Last updated: {{ lastUpdatedDateFormatted }} ago
@@ -35,6 +35,7 @@ import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import { typeToFontAwesome } from '/src/constants.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
+import UserBadge from '../users/UserBadge.vue'
 
 export default {
   name: 'Deck',
@@ -46,6 +47,7 @@ export default {
   components: {
     DeckCardsPreview,
     DeckDice,
+    UserBadge,
   },
   computed: {
     linkTarget () {
