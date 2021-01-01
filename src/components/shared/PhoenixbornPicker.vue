@@ -8,7 +8,7 @@
       @change="$emit('update:filter', $event.target.value)">
       <option value="" disabled selected>{{ placeholder }}</option>
       <option value="">All Phoenixborn</option>
-      <option value="james-endersight">Aradel Summergaard</option>
+      <option value="aradel-summergaard">Aradel Summergaard</option>
       <option value="astrea">Astrea</option>
       <option value="brennen-blackcloud">Brennen Blackcloud</option>
       <option value="coal-roarkwin">Coal Roarkwin</option>
