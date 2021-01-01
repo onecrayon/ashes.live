@@ -32,7 +32,6 @@
 
 <script>
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
-import { typeToFontAwesome } from '/src/constants.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
 import UserBadge from '../users/UserBadge.vue'
