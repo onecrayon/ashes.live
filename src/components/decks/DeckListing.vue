@@ -198,7 +198,7 @@ export default {
       console.log('Filter list')
       // Query our list of decks
       const params = {
-        'limit': 10,
+        'limit': 30,
       }
       // Show legacy cards, if necessary
       if (this.showLegacy) {
