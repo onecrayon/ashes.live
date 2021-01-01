@@ -58,6 +58,10 @@ button, input {
   }
 }
 
+hr {
+  color: var(--color-gray);
+}
+
 .btn {
   @apply appearance-none border-2 border-gray-darker bg-gray-light rounded-md px-2 text-gray-darker font-bold;
 
