@@ -8,14 +8,12 @@
   </div>
   <div v-else-if="decks && decks.length">
     <deck v-for="deck of decks" :key="deck.id" :deck="deck"></deck>
-    <div v-show="haveNextDecks" class="my-4 text-center" ref="scrollLoader">
-      <button class="btn btn-blue py-2 px-4" :disabled="isDisabled" @click="$emit('load-more')">
-        <span v-if="isDisabled">
-          <i class="fas fa-circle-notch fa-spin"></i> Loading...
-        </span>
-        <span v-if="!isDisabled">
-          Load more decks...
-        </span>
+    <div v-show="havePreviousDecks || haveNextDecks" class="my-4 text-center">
+      <button v-show="havePreviousDecks" class="btn btn-blue py-2 px-4 mr-4" :disabled="isDisabled" @click="$emit('load-previous')">
+        Previous
+      </button>
+      <button  v-show="haveNextDecks" class="btn btn-blue py-2 px-4" :disabled="isDisabled" @click="$emit('load-next')">
+        Next
       </button>
     </div>
 </div>
@@ -34,28 +32,11 @@ export default {
     isDisabled: Boolean,
     decks: Array,
     haveNextDecks: Boolean,
+    havePreviousDecks: Boolean,
   },
-  emits: ['reset-filters', 'load-more'],
+  emits: ['reset-filters', 'load-next', 'load-previous'],
   components: {
     Deck,
-  },
-  mounted () {
-    this.debouncedScrollListener = debounce(this.scrollLoadCheck, 100)
-    window.addEventListener('scroll', this.debouncedScrollListener)
-  },
-  beforeUnmount () {
-    window.removeEventListener('scroll', this.debouncedScrollListener)
-  },
-  methods: {
-    scrollLoadCheck () {
-      // Don't process scroll checks when we're already loading stuff
-      if (this.isDisabled || !this.haveNextDecks) return
-      // Check if our scrolling element is within 300 pixels of the bottom of the scroll view (or has passed it)
-      const elementBounding = this.$refs.scrollLoader.getBoundingClientRect()
-      if (elementBounding.top <= window.innerHeight + 350) {
-        this.$emit('load-more')
-      }
-    },
   },
 }
 </script>

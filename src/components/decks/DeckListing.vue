@@ -27,18 +27,21 @@
   <deck-table
     :is-disabled="isDisabled"
     :decks="decks"
-    :have-next-decks="!!nextDecksURL"
+    :haveNextDecks="haveNextDecks"
+    :havePreviousDecks="havePreviousDecks"
     @reset-filters="clearFilters"
-    @load-more="loadNext"></deck-table>
+    @load-previous="loadPrevious"
+    @load-next="loadNext"></deck-table>
 </template>
 
 <script>
 import { watch } from 'vue'
-import deepEqual from 'deep-equal'
 import DeckTable from './DeckTable.vue'
 import ClearableSearch from '../shared/ClearableSearch.vue'
 import { debounce, trimmed, request } from '/src/utils.js'
 import PhoenixbornPicker from '../shared/PhoenixbornPicker.vue'
+
+const DECKS_PER_PAGE = 10;
 
 export default {
   name: 'DeckListing',
@@ -47,10 +50,10 @@ export default {
       isDisabled: false,
       filterText: '',
       phoenixborn: null,
+      offset: 0,
       // This is the list of decks currently shown
       decks: null,
-      // This is the URL necessary to load the next "page"
-      nextDecksURL: null,
+      deckCount: 0,
     }
   },
   components: {
@@ -61,6 +64,12 @@ export default {
   computed: {
     showLegacy () {
       return !!this.$route.meta.showLegacy
+    },
+    havePreviousDecks () {
+      return this.offset > 0
+    },
+    haveNextDecks() {
+      return this.offset + DECKS_PER_PAGE < this.deckCount
     }
   },
   created () {
@@ -68,6 +77,7 @@ export default {
     if (this.$route.query.q) {
       this.filterText = this.$route.query.q
       this.phoenixborn = this.$route.query.phoenixborn
+      this.offset = this.$route.query.offset
     }
 
     let firstPreviousProps = null
@@ -81,12 +91,14 @@ export default {
         // Check filterText (string)
         if (trimmed(curProps[0]) !== trimmed(firstPreviousProps[0])) return true
         if (curProps[1] !== firstPreviousProps[1]) return true
+        if (curProps[2] !== firstPreviousProps[2]) return true
         return false
       })()
       // We cache the original values in case of failure
       const cachedValues = {
         filterText: String(trimmed(firstPreviousProps[0])),
         phoenixborn: String(firstPreviousProps[1]),
+        offset: Number(firstPreviousProps[2]),
       }
       // Reset our first previous props before exiting
       firstPreviousProps = null
@@ -118,6 +130,7 @@ export default {
     watch(
       [
         () => this.phoenixborn,
+        () => this.offset,
       ],
       (curProps, prevProps) => {
         if (firstPreviousProps === null) {
@@ -148,33 +161,25 @@ export default {
         if (this.phoenixborn) {
           query.phoenixborn = this.phoenixborn
         }
+        if (this.offset) {
+          query.offset = this.offset
+        }
         // Only push to router is query has changed. In the case of scrolling, we don't want to push as
         // it's the same url but pushing to the router will make it scroll back to top
-        if (!deepEqual(this.$route.query, query)) {
-          this.$router.push({
-            path: this.$route.path,
-            query: query,
-          })
-        }
+        this.$router.push({
+          path: this.$route.path,
+          query: query,
+        })
         // Clear everything out if we have no actual results (makes logical comparisons easier)
         if (response.data.count === 0) {
           this.decks = null
           this.nextDecksURL = null
           return
         }
-        // Ensure we have a list to work with
-        if (!this.decks) this.decks = []
-        // If we have a previous link, then that means we are loading paginated results (so concat)
-        if (response.data.previous) {
-          this.decks = this.decks.concat(response.data.results)
-        } else {
-          // Otherwise, we're loading a newly filtered list
-          this.decks = response.data.results
-        }
-        this.nextDecksURL = response.data.next
-
-        // TODO: cache to store
-
+     
+        this.deckCount = response.data.count
+        this.decks = response.data.results
+        
         // Add decks to the Vuex store so that we don't need to fetch individual cards via AJAX
         // when viewing their details around the site (during this session, at least)
         // this.$store.commit('decks/addDecks', response.data.results)
@@ -197,7 +202,8 @@ export default {
     filterList (failureCallback) {
       // Query our list of decks
       const params = {
-        'limit': 30,
+        offset: this.offset,
+        limit: DECKS_PER_PAGE,
       }
       // Show legacy cards, if necessary
       if (this.showLegacy) {
@@ -208,10 +214,12 @@ export default {
       if (filterText) params.q = filterText
       this.fetchDecks({ options: { params }, failureCallback })
     },
-    // Load the next page of decks
     loadNext () {
-      this.fetchDecks({ endpoint: this.nextDecksURL })
+      this.offset += DECKS_PER_PAGE
     },
+    loadPrevious () {
+      this.offset -= DECKS_PER_PAGE
+    }
   }
 }
 </script>
