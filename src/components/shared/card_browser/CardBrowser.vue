@@ -42,7 +42,6 @@
 <script>
 import { watch } from 'vue'
 import { useToast } from 'vue-toastification'
-import deepEqual from 'deep-equal'
 import { debounce, areSetsEqual, trimmed, request } from '/src/utils.js'
 import DiceFilter from './DiceFilter.vue'
 import TypeFilter from './TypeFilter.vue'
@@ -276,14 +275,10 @@ export default {
         if (this.order !== 'asc') {
           query.order = this.order
         }
-        // Only push to router is query has changed. In the case of scrolling, we don't want to push as
-        // it's the same url but pushing to the router will make it scroll back to top
-        if (!deepEqual(this.$route.query, query)) {
-          this.$router.push({
-            path: this.$route.path,
-            query: query,
-          })
-        }
+        this.$router.push({
+          path: this.$route.path,
+          query: query,
+        })
         // Clear everything out if we have no actual results (makes logical comparisons easier)
         if (response.data.count === 0) {
           this.cards = null
