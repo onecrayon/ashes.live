@@ -249,7 +249,7 @@ export default {
      *   See https://github.com/axios/axios#request-config
      * * `failureCallback`: an optional callback that will be invoked on failure
      */
-    fetchCards ({endpoint = null, options = {}, failureCallback = null} = {}) {
+    fetchCards ({endpoint = null, options = {}, failureCallback = null, pushToRouter = true} = {}) {
       if (!endpoint) {
         endpoint = '/v2/cards'
       }
@@ -275,10 +275,12 @@ export default {
         if (this.order !== 'asc') {
           query.order = this.order
         }
-        this.$router.push({
-          path: this.$route.path,
-          query: query,
-        })
+        if (pushToRouter) {
+          this.$router.push({
+            path: this.$route.path,
+            query: query,
+          })
+        }
         // Clear everything out if we have no actual results (makes logical comparisons easier)
         if (response.data.count === 0) {
           this.cards = null
@@ -345,7 +347,7 @@ export default {
     },
     // Load the next page of cards
     loadNext () {
-      this.fetchCards({ endpoint: this.nextCardsURL })
+      this.fetchCards({ endpoint: this.nextCardsURL, pushToRouter: false })
     },
   },
 }
