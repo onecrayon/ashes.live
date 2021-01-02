@@ -31,7 +31,9 @@
     :havePreviousDecks="havePreviousDecks"
     @reset-filters="clearFilters"
     @load-previous="loadPrevious"
-    @load-next="loadNext"></deck-table>
+    @load-next="loadNext"
+    :currentPage="currentPage"
+    :totalPage="totalPage"></deck-table>
 </template>
 
 <script>
@@ -41,7 +43,7 @@ import ClearableSearch from '../shared/ClearableSearch.vue'
 import { debounce, trimmed, request } from '/src/utils.js'
 import PhoenixbornPicker from '../shared/PhoenixbornPicker.vue'
 
-const DECKS_PER_PAGE = 10;
+const DECKS_PER_PAGE = 30;
 
 export default {
   name: 'DeckListing',
@@ -70,6 +72,12 @@ export default {
     },
     haveNextDecks() {
       return this.offset + DECKS_PER_PAGE < this.deckCount
+    },
+    currentPage() {
+      return (this.offset / DECKS_PER_PAGE) + 1
+    },
+    totalPage() {
+      return Math.ceil(this.deckCount / DECKS_PER_PAGE)
     }
   },
   created () {

@@ -8,6 +8,9 @@
   </div>
   <div v-else-if="decks && decks.length">
     <deck v-for="deck of decks" :key="deck.id" :deck="deck"></deck>
+    <div class="my-4 text-center">
+      Page {{ currentPage }} of {{ totalPage }}
+    </div>
     <div v-show="havePreviousDecks || haveNextDecks" class="my-4 text-center">
       <button v-show="havePreviousDecks" class="btn btn-blue py-2 px-4 mr-4" :disabled="isDisabled" @click="$emit('load-previous')">
         Previous
@@ -33,6 +36,8 @@ export default {
     decks: Array,
     haveNextDecks: Boolean,
     havePreviousDecks: Boolean,
+    currentPage: Number,
+    totalPage: Number,
   },
   emits: ['reset-filters', 'load-next', 'load-previous'],
   components: {
