@@ -21,6 +21,7 @@
       class="flex-auto h-10 mb-4 md:mb-0"
       placeholder="Filter by Phoenixborn..."
       v-model:filter="phoenixborn"
+      :is-legacy="showLegacy"
     />
   </div>
 
