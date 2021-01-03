@@ -1,7 +1,8 @@
 <template>
   <div
-    class="border border-gray bg-white mt-4 mb-4">
-    <div class="p-2 text-xs">
+    class="border border-gray bg-white mt-4 mb-4 deck-item">
+    <img class="float-left" :src="phoenixbornImagePath" />
+    <div class="clear-float p-2 text-xs">
       <div class="m-0 font-bold text-xl">
         <router-link :to="linkTarget" class="text-black">{{ deck.title }}</router-link>
         <span class="float-right">
@@ -62,6 +63,9 @@ export default {
       return this.deck.cards.reduce((prev, card) => {
         return prev + card.count
       }, 0)
+    },
+    phoenixbornImagePath () {
+      return this.deck.is_legacy ? `https://cdn.ashes.live/legacy/images/cards/${this.deck.phoenixborn.stub}-slice.jpg` : `https://cdn.ashes.live/images/phoenixborn-badges/${this.deck.phoenixborn.stub}.jpg`
     }
   },
 }
@@ -69,5 +73,9 @@ export default {
 <style scoped>
 .deck-not-full {
   color: var(--color-red);
+}
+
+.deck-item {
+  min-height: 302px;
 }
 </style>
