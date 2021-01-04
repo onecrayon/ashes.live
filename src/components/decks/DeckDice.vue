@@ -1,7 +1,7 @@
 <template>
   <ul class="dice">
     <template v-for="(die, idx) of dice" :key="idx">
-      <li v-for="index in die.count" :key="index" :class="['phg-' + die.name + '-power', die.name, 'die']">
+      <li v-for="index in die.count" :key="index" :class="['phg-' + die.name + '-power', die.name, 'die']" class="w-6 h-6 text-sm sm:w-8 sm:h-8 sm:text-xl">
       </li>
     </template>
   </ul>
@@ -17,18 +17,14 @@ export default {
 <style>
 .dice {
   display: flex;
-  margin: 4px 0;
+  margin: 0;
 }
 .die {
-  font-size: 1em;
   line-height: 1.5em;
   flex: 0 0 auto;
   border-radius: 3px;
-  margin: 0 0 0 2px;
-  height: 32px;
-  width: 32px;
+  margin: 0.1em;
   text-align: center;
-  padding-left: 2px;
 }
 .die:before {
   padding: 0;

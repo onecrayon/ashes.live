@@ -98,16 +98,11 @@ export default {
       // logic as necessary
       const haveChanges = (() => {
         // Check filterText (string)
-        if (trimmed(curProps[0]) !== trimmed(firstPreviousProps[0])) return true
-        if (curProps[1] !== firstPreviousProps[1]) return true
-        if (curProps[2] !== firstPreviousProps[2]) return true
-        return false
+        return trimmed(curProps[0]) !== trimmed(firstPreviousProps[0])
       })()
       // We cache the original values in case of failure
       const cachedValues = {
         filterText: String(trimmed(firstPreviousProps[0])),
-        phoenixborn: String(firstPreviousProps[1]),
-        offset: Number(firstPreviousProps[2]),
       }
       // Reset our first previous props before exiting
       firstPreviousProps = null
@@ -115,6 +110,7 @@ export default {
         resettingFailedValues = false
         return
       }
+      this.offset = 0
       // Filter the list, and on failure revert to the previous filters
       this.filterList(() => {
         resettingFailedValues = true
@@ -124,8 +120,6 @@ export default {
       })
     }, 750)
     watch(
-      // All filter properties that can trigger a new API call
-      // DO NOT REORDER THESE! If you do, you must change the index logic in `debouncedFilterCall` above
       [
         () => this.filterText,
       ],
@@ -139,13 +133,10 @@ export default {
     watch(
       [
         () => this.phoenixborn,
-        () => this.offset,
       ],
       (curProps, prevProps) => {
-        if (firstPreviousProps === null) {
-          firstPreviousProps = prevProps
-        }
-        this.filterList(() => { /* TODO: implement failed callback */ })
+        this.offset = 0
+        this.filterList(() => {})
       }
     )
     // Trigger initial listing load
@@ -153,7 +144,9 @@ export default {
   },
   methods: {
     clearFilters () {
-      // TODO: clear filters
+      this.filterText = ''
+      this.phoenixborn = null
+      this.offset = 0
     },
     fetchDecks ({endpoint = null, options = {}, failureCallback = null} = {}) {
       if (!endpoint) {
@@ -225,9 +218,11 @@ export default {
     },
     loadNext () {
       this.offset += DECKS_PER_PAGE
+      this.filterList()
     },
     loadPrevious () {
       this.offset -= DECKS_PER_PAGE
+      this.filterList()
     }
   }
 }

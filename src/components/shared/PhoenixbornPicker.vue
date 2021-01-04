@@ -3,6 +3,7 @@
     <select
       id="phoenixborn"
       name="Phoenixborn"
+      v-bind:value="filter"
       class="border-2 bg-white border-gray-darker rounded h-full px-2 flex-auto"
       :placeholder="placeholder"
       @change="$emit('update:filter', $event.target.value)">
@@ -19,6 +20,7 @@ export default {
   props: {
     placeholder: '',
     isLegacy: false,
+    filter: '',
 	},
   data () {
     return {

@@ -1,24 +1,22 @@
 <template>
   <div
-    class="border border-gray bg-white mt-4 mb-4 deck-item">
-    <img class="float-left" :src="phoenixbornImagePath" />
-    <div class="clear-float p-2 text-xs">
-      <div class="m-0 font-bold text-xl">
-        <router-link :to="linkTarget" class="text-black">{{ deck.title }}</router-link>
-        <span class="float-right">
-          <deck-dice :dice="deck.dice" />
-        </span>
+    class="border border-gray bg-white mt-4 mb-4 deck-item pl-12"
+    :style="`background-image: url(${phoenixbornImagePath})`">
+    <div class="p-2 text-xs">
+      <div class="m-0 font-bold text-xl flex flex-col sm:flex-row">
+        <router-link :to="linkTarget" class="text-black flex-grow pt-0 sm:pt-2">{{ deck.title }}</router-link>
+        <deck-dice :dice="deck.dice" />
       </div>
-      <div class="clear-right">
-        <span class="text-sm">
+      <div class="flex flex-col sm:flex-row">
+        <span class="flex-grow text-sm">
           <user-badge :user="deck.user" />
         </span>
-        <span class="text-sm float-right">
+        <span class="text-sm float-right text-gray-darker">
           Last updated: {{ lastUpdatedDateFormatted }} ago
         </span>
       </div>
-      <hr />
-      <div class="mt-1 mb-1">
+      <hr class="mb-1 mt-1" />
+      <div class="mb-1">
         <span class="text-lg">
           <card-link :card="deck.phoenixborn"></card-link>
         </span>
@@ -76,6 +74,6 @@ export default {
 }
 
 .deck-item {
-  min-height: 302px;
+  background-repeat: no-repeat;
 }
 </style>

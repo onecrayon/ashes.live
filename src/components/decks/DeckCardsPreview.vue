@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-5 gap-2">
+  <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2">
     <deck-cards-type-list :cards="this.readySpells" typeLabel="Ready Spells" />
     <deck-cards-type-list :cards="this.allies" typeLabel="Allies" />
     <deck-cards-type-list :cards="this.actionSpells" typeLabel="Action Spells" />
