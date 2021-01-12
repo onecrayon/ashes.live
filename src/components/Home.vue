@@ -49,7 +49,7 @@
             <i class="far fa-square"></i>
           </span>
           <span class="text-gray-dark">
-            Deck builder (including deck listings for both public and private decks); <em>hopefully complete late Dec. 2020</em>
+            Deck builder (including deck listings for both public and private decks); <em>hopefully complete late Jan. 2021</em>
           </span>
         </li>
         <li class="flex flex-no-wrap">
@@ -57,7 +57,7 @@
             <i class="far fa-square"></i>
           </span>
           <span class="text-gray-dark">
-            Comments (on decks and cards); <em>hopefully complete Jan. 2021</em>
+            Comments (on decks and cards); <em>hopefully complete Feb. 2021</em>
           </span>
         </li>
         <li class="flex flex-no-wrap">
