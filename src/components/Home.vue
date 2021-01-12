@@ -65,7 +65,7 @@
             <i class="far fa-square"></i>
           </span>
           <span class="text-gray-dark">
-            Posts; <em>hopefully complete Feb. or March. 2021</em>
+            Posts; <em>hopefully complete Feb. or Mar. 2021</em>
           </span>
         </li>
       </ul>
