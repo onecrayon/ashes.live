@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.6.0",
-    "@vitejs/plugin-vue": "^1.0.6",
     "axios": "^0.21.1",
     "nanobar": "^0.4.2",
     "qs": "^6.9.6",
@@ -20,7 +19,10 @@
     "vuex": "^4.0.0-rc.2"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^1.0.6",
     "@vue/compiler-sfc": "^3.0.5",
+    "autoprefixer": "^10.2.1",
+    "postcss": "^8.2.4",
     "postcss-nesting": "^7.0.1",
     "tailwindcss": "^2.0.2",
     "vite": "^2.0.0-beta.30"
