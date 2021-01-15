@@ -21,7 +21,7 @@
   "devDependencies": {
     "@vue/compiler-sfc": "^3.0.2",
     "postcss-nesting": "^7.0.1",
-    "tailwindcss": "^1.9.6",
+    "tailwindcss": "^2.0.2",
     "vite": "^1.0.0-rc.9"
   }
 }

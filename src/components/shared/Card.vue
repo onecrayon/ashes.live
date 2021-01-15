@@ -11,7 +11,7 @@
         alt=" "
         :src="cardImageURL">
     </div>
-    <div class="clearfix">
+    <div class="flow-root">
       <card-costs class="p-2 float-right text-right" :costs="card.cost"></card-costs>
       <div class="px-2 py-px text-xs">
         <p class="m-0 font-bold text-lg">
