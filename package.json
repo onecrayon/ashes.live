@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.5.4",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "date-fns": "^2.16.1",
     "nanobar": "^0.4.2",
     "qs": "^6.9.4",
