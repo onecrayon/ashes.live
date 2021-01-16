@@ -4,6 +4,7 @@ import NotFound from './components/NotFound.vue'
 import CardListing from './components/cards/CardListing.vue'
 import CardDetails from './components/cards/CardDetails.vue'
 import DeckListing from './components/decks/DeckListing.vue'
+import DeckDetails from './components/decks/DeckDetails.vue'
 
 export default createRouter({
   history: createWebHistory(),
@@ -48,6 +49,21 @@ export default createRouter({
       name: 'Decks',
       component: DeckListing,
       meta: { title: 'Decks' },
+    },
+    {
+      path: '/decks/legacy/',
+      name: 'LegacyDecks',
+      component: DeckListing,
+      meta: {
+        title: 'Browse Legacy Decks',
+        showLegacy: true,
+      },
+    },
+    {
+      path: '/decks/:id',
+      name: 'DeckDetails',
+      component: DeckDetails,
+      props: true,
     },
     {
       path: '/:pathMatch(.*)*',
