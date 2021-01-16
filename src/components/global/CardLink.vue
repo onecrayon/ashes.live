@@ -15,7 +15,7 @@
       ref="popup">
       <i
         class="fas fa-circle-notch fa-spin text-2xl"
-        :class="[$style['center-position']]"></i>
+        :class="[$style.centerPosition]"></i>
       <img
         width="299"
         height="418"
@@ -159,7 +159,7 @@ export default {
 </script>
 
 <style lang="postcss" module>
-.center-position {
+.centerPosition {
   position: absolute;
   top: 50%;
   left: 50%;

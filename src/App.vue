@@ -1,12 +1,12 @@
 <template>
-  <nav class="bg-inexhaustible" :class="[useFullHeader ? $style['full-header'] : '']">
-    <!-- Referencing the style directly through an injected $style element is necessary for modular styles to function; otherwise, the template style name doesn't get rewritten -->
+  <nav class="bg-inexhaustible" :class="[useFullHeader ? $style.fullHeader : '']">
+    <!-- Referencing the style directly through an injected $style element is necessary for modular styles to function; otherwise, the template style name doesn't get rewritten. Due to a bug in Vite 2, we have to use snakeCase instead of hyphens or underscores for class names. -->
     <div :class="$style.banner">
       <ul
         class="container mx-auto grid items-center text-center py-2 px-4 gap-x-10 grid-rows-2 md:grid-rows-1"
-        :class="[$style['header-cols'], useFullHeader ? 'lg:py-4' : '']">
+        :class="[$style.headerCols, useFullHeader ? 'lg:py-4' : '']">
         <li class="col-start-1 col-span-3 row-start-1 md:col-start-2 md:col-span-1">
-          <router-link to="/" :class="$style['home-link']">Ashes.live</router-link>
+          <router-link to="/" :class="$style.homeLink">Ashes.live</router-link>
         </li>
         <li
           class="col-start-1 row-start-2 justify-self-start md:row-start-1"
@@ -95,11 +95,11 @@ export default {
   }
 }
 
-.header-cols {
+.headerCols {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
 }
 
-.home-link {
+.homeLink {
   background: url('./assets/ashes-live-small.png') left top no-repeat;
   display: inline-block;
   height: 0px;
@@ -109,7 +109,7 @@ export default {
 }
 
 @media (min-width: 1024px) {
-  .full-header .home-link {
+  .fullHeader .homeLink {
     background-image: url('./assets/ashes-live.png');
     width: 366px;
     padding-top: 107px;
@@ -120,7 +120,7 @@ export default {
     z-index: 10;
   }
 
-  .header-cols {
+  .headerCols {
     grid-template-columns: minmax(0, 1fr) 366px minmax(0, 1fr);
   }
 }
