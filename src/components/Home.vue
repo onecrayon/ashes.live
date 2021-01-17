@@ -36,7 +36,7 @@
       <h2>Current progress</h2>
 
       <ul>
-        <li class="flex flex-no-wrap">
+        <li class="flex flex-nowrap">
           <span class="pr-2">
             <i class="far fa-check-square"></i>
           </span>
@@ -44,7 +44,7 @@
             Card browsers: <router-link to="/cards/">Reborn</router-link> and <router-link to="/cards/legacy/">legacy</router-link>
           </span>
         </li>
-        <li class="flex flex-no-wrap">
+        <li class="flex flex-nowrap">
           <span class="pr-2">
             <i class="far fa-square"></i>
           </span>
@@ -52,7 +52,7 @@
             Deck builder (including deck listings for both public and private decks); <em>hopefully complete late Jan. 2021</em>
           </span>
         </li>
-        <li class="flex flex-no-wrap">
+        <li class="flex flex-nowrap">
           <span class="pr-2">
             <i class="far fa-square"></i>
           </span>
@@ -60,7 +60,7 @@
             Comments (on decks and cards); <em>hopefully complete Feb. 2021</em>
           </span>
         </li>
-        <li class="flex flex-no-wrap">
+        <li class="flex flex-nowrap">
           <span class="pr-2">
             <i class="far fa-square"></i>
           </span>

@@ -14,7 +14,7 @@
   <div v-else>
     <h1 class="phg-side-action">{{ details.name }}</h1>
 
-    <div class="md:flex md:flex-no-wrap">
+    <div class="md:flex md:flex-nowrap">
       <div class="md:flex-none md:mr-8 mb-8">
         <img
           class="bg-gray-light"
