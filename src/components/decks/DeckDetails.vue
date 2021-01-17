@@ -13,23 +13,34 @@
     <h1 class="phg-side-action">{{ deck.title }}</h1>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <div
-        class="mb-4 deck-container col-span-2 flex flex-row">
+        class="mb-4 deckContainer col-span-2 flex flex-row">
         <img :src="phoenixbornImagePath" />
         <div class="text-xs">
           <div class="text-3xl">
             <card-link :card="deck.phoenixborn"></card-link>
           </div>
-          <div class="m-0 font-bold text-xl flex flex-col sm:flex-row">
+          <ul class="mb-2 mt-2 text-base">
+            <strong
+            v-if="deck.phoenixborn.battlefield !== undefined"
+            class="inline-block border border-red-light px-1">Battlefield {{ deck.phoenixborn.battlefield }}</strong>
+            <strong
+              v-if="deck.phoenixborn.life !== undefined"
+              class="inline-block border border-green-light px-1 mx-1">Life {{ deck.phoenixborn.life }}</strong>
+            <strong
+              v-if="deck.phoenixborn.spellboard !== undefined"
+              class="inline-block border border-blue-dark px-1">Spellboard {{ deck.phoenixborn.spellboard }}</strong>
+          </ul>
+          <div class="mb-2 mt-2 font-bold text-xl flex flex-col sm:flex-row">
             <deck-dice :dice="deck.dice" />
           </div>
           <hr class="mb-4 mt-4" />
           <div class="mb-1">
-            
-            <span class="text-sm float-right font-bold" :class="[ cardsCount != 30 ? 'deck-not-full' : '']">
+            <span class="text-lg font-bold">Cards</span>
+            <span class="text-sm float-right font-bold" :class="[ cardsCount != 30 ? 'deckNotFull' : 'text-gray-darker']">
               {{ cardsCount }}/30
             </span>
           </div>
-          <deck-cards-preview :cards="deck.cards" :conjurations="deck.conjurations" />
+          <deck-cards-preview :cards="deck.cards" :conjurations="deck.conjurations" :columnLayout="true"/>
         </div>
       </div>
       <div class="flex flex-col">
@@ -41,13 +52,18 @@
           </span>
       </div>
     </div>
+    <hr />
+    <h1>Description</h1>
+    <DeckDescription :content="deck.description" />
   </div>
 </template>
 
 <script>
-import { request } from '/src/utils.js'
+import { compile } from 'vue'
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
+import { request, parseCardText } from '/src/utils.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
+import DeckDescription from './DeckDescription.vue'
 import DeckDice from './DeckDice.vue'
 import UserBadge from '../users/UserBadge.vue'
 
@@ -56,6 +72,7 @@ export default {
   props: ['id'],
   components: {
     DeckCardsPreview,
+    DeckDescription,
     DeckDice,
     UserBadge,
   },
@@ -92,7 +109,12 @@ export default {
 }
 </script>
 <style scoped>
-.deck-container {
+.deckContainer {
   background-repeat: no-repeat;
 }
+
+.deckNotFull {
+  color: var(--color-red);
+}
+
 </style>
