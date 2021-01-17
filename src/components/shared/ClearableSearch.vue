@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-no-wrap">
+  <div class="flex flex-nowrap">
     <input
       class="appearance-none border-2 bg-white border-gray-darker border-r rounded-l-md h-full px-2 flex-auto"
       type="text"

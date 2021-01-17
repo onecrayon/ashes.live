@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="md:flex md:flex-no-wrap mb-4">
+    <div class="md:flex md:flex-nowrap mb-4">
       <dice-filter
         class="flex-none mb-4 h-10 md:pr-4 md:mb-0"
         v-model:filter-logic="diceFilterLogic"
@@ -16,7 +16,7 @@
       class="mb-4"
       v-model:filter-list="typeFilterList"
       :is-disabled="isDisabled"></type-filter>
-    <div class="flex flex-no-wrap">
+    <div class="flex flex-nowrap">
       <card-sort
         class="mb-4 flex-auto"
         v-model:sort="sort"

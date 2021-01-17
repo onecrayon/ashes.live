@@ -7,10 +7,10 @@
     </p>
   </div>
   <div v-else-if="cards && cards.length">
-    <div v-if="galleryStyle === 'list'" class="grid gap-0" :class="[$style['list-columns']]">
+    <div v-if="galleryStyle === 'list'" class="grid gap-0" :class="[$style.listColumns]">
       <card-table-row v-for="card of cards" :key="card.stub" :card="card"></card-table-row>
     </div>
-    <div v-else class="grid gap-4 grid-flow-row auto-cols-auto" :class="[$style['card-columns']]">
+    <div v-else class="grid gap-4 grid-flow-row auto-cols-auto" :class="[$style.cardColumns]">
       <card v-for="card of cards" :key="card.stub" :card="card"></card>
     </div>
     <div v-show="haveNextCards" class="my-4 text-center" ref="scrollLoader">
@@ -70,11 +70,11 @@ export default {
 </script>
 
 <style lang="postcss" module>
-.list-columns {
+.listColumns {
   grid-template-columns: auto 1fr auto max-content;
 }
 
-.card-columns {
+.cardColumns {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 </style>

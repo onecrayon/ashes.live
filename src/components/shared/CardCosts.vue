@@ -1,7 +1,7 @@
 <template>
   <ol v-if="costs && costs.length" :class="[isHorizontal ? $style.horizontal : '']">
     <li v-for="(cost, index) of costs" :class="$style.cost" :key="index">
-      <span v-if="Array.isArray(cost)" :class="$style['parallel-costs']">
+      <span v-if="Array.isArray(cost)" :class="$style.parallelCosts">
         <span
           v-for="(splitCost, splitIndex) of cost"
           :class="$style.cost"
@@ -52,7 +52,7 @@ export default {
   }
 }
 
-.parallel-costs {
+.parallelCosts {
   & .cost {
     display: block;
     padding: 0 0 8px;
@@ -110,7 +110,7 @@ export default {
     margin: 0;
   }
 
-  & .parallel-costs {
+  & .parallelCosts {
     & .cost {
       display: inline-block;
       padding: 0 12px 0 0;

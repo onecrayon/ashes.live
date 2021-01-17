@@ -3,7 +3,7 @@
     class="border border-gray bg-white"
     :class="[$style.card]">
     <div class="bg-gray-light text-gray text-center relative border-b border-gray-light">
-      <i class="text-2xl" :class="[typeIcon, $style['center-icon']]"></i>
+      <i class="text-2xl" :class="[typeIcon, $style.centerIcon]"></i>
       <img
         class="relative"
         width="300"
@@ -11,7 +11,7 @@
         alt=" "
         :src="cardImageURL">
     </div>
-    <div class="clearfix">
+    <div class="flow-root">
       <card-costs class="p-2 float-right text-right" :costs="card.cost"></card-costs>
       <div class="px-2 py-px text-xs">
         <p class="m-0 font-bold text-lg">
@@ -40,7 +40,7 @@
         </div>
         <div v-if="card.text">
           <hr v-if="!isPhoenixborn" class="my-2 border-gray-light">
-          <div class="leading-snug" :class="$style['effect-text']">
+          <div class="leading-snug" :class="$style.effectText">
             <card-codes
               :content="card.text"
               :is-legacy="card.is_legacy"
@@ -150,7 +150,7 @@ export default {
   width: 300px;
 }
 
-.center-icon {
+.centerIcon {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -158,7 +158,7 @@ export default {
   margin: -13px 0 0 -13px;
 }
 
-.effect-text {
+.effectText {
   & p {
     @apply my-2;
   }
