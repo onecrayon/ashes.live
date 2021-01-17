@@ -15,7 +15,7 @@
       <div
         class="mb-4 deckContainer col-span-2 flex flex-row">
         <img :src="phoenixbornImagePath" />
-        <div class="text-xs">
+        <div class="flex-grow text-xs">
           <div class="text-3xl">
             <card-link :card="deck.phoenixborn"></card-link>
           </div>
@@ -43,13 +43,21 @@
           <deck-cards-preview :cards="deck.cards" :conjurations="deck.conjurations" :columnLayout="true"/>
         </div>
       </div>
-      <div class="flex flex-col">
-          <span class="text-sm">
+      <div>
+        <div>
+          <span class="text-gray-darker w-20 inline-block">Author:</span>
+          <span>
             <user-badge :user="deck.user" />
           </span>
-          <span class="text-sm float-right text-gray-darker">
-            Last updated: {{ lastUpdatedDateFormatted }} ago
-          </span>
+        </div>
+        <div>
+          <span class="text-gray-darker w-20 inline-block">Updated:</span>
+          <span>{{ lastUpdatedDateFormatted }} ago</span>
+        </div>
+        <div>
+          <span class="text-gray-darker w-20 inline-block">Requires:</span>
+          <span>{{ formatReleases }}</span>
+        </div>
       </div>
     </div>
     <hr />
@@ -95,7 +103,7 @@ export default {
   },
   computed: {
     phoenixbornImagePath () {
-      return this.deck.is_legacy ? `https://cdn.ashes.live/legacy/images/cards/${this.deck.phoenixborn.stub}-slice.jpg` : `https://cdn.ashes.live/images/phoenixborn/${this.deck.phoenixborn.stub}.jpg`
+      return this.deck.is_legacy ? `https://cdn.ashes.live/legacy/images/cards/${this.deck.phoenixborn.stub}-large.jpg` : `https://cdn.ashes.live/images/phoenixborn/${this.deck.phoenixborn.stub}.jpg`
     },
     lastUpdatedDateFormatted () {
       return formatDistanceToNowStrict(parseISO(this.deck.modified))
@@ -105,6 +113,10 @@ export default {
         return prev + card.count
       }, 0)
     },
+    formatReleases() {
+      const releaseNames = this.releases.map(r => r.name)
+      return releaseNames.join(', ')
+    }
   },
 }
 </script>
