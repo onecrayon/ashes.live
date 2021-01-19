@@ -13,7 +13,8 @@
     <h1 class="phg-side-action">{{ deck.title }}</h1>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <div
-        class="mb-4 deckContainer col-span-2 flex flex-row">
+        class="mb-4 col-span-2 flex flex-row"
+        :class="$style.deckContainer">
         <img :src="phoenixbornImagePath" />
         <div class="flex-grow text-xs">
           <div class="text-3xl">
@@ -36,7 +37,7 @@
           <hr class="mb-4 mt-4" />
           <div class="mb-1">
             <span class="text-lg font-bold">Cards</span>
-            <span class="text-sm float-right font-bold" :class="[ cardsCount != 30 ? 'deckNotFull' : 'text-gray-darker']">
+            <span class="text-sm float-right font-bold" :class="[ cardsCount != 30 ? $style.deckNotFull : 'text-gray-darker']">
               {{ cardsCount }}/30
             </span>
           </div>
@@ -120,7 +121,7 @@ export default {
   },
 }
 </script>
-<style scoped>
+<style lang="postcss" module>
 .deckContainer {
   background-repeat: no-repeat;
 }

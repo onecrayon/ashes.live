@@ -1,6 +1,7 @@
 <template>
   <div
-    class="border border-gray bg-white mt-4 mb-4 deck-item pl-12"
+    class="border border-gray bg-white mt-4 mb-4 pl-12"
+    :class="$style.deckItem"
     :style="`background-image: url(${phoenixbornImagePath})`">
     <div class="p-2 text-xs">
       <div class="m-0 font-bold text-xl flex flex-col sm:flex-row">
@@ -20,7 +21,7 @@
         <span class="text-lg">
           <card-link :card="deck.phoenixborn"></card-link>
         </span>
-        <span class="text-sm float-right font-bold" :class="[ cardsCount != 30 ? 'deck-not-full' : '']">
+        <span class="text-sm float-right font-bold" :class="[ cardsCount != 30 ? $style.deckNotFull : '']">
           {{ cardsCount }}/30
         </span>
       </div>
@@ -69,12 +70,12 @@ export default {
   },
 }
 </script>
-<style scoped>
-.deck-not-full {
+<style lang="postcss" module>
+.deckNotFull {
   color: var(--color-red);
 }
 
-.deck-item {
+.deckItem {
   background-repeat: no-repeat;
 }
 </style>
