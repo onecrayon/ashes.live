@@ -14,8 +14,18 @@ export default {
     // Setup accepts a reactive `props` object and can return a render function, so this
     // functionally allows us to compile arbitrary HTML into Vue components
     return compile(
-      parseCardText(props.content)
+      `<div class="deckDescription">` +
+        parseCardText(props.content) +
+        '</div>'
     )
   },
 }
 </script>
+<style>
+
+.deckDescription ul {
+  list-style-type: disc;
+  padding-left: 40px;
+}
+
+</style>
