@@ -69,7 +69,7 @@
 <script>
 import { compile } from 'vue'
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
-import { request, parseCardText } from '/src/utils.js'
+import { request, parseCardText, getPhoenixbornImageUrl } from '/src/utils.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDescription from './DeckDescription.vue'
 import DeckDice from './DeckDice.vue'
@@ -103,7 +103,7 @@ export default {
   },
   computed: {
     phoenixbornImagePath () {
-      return this.deck.is_legacy ? `https://cdn.ashes.live/legacy/images/cards/${this.deck.phoenixborn.stub}-large.jpg` : `https://cdn.ashes.live/images/phoenixborn/${this.deck.phoenixborn.stub}.jpg`
+      return getPhoenixbornImageUrl(this.deck.phoenixborn.stub, true, this.deck.is_legacy)
     },
     lastUpdatedDateFormatted () {
       return formatDistanceToNowStrict(parseISO(this.deck.modified))

@@ -31,6 +31,7 @@
 
 <script>
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
+import { getPhoenixbornImageUrl } from '/src/utils.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
 import UserBadge from '../users/UserBadge.vue'
@@ -63,7 +64,7 @@ export default {
       }, 0)
     },
     phoenixbornImagePath () {
-      return this.deck.is_legacy ? `https://cdn.ashes.live/legacy/images/cards/${this.deck.phoenixborn.stub}-slice.jpg` : `https://cdn.ashes.live/images/phoenixborn-badges/${this.deck.phoenixborn.stub}.jpg`
+      return getPhoenixbornImageUrl(this.deck.phoenixborn.stub, false, this.deck.is_legacy)
     }
   },
 }
