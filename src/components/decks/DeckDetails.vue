@@ -70,7 +70,7 @@
 <script>
 import { compile } from 'vue'
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
-import { request, parseCardText, getPhoenixbornImageUrl } from '/src/utils.js'
+import { request, getPhoenixbornImageUrl } from '/src/utils.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDescription from './DeckDescription.vue'
 import DeckDice from './DeckDice.vue'
