@@ -9,13 +9,14 @@ export default {
       type: String,
       required: true,
     },
+    isLegacy: false
   },
   setup (props) {
     // Setup accepts a reactive `props` object and can return a render function, so this
     // functionally allows us to compile arbitrary HTML into Vue components
     return compile(
       `<div class="deckDescription">` +
-        parseCardText(props.content) +
+        parseCardText(props.content, true, props.isLegacy) +
         '</div>'
     )
   },

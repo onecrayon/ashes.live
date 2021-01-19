@@ -63,7 +63,7 @@
     </div>
     <hr />
     <h1>Description</h1>
-    <DeckDescription :content="deck.description" />
+    <DeckDescription :content="deck.description" :isLegacy="deck.is_legacy"/>
   </div>
 </template>
 
