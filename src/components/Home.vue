@@ -12,7 +12,8 @@
       <h3 class="font-bold my-4">Community</h3>
 
       <ul class="list-disc pl-4">
-        <li><a href="https://discord.gg/UU5bduq">Community Discord</a> <span class="text-gray">(TTS matchmaking + general discussion)</span></li>
+        <li><a href="https://discord.gg/UU5bduq">Community Discord</a> <span class="text-gray">(TTS or Ashteki matchmaking + general discussion)</span></li>
+        <li><a href="https://ashteki.com">Ashteki</a> <span class="text-gray">(Play Ashes in your browser! Under active development, so there may be bugs and not all cards are available yet.)</span></li>
         <li><a href="https://www.reddit.com/r/AshesGame/">Ashes on reddit</a></li>
         <li><a href="https://boardgamegeek.com/boardgame/167400/ashes-rise-phoenixborn/forums/0">Ashes on BoardGameGeek</a></li>
       </ul>
@@ -21,6 +22,7 @@
 
       <ul class="list-disc pl-4">
         <li><a href="https://cdn.ashes.live/files/ashes-reborn-rules.pdf">Ashes Reborn Rules</a> <span class="text-gray">(PDF)</span></li>
+        <li>Dice references: <a href="https://cdn.ashes.live/images/cards/ceremonial-magic.jpg"><span class="phg-ceremonial-power" title="Ceremonial Magic"></span></a> <a href="https://cdn.ashes.live/images/cards/charm-magic.jpg"><span class="phg-charm-power" title="Charm Magic"></span></a> <a href="https://cdn.ashes.live/images/cards/illusion-magic.jpg"><span class="phg-illusion-power" title="Illusion Magic"></span></a> <a href="https://cdn.ashes.live/images/cards/natural-magic.jpg"><span class="phg-natural-power" title="Natural Magic"></span></a> <a href="https://cdn.ashes.live/images/cards/divine-magic.jpg"><span class="phg-divine-power" title="Divine Magic"></span></a> <a href="https://cdn.ashes.live/images/cards/sympathy-magic.jpg"><span class="phg-sympathy-power" title="Sympathy Magic"></span></a></li>
       </ul>
 
       <hr class="border-gray-light my-2">
