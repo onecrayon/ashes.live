@@ -131,5 +131,63 @@ button, input {
   margin-left: -10px;
 }
 
+.die {
+  line-height: 1.5em;
+  flex: 0 0 auto;
+  border-radius: 3px;
+  margin: 0.1em;
+  text-align: center;
+
+  &:before {
+    padding: 0;
+  }
+
+  &:hover, &:active {
+    @apply no-underline;
+  }
+}
+
+.die.ceremonial {
+  color: #ee3342;
+  background: #111821;
+  border-color: #ee3342;
+}
+
+.die.charm {
+  color: #f7e442;
+  background: #f34f98;
+  border-color: #f7e442;
+}
+
+.die.illusion {
+  color: #8bc7ea;
+  background: #490d67;
+  border-color: #8bc7ea;
+}
+
+.die.natural {
+  color: #cedb00;
+  background: #004a98;
+  border-color: #cedb00;
+}
+
+.die.divine {
+  color: #b58a2b;
+  background: #f2f2f2;
+  border-color: #b58a2b;
+}
+
+.die.sympathy {
+  color: #e3c2af;
+  background: #119981;
+  border-color: #e3c2af;
+}
+
+.die.time {
+  color: #dfdfdf;
+  background: #9a2e36;
+  border-color: #dfdfdf;
+}
+
 @tailwind components;
 @tailwind utilities;
