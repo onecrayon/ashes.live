@@ -1,7 +1,7 @@
 <template>
   <div v-if="cards && cards.length" class="mt-1">
     <i :class="[typeIcon]"></i>
-    <strong class="text-base font-medium pl-1">{{typeLabel}}</strong> ({{ count }})
+    <strong class="text-base font-normal pl-1">{{typeLabel}}</strong> <span class="text-gray-darker">({{ count }})</span>
     <ul class="mt-1">
       <li v-for="(card, index) of cards" :key="index">
         <span>{{ card.count }}x <card-link :card="card"></card-link></span>

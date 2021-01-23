@@ -1,6 +1,7 @@
 <template>
   <div
-    class="border border-gray bg-white mt-4 mb-4 deck-item pl-12"
+    class="border border-gray bg-white mt-4 mb-4 pl-12"
+    :class="$style.deckItem"
     :style="`background-image: url(${phoenixbornImagePath})`">
     <div class="p-2 text-xs">
       <div class="m-0 font-bold text-xl flex flex-col sm:flex-row">
@@ -20,7 +21,7 @@
         <span class="text-lg">
           <card-link :card="deck.phoenixborn"></card-link>
         </span>
-        <span class="text-sm float-right font-bold" :class="[ cardsCount != 30 ? 'deck-not-full' : '']">
+        <span class="text-sm float-right font-bold" :class="[ cardsCount != 30 ? $style.deckNotFull : '']">
           {{ cardsCount }}/30
         </span>
       </div>
@@ -31,6 +32,7 @@
 
 <script>
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
+import { getPhoenixbornImageUrl } from '/src/utils.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
 import UserBadge from '../users/UserBadge.vue'
@@ -63,17 +65,17 @@ export default {
       }, 0)
     },
     phoenixbornImagePath () {
-      return this.deck.is_legacy ? `https://cdn.ashes.live/legacy/images/cards/${this.deck.phoenixborn.stub}-slice.jpg` : `https://cdn.ashes.live/images/phoenixborn-badges/${this.deck.phoenixborn.stub}.jpg`
+      return getPhoenixbornImageUrl(this.deck.phoenixborn.stub, false, this.deck.is_legacy)
     }
   },
 }
 </script>
-<style scoped>
-.deck-not-full {
+<style lang="postcss" module>
+.deckNotFull {
   color: var(--color-red);
 }
 
-.deck-item {
+.deckItem {
   background-repeat: no-repeat;
 }
 </style>

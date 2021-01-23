@@ -2,6 +2,8 @@ import axios from 'axios'
 import Nanobar from 'nanobar'
 import { diceList } from './constants.js'
 
+const ASHES_CDN_BASE_URL = 'https://cdn.ashes.live'
+
 /**
  * request(options)
  *
@@ -254,4 +256,17 @@ export function parseEffectText (text, isLegacy=false) {
   // Bold ability names (&#39; is apostrophe)
   text = text.replace(/(?:<p>|^)((?:[a-z 0-9]|&#39;)+:)(?= \w| <i class="phg-)/ig, '<p><strong>$1</strong>')
   return text
+}
+
+/**
+ * Returns phoenixborn image url from the CDN.
+ *
+ * @param {str} stub Phoenixborn card name
+ * @param {str} isLarge If the image to be returned should be the large version 
+ * @param {bool} isLegacy If the card is from the Ashes 1.0 set as opposed to the Reborn set
+ */
+export function getPhoenixbornImageUrl(stub, isLarge = false, isLegacy = false) {
+  return isLegacy ?
+    `${ASHES_CDN_BASE_URL}/legacy/images/cards/${stub}-${isLarge ? 'large' : 'slice'}.jpg` :
+    `${ASHES_CDN_BASE_URL}/images/phoenixborn${isLarge ? '' : '-badges'}/${stub}.jpg`
 }
