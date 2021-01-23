@@ -2,7 +2,7 @@ import axios from 'axios'
 import Nanobar from 'nanobar'
 import { diceList } from './constants.js'
 
-const ASHES_CDN_BASE_URL = 'https://cdn.ashes.live'
+const ASHES_CDN_BASE_URL = import.meta.env.VITE_CDN_URL
 
 /**
  * request(options)
@@ -77,7 +77,7 @@ export function trimmed(stringOrFalsey) {
 
 /**
  * localStoreFactory(rootKey)
- * 
+ *
  * Factory funcion for generating local store access functions keyed off rootKey (that is, the
  * local store will include a single rootKey that contains a JSON object with whatever is set
  * via the factory-derived methods).
@@ -262,7 +262,7 @@ export function parseEffectText (text, isLegacy=false) {
  * Returns phoenixborn image url from the CDN.
  *
  * @param {str} stub Phoenixborn card name
- * @param {str} isLarge If the image to be returned should be the large version 
+ * @param {str} isLarge If the image to be returned should be the large version
  * @param {bool} isLegacy If the card is from the Ashes 1.0 set as opposed to the Reborn set
  */
 export function getPhoenixbornImageUrl(stub, isLarge = false, isLegacy = false) {

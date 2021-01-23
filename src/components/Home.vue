@@ -20,15 +20,15 @@
       <h3 class="font-bold my-4">Files</h3>
 
       <ul class="list-disc pl-4">
-        <li><a href="https://cdn.ashes.live/files/ashes-reborn-rules.pdf">Ashes Reborn Rules</a> <span class="text-gray">(PDF)</span></li>
+        <li><a :href="getCDNURL('/files/ashes-reborn-rules.pdf')">Ashes Reborn Rules</a> <span class="text-gray">(PDF)</span></li>
       </ul>
 
       <hr class="border-gray-light my-2">
 
       <ul class="list-disc pl-4">
-        <li><a href="https://cdn.ashes.live/legacy/files/ashes-core-rules.pdf">Legacy Rules</a> <span class="text-gray">(PDF)</span></li>
-        <li><a href="https://cdn.ashes.live/legacy/files/ashes-raven-rules.pdf">Raven Rules</a> <span class="text-gray">(PDF; fan-made replacement for official FAQ)</span></li>
-        <li><a href="https://cdn.ashes.live/legacy/files/ashes-rules-reference.pdf">Legacy Rules Reference</a> <span class="text-gray">(PDF; all official rules, one document)</span></li>
+        <li><a :href="getCDNURL('/legacy/files/ashes-core-rules.pdf')">Legacy Rules</a> <span class="text-gray">(PDF)</span></li>
+        <li><a :href="getCDNURL('/legacy/files/ashes-raven-rules.pdf')">Raven Rules</a> <span class="text-gray">(PDF; fan-made replacement for official FAQ)</span></li>
+        <li><a :href="getCDNURL('/legacy/files/ashes-rules-reference.pdf')">Legacy Rules Reference</a> <span class="text-gray">(PDF; all official rules, one document)</span></li>
         <li><a href="https://steamcommunity.com/sharedfiles/filedetails/?id=1717839303">TableTop Simulator: Ashes Custom Workshop</a> <span class="text-gray">(legacy TTS mod; includes Project Phoenix fan-made content)</span></li>
       </ul>
     </div>
@@ -81,6 +81,14 @@ export default {
   computed: {
     apiURL () {
       return import.meta.env.VITE_API_URL
+    },
+    cdnURL() {
+      return import.meta.env.VITE_CDN_URL
+    },
+  },
+  methods: {
+    getCDNURL(path) {
+      return this.cdnURL + path
     },
   },
 }
