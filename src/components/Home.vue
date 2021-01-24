@@ -12,7 +12,8 @@
       <h3 class="font-bold my-4">Community</h3>
 
       <ul class="list-disc pl-4">
-        <li><a href="https://discord.gg/UU5bduq">Community Discord</a> <span class="text-gray">(TTS matchmaking + general discussion)</span></li>
+        <li><a href="https://discord.gg/UU5bduq">Community Discord</a> <span class="text-gray">(TTS or Ashteki matchmaking + general discussion)</span></li>
+        <li><a href="https://ashteki.com">Ashteki</a> <span class="text-gray">(Play Ashes in your browser! Under active development, so there may be bugs and not all cards are available yet.)</span></li>
         <li><a href="https://www.reddit.com/r/AshesGame/">Ashes on reddit</a></li>
         <li><a href="https://boardgamegeek.com/boardgame/167400/ashes-rise-phoenixborn/forums/0">Ashes on BoardGameGeek</a></li>
       </ul>
@@ -21,6 +22,16 @@
 
       <ul class="list-disc pl-4">
         <li><a :href="getCDNURL('/files/ashes-reborn-rules.pdf')">Ashes Reborn Rules</a> <span class="text-gray">(PDF)</span></li>
+        <li>Dice reference cards:
+          <div class="text-2xl">
+            <a class="die ceremonial phg-ceremonial-power py-1 px-2" :href="getCDNURL('/images/cards/ceremonial-magic.jpg')" target="_blank" title="Ceremonial Magic"></a>
+            <a class="die charm phg-charm-power py-1 px-2" :href="getCDNURL('/images/cards/charm-magic.jpg')" target="_blank" title="Charm Magic"></a>
+            <a class="die illusion phg-illusion-power py-1 px-2" :href="getCDNURL('/images/cards/illusion-magic.jpg')" target="_blank" title="Illusion Magic"></a>
+            <a class="die natural phg-natural-power py-1 px-2" :href="getCDNURL('/images/cards/natural-magic.jpg')" target="_blank" title="Natural Magic"></a>
+            <a class="die divine phg-divine-power py-1 px-2" :href="getCDNURL('/images/cards/divine-magic.jpg')" target="_blank" title="Divine Magic"></a>
+            <a class="die sympathy phg-sympathy-power py-1 px-2" :href="getCDNURL('/images/cards/sympathy-magic.jpg')" target="_blank" title="Sympathy Magic"></a>
+          </div>
+        </li>
       </ul>
 
       <hr class="border-gray-light my-2">
