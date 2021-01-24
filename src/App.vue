@@ -1,33 +1,45 @@
 <template>
-  <nav class="bg-inexhaustible" :class="[useFullHeader ? $style.fullHeader : '']">
-    <!-- Referencing the style directly through an injected $style element is necessary for modular styles to function; otherwise, the template style name doesn't get rewritten. Due to a bug in Vite 2, we have to use snakeCase instead of hyphens or underscores for class names. -->
-    <div :class="$style.banner">
-      <ul
-        class="container mx-auto grid items-center text-center py-2 px-4 gap-x-10 grid-rows-2 md:grid-rows-1"
-        :class="[$style.headerCols, useFullHeader ? 'lg:py-4' : '']">
-        <li class="col-start-1 col-span-3 row-start-1 md:col-start-2 md:col-span-1">
-          <router-link to="/" :class="$style.homeLink">Ashes.live</router-link>
-        </li>
-        <li
-          class="col-start-1 row-start-2 justify-self-start md:row-start-1"
-          :class="[useFullHeader ? 'lg:justify-self-end' : '']">
-          <router-link to="/decks/" class="inline-block text-black leading-tight">
-            <i
-              class="phg-main-action phg-standalone text-2xl pr-2 inline-block"
-              :class="[useFullHeader ? 'lg:block lg:pr-0' : '']"></i>
-            <span class="text-lg">Decks</span>
-          </router-link>
-        </li>
-        <li
-          class="col-start-3 row-start-2 justify-self-end md:row-start-1"
-          :class="[useFullHeader ? 'lg:justify-self-start' : '']">
-          <router-link to="/cards/" class="inline-block text-black leading-tight">
-            <i
-              class="phg-side-action phg-standalone text-2xl pr-2 inline-block"
-              :class="[useFullHeader ? 'lg:block lg:pr-0' : '']"></i>
-            <span class="text-lg">Cards</span>
-          </router-link>
-        </li>
+  <nav>
+    <!-- Referencing the style directly through an injected $style element is necessary for modular styles to function; otherwise, the template style name doesn't get rewritten. Due to a wrinkle in Vite 2, we have to use snakeCase instead of hyphens or underscores for class names. -->
+    <div class="bg-inexhaustible" :class="[useFullHeader ? $style.fullHeader : '']">
+      <div :class="$style.banner">
+        <ul
+          class="container mx-auto grid items-center text-center py-2 px-4 gap-x-10 grid-rows-2 md:grid-rows-1"
+          :class="[$style.headerCols, useFullHeader ? 'lg:py-4' : '']">
+          <li class="col-start-1 col-span-3 row-start-1 md:col-start-2 md:col-span-1">
+            <router-link to="/" :class="$style.homeLink">Ashes.live</router-link>
+          </li>
+          <li
+            class="col-start-1 row-start-2 justify-self-start md:row-start-1"
+            :class="[useFullHeader ? 'lg:justify-self-end' : '']">
+            <router-link to="/decks/" class="inline-block text-black leading-tight">
+              <i
+                class="phg-main-action phg-standalone text-2xl pr-2 inline-block"
+                :class="[useFullHeader ? 'lg:block lg:pr-0' : '']"></i>
+              <span class="text-lg">Decks</span>
+            </router-link>
+          </li>
+          <li
+            class="col-start-3 row-start-2 justify-self-end md:row-start-1"
+            :class="[useFullHeader ? 'lg:justify-self-start' : '']">
+            <router-link to="/cards/" class="inline-block text-black leading-tight">
+              <i
+                class="phg-side-action phg-standalone text-2xl pr-2 inline-block"
+                :class="[useFullHeader ? 'lg:block lg:pr-0' : '']"></i>
+              <span class="text-lg">Cards</span>
+            </router-link>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="px-4 container mx-auto">
+      <ul v-if="!isAuthenticated" class="flex">
+        <li class="flex-initial py-1 px-2"><router-link to="/log-in/" class="text-black">
+          <i class="fas fa-user-secret text-xl"></i> Log In
+        </router-link></li>
+        <li class="flex-initial py-1 px-2"><router-link to="/sign-up/" class="text-black">
+          <i class="fas fa-user-plus text-xl"></i> Sign Up
+        </router-link></li>
       </ul>
     </div>
   </nav>
@@ -66,6 +78,9 @@ export default {
     },
     thisYear () {
       return (new Date()).getFullYear()
+    },
+    isAuthenticated () {
+      return this.$store.getters['player/isAuthenticated']
     },
   },
   watch: {
