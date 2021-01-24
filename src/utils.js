@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Nanobar from 'nanobar'
 import { diceList } from './constants.js'
+import store from './store/index.js'
 
 const ASHES_CDN_BASE_URL = import.meta.env.VITE_CDN_URL
 
@@ -21,6 +22,16 @@ export function request(endpoint, options = {}) {
   } else {
     if (endpoint.startsWith('/')) endpoint = endpoint.substr(1)
     options.url = `${import.meta.env.VITE_API_URL}/${endpoint}`
+  }
+  // Always authenticate, if we have a token available
+  if (store.getters['player/isAuthenticated']) {
+    const authHeader = {
+      Authorization: `bearer ${store.state.player.token}`
+    }
+    options.headers = {
+      ...(options.headers || {}),
+      ...authHeader,
+    }
   }
   const nano = new Nanobar({ autoRun: true })
   return axios.request(options).finally(() => {
