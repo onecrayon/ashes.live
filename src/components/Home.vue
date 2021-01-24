@@ -34,7 +34,7 @@
         </li>
       </ul>
 
-      <hr class="border-gray-light my-2">
+      <hr class="border-gray-light mt-6 mb-4">
 
       <ul class="list-disc pl-4">
         <li><a :href="getCDNURL('/legacy/files/ashes-core-rules.pdf')">Legacy Rules</a> <span class="text-gray">(PDF)</span></li>
