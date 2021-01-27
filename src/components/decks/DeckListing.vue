@@ -17,7 +17,7 @@
       placeholder="Filter by title..."
       v-model:search="filterText"
       :is-disabled="isDisabled"></clearable-search>
-    <phoenixborn-picker 
+    <phoenixborn-picker
       class="flex-auto h-10 mb-4 md:mb-0"
       placeholder="Filter by Phoenixborn..."
       v-model:filter="phoenixborn"
@@ -39,6 +39,7 @@
 
 <script>
 import { watch } from 'vue'
+import { useToast } from 'vue-toastification'
 import DeckTable from './DeckTable.vue'
 import ClearableSearch from '../shared/ClearableSearch.vue'
 import { debounce, trimmed, request } from '/src/utils.js'
@@ -48,6 +49,11 @@ const DECKS_PER_PAGE = 30;
 
 export default {
   name: 'DeckListing',
+  setup () {
+    // Expose toasts for use in other portions of this component
+    const toast = useToast()
+    return { toast }
+  },
   data: () => {
     return {
       isDisabled: false,
@@ -156,7 +162,7 @@ export default {
       request(endpoint, options).then((response) => {
         // Update our query string with the currently set filters
         const query = {}
-        
+
         if (this.filterText) {
           query.q = this.filterText
         }
@@ -178,10 +184,10 @@ export default {
           this.nextDecksURL = null
           return
         }
-     
+
         this.deckCount = response.data.count
         this.decks = response.data.results
-        
+
         // Add decks to the Vuex store so that we don't need to fetch individual cards via AJAX
         // when viewing their details around the site (during this session, at least)
         // this.$store.commit('decks/addDecks', response.data.results)
