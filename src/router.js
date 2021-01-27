@@ -2,11 +2,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from './components/Home.vue'
 import NotFound from './components/NotFound.vue'
 import LogIn from './components/LogIn.vue'
-import SignUp from './components/SignUp.vue'
 import CardListing from './components/cards/CardListing.vue'
 import CardDetails from './components/cards/CardDetails.vue'
 import DeckListing from './components/decks/DeckListing.vue'
 import DeckDetails from './components/decks/DeckDetails.vue'
+import NewPlayer from './components/players/NewPlayer.vue'
 
 export default createRouter({
   history: createWebHistory(),
@@ -68,15 +68,9 @@ export default createRouter({
       props: true,
     },
     {
-      path: '/log-in/',
-      name: 'LogIn',
-      component: LogIn,
-      meta: { title: 'Log In' },
-    },
-    {
-      path: '/sign-up/',
-      name: 'SignUp',
-      component: SignUp,
+      path: '/players/new/',
+      name: 'NewPlayer',
+      component: NewPlayer,
       meta: { title: 'Sign Up' },
     },
     {

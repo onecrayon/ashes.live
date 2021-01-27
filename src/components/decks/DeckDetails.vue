@@ -48,7 +48,7 @@
         <div>
           <span class="text-gray-darker w-20 inline-block">Author:</span>
           <span>
-            <user-badge :user="deck.user" />
+            <player-badge :user="deck.user" />
           </span>
         </div>
         <div>
@@ -74,7 +74,7 @@ import { request, getPhoenixbornImageUrl } from '/src/utils.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDescription from './DeckDescription.vue'
 import DeckDice from './DeckDice.vue'
-import UserBadge from '../users/UserBadge.vue'
+import PlayerBadge from '../shared/PlayerBadge.vue'
 
 export default {
   name: 'DeckDetails',
@@ -83,7 +83,7 @@ export default {
     DeckCardsPreview,
     DeckDescription,
     DeckDice,
-    UserBadge,
+    PlayerBadge,
   },
   data () {
     return {
