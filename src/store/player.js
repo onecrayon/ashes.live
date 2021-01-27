@@ -35,13 +35,14 @@ const getters = {
 // Actions
 const actions = {
   logIn ({ commit }, { email, password }) {
+    const formData = new FormData()
+    formData.append('username', email)
+    formData.append('password', password)
+
     return new Promise((resolve, reject) => {
       request('/v2/token', {
         method: 'post',
-        data: {
-          username: email,
-          password: password,
-        }
+        data: formData,
       }).then(response => {
         const user = response.data.user
         commit('setToken', response.data.access_token)
@@ -51,8 +52,18 @@ const actions = {
         commit('options/setColorizeIcons', user.colorize_icons, { root: true })
         resolve()
       }).catch((error) => {
-        reject(error)
+        // TODO: make sure to catch situation where we don't have a response at all (or are missing detail key)
+        reject(error.response.data.detail)
       })
+    })
+  },
+  logOut ({ commit }) {
+    return new Promise((resolve) => {
+      commit('setToken', null)
+      commit('setUsername', null)
+      commit('setBadge', null)
+      commit('setIsAdmin', false)
+      resolve()
     })
   }
 }

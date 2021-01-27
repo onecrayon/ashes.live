@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from './components/Home.vue'
 import NotFound from './components/NotFound.vue'
-import LogIn from './components/LogIn.vue'
 import CardListing from './components/cards/CardListing.vue'
 import CardDetails from './components/cards/CardDetails.vue'
 import DeckListing from './components/decks/DeckListing.vue'

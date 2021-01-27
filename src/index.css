@@ -193,5 +193,14 @@ hr {
   border-color: #dfdfdf;
 }
 
+/* Usage: <transition name="fade"> */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .25s ease-out;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
 @tailwind components;
 @tailwind utilities;

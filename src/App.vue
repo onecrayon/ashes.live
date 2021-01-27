@@ -33,15 +33,26 @@
       </div>
     </div>
     <div class="px-4 container mx-auto">
-      <ul v-if="!isAuthenticated" class="flex">
-        <li class="flex-initial py-1 px-2"><router-link to="/log-in/" class="text-black">
-          <i class="fas fa-user-secret text-xl"></i> Log In
-        </router-link></li>
-        <li class="flex-initial py-1 px-2"><router-link to="/sign-up/" class="text-black">
+      <ul v-if="!isAuthenticated" class="flex py-1">
+        <li class="flex-initial px-2">
+          <!-- TODO: convert this to a standard linkalike component -->
+          <span class="cursor-pointer hover:underline" @click="isLogInModalOpen = true">
+            <i class="fas fa-user-secret text-xl"></i> Log In
+          </span>
+        </li>
+        <li class="flex-initial px-2"><router-link to="/players/new/" class="text-black">
           <i class="fas fa-user-plus text-xl"></i> Sign Up
         </router-link></li>
       </ul>
+      <ul v-else class="flex py-1">
+        <li class="flex-initial px-2">
+          <span class="cursor-pointer hover:underline" @click="logOut">
+            <i class="fas fa-user-slash text-xl"></i> Log Out
+          </span>
+        </li>
+      </ul>
     </div>
+    <log-in-modal v-model:open="isLogInModalOpen"></log-in-modal>
   </nav>
   <div class="p-4 container mx-auto lg:pt-8">
     <!-- Keying to the route path is necessary, because legacy routes tend to share the same components, and without keying against the path they won't receive standard router lifecycle calls -->
@@ -56,6 +67,8 @@
 <script>
 import axios from 'axios'
 import qs from 'qs'
+import { useToast } from 'vue-toastification'
+import LogInModal from './components/LogInModal.vue'
 
 // Set up sensible Axios defaults for query string array handling
 // (it uses bracketed property names, which the backend doesn't support)
@@ -68,6 +81,17 @@ function siteTitle(routeObject) {
 
 export default {
   name: 'App',
+  setup () {
+    // Expose toasts for use in other portions of this component
+    const toast = useToast()
+    return { toast }
+  },
+  components: {
+    LogInModal,
+  },
+  data: () => ({
+    isLogInModalOpen: false,
+  }),
   created () {
     // Set the page title when the app is loaded for the first time
     document.title = siteTitle(this.$route)
@@ -87,6 +111,12 @@ export default {
     $route(to, from) {
       // Set the page title when we navigate to a new page
       document.title = siteTitle(to)
+    },
+  },
+  methods: {
+    logOut () {
+      this.$store.dispatch('player/logOut')
+      this.toast.success('You have logged out!')
     },
   },
 }
