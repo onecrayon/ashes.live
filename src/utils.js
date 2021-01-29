@@ -119,7 +119,7 @@ export function localStoreFactory(rootKey) {
  *
  * @param {string} text
  */
-export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
+export function parseFormattedText (text, ensureParagraphs=false, isLegacy=false) {
   // First make sure that we don't have any HTML in our string; no XSS, thanks
   const unescapedHTML = /[&<"']/g
   const escapeMap = {
@@ -258,7 +258,7 @@ export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
  * @param {str} text Card effect text to parse
  */
 export function parseEffectText (text, isLegacy=false) {
-  text = parseCardText(text, true, isLegacy)
+  text = parseFormattedText(text, true, isLegacy)
   // Convert lists to inexhaustible and blue blocks
   text = text.replace('<ul>', '<div class="inexhaustible-effects">')
     .replace('<ol>', '<div class="reaction-effects">')

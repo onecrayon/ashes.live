@@ -1,6 +1,6 @@
 <script>
 import { compile } from 'vue'
-import { parseCardText } from '/src/utils.js'
+import { parseFormattedText } from '/src/utils.js'
 
 export default {
   name: 'DeckDescription',
@@ -16,7 +16,7 @@ export default {
     // functionally allows us to compile arbitrary HTML into Vue components
     return compile(
       `<div class="deckDescription">` +
-        parseCardText(props.content, true, props.isLegacy) +
+        parseFormattedText(props.content, true, props.isLegacy) +
         '</div>'
     )
   },

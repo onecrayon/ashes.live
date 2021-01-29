@@ -1,6 +1,6 @@
 <script>
 import { compile } from 'vue'
-import { parseCardText, parseEffectText } from '/src/utils.js'
+import { parseFormattedText, parseEffectText } from '/src/utils.js'
 
 export default {
   name: 'CardCodes',
@@ -21,7 +21,7 @@ export default {
   setup (props) {
     // Setup accepts a reactive `props` object and can return a render function, so this
     // functionally allows us to compile arbitrary HTML into Vue components
-    const cardText = props.isCardEffect ? parseEffectText(props.content, props.isLegacy) : parseCardText(props.content, false, props.isLegacy)
+    const cardText = props.isCardEffect ? parseEffectText(props.content, props.isLegacy) : parseFormattedText(props.content, false, props.isLegacy)
     return compile(
       cardText
     )
