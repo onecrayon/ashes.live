@@ -139,6 +139,9 @@ export default {
     logOut () {
       this.$store.dispatch('player/logOut')
       this.toast.info('You have logged out!')
+      if (this.$route.meta.needsAuth) {
+        this.$router.push('/')
+      }
     },
   },
 }

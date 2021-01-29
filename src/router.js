@@ -67,7 +67,10 @@ export default createRouter({
       path: '/decks/mine/',
       name: 'PlayerDecks',
       component: PlayerDecks,
-      meta: { title: 'My Decks' },
+      meta: {
+        title: 'My Decks',
+        needsAuth: true,
+      },
     },
     {
       path: '/decks/mine/legacy',
@@ -76,6 +79,7 @@ export default createRouter({
       meta: {
         title: 'My Legacy Decks',
         showLegacy: true,
+        needsAuth: true,
       },
     },
     {
@@ -94,7 +98,10 @@ export default createRouter({
       path: '/players/me/',
       name: 'PlayerAccount',
       component: PlayerAccount,
-      meta: { title: 'My Account' },
+      meta: {
+        title: 'My Account',
+        needsAuth: true,
+      },
     },
     {
       path: '/players/:badge/',
