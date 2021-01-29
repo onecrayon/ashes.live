@@ -48,7 +48,7 @@ import PhoenixbornPicker from '../shared/PhoenixbornPicker.vue'
 const DECKS_PER_PAGE = 30;
 
 export default {
-  name: 'DeckListing',
+  name: 'PublicDecks',
   setup () {
     // Expose toasts for use in other portions of this component
     const toast = useToast()

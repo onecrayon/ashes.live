@@ -3,7 +3,7 @@ import Home from './components/Home.vue'
 import NotFound from './components/NotFound.vue'
 import CardListing from './components/cards/CardListing.vue'
 import CardDetails from './components/cards/CardDetails.vue'
-import DeckListing from './components/decks/DeckListing.vue'
+import PublicDecks from './components/decks/PublicDecks.vue'
 import DeckDetails from './components/decks/DeckDetails.vue'
 import PlayerAccount from './components/players/PlayerAccount.vue'
 import PlayerDecks from './components/decks/PlayerDecks.vue'
@@ -51,13 +51,13 @@ export default createRouter({
     {
       path: '/decks/',
       name: 'Decks',
-      component: DeckListing,
+      component: PublicDecks,
       meta: { title: 'Decks' },
     },
     {
       path: '/decks/legacy/',
       name: 'LegacyDecks',
-      component: DeckListing,
+      component: PublicDecks,
       meta: {
         title: 'Browse Legacy Decks',
         showLegacy: true,
