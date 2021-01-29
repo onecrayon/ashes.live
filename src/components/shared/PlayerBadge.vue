@@ -1,7 +1,7 @@
 <template>
-  <div class="inline">
-    <span>{{ user.username }}</span><span class="text-xs text-gray-darker">#{{ user.badge }}</span>
-  </div>
+  <router-link :to="profileURL">
+    <span>{{ user.username }}</span><span class="text-gray">#{{ user.badge }}</span>
+  </router-link>
 </template>
 
 <script>
@@ -11,6 +11,11 @@ export default {
     user: {
       username: '',
       badge: '',
+    },
+  },
+  computed: {
+    profileURL () {
+      return `/players/${this.user.badge}/`
     },
   },
 }

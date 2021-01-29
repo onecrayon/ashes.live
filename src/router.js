@@ -5,6 +5,9 @@ import CardListing from './components/cards/CardListing.vue'
 import CardDetails from './components/cards/CardDetails.vue'
 import DeckListing from './components/decks/DeckListing.vue'
 import DeckDetails from './components/decks/DeckDetails.vue'
+import PlayerAccount from './components/players/PlayerAccount.vue'
+import PlayerDecks from './components/decks/PlayerDecks.vue'
+import PlayerPublicProfile from './components/players/PlayerPublicProfile.vue'
 import NewPlayer from './components/players/NewPlayer.vue'
 
 export default createRouter({
@@ -61,6 +64,12 @@ export default createRouter({
       },
     },
     {
+      path: '/decks/mine/',
+      name: 'PlayerDecks',
+      component: PlayerDecks,
+      meta: { title: 'My Decks' },
+    },
+    {
       path: '/decks/:id',
       name: 'DeckDetails',
       component: DeckDetails,
@@ -71,6 +80,18 @@ export default createRouter({
       name: 'NewPlayer',
       component: NewPlayer,
       meta: { title: 'Sign Up' },
+    },
+    {
+      path: '/players/me/',
+      name: 'PlayerAccount',
+      component: PlayerAccount,
+      meta: { title: 'My Account' },
+    },
+    {
+      path: '/players/:badge/',
+      name: 'PlayerPublicProfile',
+      component: PlayerPublicProfile,
+      props: true,
     },
     {
       path: '/:pathMatch(.*)*',

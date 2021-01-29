@@ -33,24 +33,38 @@
       </div>
     </div>
     <div class="px-4 container mx-auto">
-      <ul v-if="!isAuthenticated" class="flex py-1">
-        <li class="flex-initial px-2">
-          <!-- TODO: convert this to a standard linkalike component -->
-          <span class="cursor-pointer hover:underline" @click="isLogInModalOpen = true">
-            <i class="fas fa-user-secret text-xl"></i> Log In
-          </span>
-        </li>
-        <li class="flex-initial px-2"><router-link to="/players/new/" class="text-black">
-          <i class="fas fa-user-plus text-xl"></i> Sign Up
-        </router-link></li>
-      </ul>
-      <ul v-else class="flex py-1">
-        <li class="flex-initial px-2">
-          <span class="cursor-pointer hover:underline" @click="logOut">
-            <i class="fas fa-user-slash text-xl"></i> Log Out
-          </span>
-        </li>
-      </ul>
+      <transition name="slide-vertical">
+        <ul v-if="!isAuthenticated" class="flex py-1">
+          <li class="flex-initial px-2">
+            <link-alike @click="isLogInModalOpen = true" use-underline>
+              <i class="fas fa-user-secret text-xl"></i> Log In
+            </link-alike>
+          </li>
+          <li class="flex-initial px-2">
+            <router-link to="/players/new/" class="text-black">
+              <i class="fas fa-user-plus text-xl"></i> Sign Up
+            </router-link>
+          </li>
+        </ul>
+        <ul v-else class="flex py-1">
+          <li class="flex-initial px-2">
+            <router-link to="/players/me/" class="text-black">
+              <i class="fas fa-user text-xl"></i>
+              {{ myUsername }}<span class="text-gray">#{{ myBadge }}</span>
+            </router-link>
+          </li>
+          <li class="flex-initial px-2">
+            <router-link to="/decks/mine/" class="text-black">
+              <i class="fas fa-th-list text-xl"></i> My Decks
+            </router-link>
+          </li>
+          <li class="flex-initial px-2">
+            <link-alike @click="logOut" use-underline>
+              <i class="fas fa-user-slash text-xl"></i> Log Out
+            </link-alike>
+          </li>
+        </ul>
+      </transition>
     </div>
     <log-in-modal v-model:open="isLogInModalOpen"></log-in-modal>
   </nav>
@@ -69,6 +83,7 @@ import axios from 'axios'
 import qs from 'qs'
 import { useToast } from 'vue-toastification'
 import LogInModal from './components/LogInModal.vue'
+import LinkAlike from './components/shared/LinkAlike.vue'
 
 // Set up sensible Axios defaults for query string array handling
 // (it uses bracketed property names, which the backend doesn't support)
@@ -87,6 +102,7 @@ export default {
     return { toast }
   },
   components: {
+    LinkAlike,
     LogInModal,
   },
   data: () => ({
@@ -106,6 +122,12 @@ export default {
     isAuthenticated () {
       return this.$store.getters['player/isAuthenticated']
     },
+    myUsername () {
+      return this.$store.state.player.username
+    },
+    myBadge () {
+      return this.$store.state.player.badge
+    },
   },
   watch: {
     $route(to, from) {
@@ -116,7 +138,7 @@ export default {
   methods: {
     logOut () {
       this.$store.dispatch('player/logOut')
-      this.toast.success('You have logged out!')
+      this.toast.info('You have logged out!')
     },
   },
 }

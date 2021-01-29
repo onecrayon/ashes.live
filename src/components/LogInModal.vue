@@ -48,7 +48,6 @@ export default {
       this.$emit('update:open', false)
     },
     submitCredentials () {
-      console.log('submitting?')
       this.$store.dispatch(
         'player/logIn',
         {

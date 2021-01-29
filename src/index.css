@@ -202,5 +202,25 @@ hr {
   opacity: 0;
 }
 
+/* Usage: <transition name="slide-vertical"> */
+.slide-vertical-enter-active {
+  transition: transform .25s ease-out .15s, opacity .25s ease-out .15s;
+}
+
+.slide-vertical-leave-active {
+  position: absolute;
+  transition: transform .25s ease-out, opacity .25s ease-out;
+}
+
+.slide-vertical-enter-from {
+  opacity: 0;
+  transform: translateY(-35%);
+}
+
+.slide-vertical-leave-to {
+  opacity: 0;
+  transform: translateY(35%);
+}
+
 @tailwind components;
 @tailwind utilities;
