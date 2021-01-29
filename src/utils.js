@@ -113,7 +113,7 @@ export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
     '&': '&amp;',
     '<': '&lt;',
     '"': '&quot;',
-    "'": '\\&#39;'
+    "'": '&#39;'
   }
   if (unescapedHTML.test(text)) {
     text = text.replace(unescapedHTML, (char) => {
@@ -144,11 +144,11 @@ export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
     }
   )
   // Parse card codes
-  text = text.replace(/\[\[(\*?)((?:[a-z -]|\\&#39;)+)(?::([a-z]+))?\]\]|( - )/ig, (input, isImage, primary, secondary, dash) => {
+  text = text.replace(/\[\[(\*?)((?:[a-z -]|&#39;)+)(?::([a-z]+))?\]\]|( - )/ig, (input, isImage, primary, secondary, dash) => {
     if (dash) {
       return ' <i class="divider"><span class="alt-text">-</span></i> '
     }
-    let lowerPrimary = primary.toLowerCase().replace('\\&#39;', '')
+    let lowerPrimary = primary.toLowerCase().replace('&#39;', '')
     secondary = secondary && secondary.toLowerCase()
     if (['discard', 'exhaust'].indexOf(lowerPrimary) > -1) {
       return `<i class="phg-${lowerPrimary}" title="${primary}"></i>`
