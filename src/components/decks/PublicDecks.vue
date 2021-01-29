@@ -22,5 +22,10 @@ export default {
   components: {
     DeckListing,
   },
+  computed: {
+    showLegacy () {
+      return !!this.$route.meta.showLegacy
+    },
+  },
 }
 </script>
