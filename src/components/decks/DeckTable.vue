@@ -26,7 +26,6 @@
 </template>
 
 <script>
-import { debounce } from '/src/utils.js'
 import Deck from './Deck.vue'
 
 export default {

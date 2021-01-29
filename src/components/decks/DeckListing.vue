@@ -9,7 +9,7 @@
       class="flex-auto h-10 mb-4 md:mb-0"
       placeholder="Filter by Phoenixborn..."
       v-model:filter="phoenixborn"
-      :is-legacy="legacy"
+      :is-legacy="showLegacy"
     />
   </div>
 
@@ -43,10 +43,10 @@ export default {
     return { toast }
   },
   props: {
-    legacy: {
+    showMine: {
       type: Boolean,
       default: false,
-    },
+    }
   },
   data: () => {
     return {
@@ -150,7 +150,7 @@ export default {
     },
     fetchDecks ({endpoint = null, options = {}, failureCallback = null} = {}) {
       if (!endpoint) {
-        endpoint = '/v2/decks'
+        endpoint = this.showMine ? '/v2/decks/mine' : '/v2/decks'
       }
       this.isDisabled = true
       request(endpoint, options).then((response) => {

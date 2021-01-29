@@ -11,7 +11,7 @@
     </p>
   </div>
 
-  <deck-listing :legacy="showLegacy"></deck-listing>
+  <deck-listing></deck-listing>
 </template>
 
 <script>
@@ -21,11 +21,6 @@ export default {
   name: 'PublicDecks',
   components: {
     DeckListing,
-  },
-  computed: {
-    showLegacy () {
-      return !!this.$route.meta.showLegacy
-    },
   },
 }
 </script>

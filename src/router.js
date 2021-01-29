@@ -70,6 +70,15 @@ export default createRouter({
       meta: { title: 'My Decks' },
     },
     {
+      path: '/decks/mine/legacy',
+      name: 'PlayerLegacyDecks',
+      component: PlayerDecks,
+      meta: {
+        title: 'My Legacy Decks',
+        showLegacy: true,
+      },
+    },
+    {
       path: '/decks/:id',
       name: 'DeckDetails',
       component: DeckDetails,
