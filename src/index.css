@@ -135,6 +135,10 @@ hr {
   margin-left: -10px;
 }
 
+.parsed-text ul {
+  @apply list-disc pl-4;
+}
+
 .die {
   line-height: 1.5em;
   flex: 0 0 auto;

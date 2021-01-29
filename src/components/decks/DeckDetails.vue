@@ -63,7 +63,8 @@
     </div>
     <hr />
     <h2>Description</h2>
-    <deck-description :content="deck.description" :isLegacy="deck.is_legacy"/>
+
+    <card-codes :content="deck.description" :is-legacy="deck.is_legacy" needs-paragraphs></card-codes>
   </div>
 </template>
 
@@ -71,16 +72,16 @@
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import { request, getPhoenixbornImageUrl } from '/src/utils.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
-import DeckDescription from './DeckDescription.vue'
 import DeckDice from './DeckDice.vue'
+import CardCodes from '../shared/CardCodes.vue'
 import PlayerBadge from '../shared/PlayerBadge.vue'
 
 export default {
   name: 'DeckDetails',
   props: ['id'],
   components: {
+    CardCodes,
     DeckCardsPreview,
-    DeckDescription,
     DeckDice,
     PlayerBadge,
   },
