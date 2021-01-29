@@ -1,5 +1,5 @@
 <template>
-<div v-if="error">
+  <div v-if="error">
     <h1 class="phg-discard">No deck found</h1>
 
     <p class="text-lg">
@@ -7,10 +7,10 @@
     </p>
   </div>
   <div v-else-if="!deck">
-    <h1 class="phg-side-action text-gray"><i class="fas fa-circle-notch fa-spin"></i> Loading...</h1>
+    <h1 class="phg-main-action text-gray"><i class="fas fa-circle-notch fa-spin"></i> Loading...</h1>
   </div>
   <div v-else>
-    <h1 class="phg-side-action">{{ deck.title }}</h1>
+    <h1 class="phg-main-action">{{ deck.title }}</h1>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <div
         class="mb-4 col-span-2 flex flex-row"
@@ -62,13 +62,12 @@
       </div>
     </div>
     <hr />
-    <h1>Description</h1>
-    <DeckDescription :content="deck.description" :isLegacy="deck.is_legacy"/>
+    <h2>Description</h2>
+    <deck-description :content="deck.description" :isLegacy="deck.is_legacy"/>
   </div>
 </template>
 
 <script>
-import { compile } from 'vue'
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import { request, getPhoenixbornImageUrl } from '/src/utils.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
