@@ -1,9 +1,47 @@
 <template>
-  <h1 class="phg-time-class">Player public profile coming soon!</h1>
+  <div v-if="error">
+    <h1 class="phg-discard">No player found</h1>
+
+    <p class="text-lg">
+      Sorry, this does not appear to be a valid player!
+    </p>
+  </div>
+  <div v-else-if="!username">
+    <h1 class="phg-illusion-power text-gray"><i class="fas fa-circle-notch fa-spin"></i> Loading...</h1>
+  </div>
+  <div v-else>
+    <h1 class="phg-illusion-power">{{ username }}<span class="text-gray">#{{ badge }}</span></h1>
+
+    <!-- TODO: move description into a sidebar and add deck-listing that only shows this user's decks -->
+
+    <card-codes :content="description" needs-paragraphs></card-codes>
+  </div>
 </template>
 
 <script>
+import { request } from '/src/utils.js'
+import CardCodes from '../shared/CardCodes.vue'
+
 export default {
   name: 'PlayerPublicProfile',
+  props: ['badge'],
+  components: {
+    CardCodes,
+  },
+  data: () => ({
+    username: null,
+    description: null,
+    error: false,
+  }),
+  beforeMount () {
+    request(`/v2/players/${this.badge}`).then(response => {
+      this.username = response.data.username
+      this.description = response.data.description
+      // And set the site title
+      document.title = `${this.username}#${this.badge} - Ashes.live`
+    }).catch(error => {
+      this.error = true
+    })
+  },
 }
 </script>
