@@ -59,11 +59,15 @@ const actions = {
   },
   logOut ({ commit }) {
     return new Promise((resolve) => {
-      commit('setToken', null)
-      commit('setUsername', null)
-      commit('setBadge', null)
-      commit('setIsAdmin', false)
-      resolve()
+      request('/v2/token', {
+        method: 'delete'
+      }).finally(() => {
+        commit('setToken', null)
+        commit('setUsername', null)
+        commit('setBadge', null)
+        commit('setIsAdmin', false)
+        resolve()
+      })
     })
   }
 }

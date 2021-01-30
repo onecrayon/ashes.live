@@ -26,7 +26,7 @@ export function request(endpoint, options = {}) {
   // Always authenticate, if we have a token available
   if (store.getters['player/isAuthenticated']) {
     const authHeader = {
-      Authorization: `bearer ${store.state.player.token}`
+      Authorization: `Bearer ${store.state.player.token}`
     }
     options.headers = {
       ...(options.headers || {}),
