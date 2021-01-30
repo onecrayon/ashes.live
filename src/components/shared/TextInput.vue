@@ -5,6 +5,7 @@
     :placeholder="placeholder"
     :disabled="isDisabled"
     @input="$emit('update:modelValue', $event.target.value)"
+    @keyup="handleSpecialKeys"
     ref="textInput">
 </template>
 
@@ -25,10 +26,15 @@ export default {
       default: false,
     },
   },
-  emits: ['update:modelValue'],
+  emits: ['escape', 'update:modelValue'],
   methods: {
     focus () {
       this.$refs.textInput.focus()
+    },
+    handleSpecialKeys (event) {
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        this.$emit('escape')
+      }
     },
   },
 }

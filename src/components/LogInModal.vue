@@ -8,12 +8,14 @@
           class="mb-2"
           placeholder="Email"
           v-model="email"
-          ref="emailInput"></text-input>
+          ref="emailInput"
+          @escape="closeModal()"></text-input>
         <text-input
           class="mb-4"
           type="password"
           placeholder="Password"
-          v-model="password"></text-input>
+          v-model="password"
+          @escape="closeModal()"></text-input>
         <button class="btn btn-blue px-4 py-1">Log in</button>
       </form>
     </div>
