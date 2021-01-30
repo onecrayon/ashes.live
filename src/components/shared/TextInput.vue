@@ -4,7 +4,8 @@
     :type="type"
     :placeholder="placeholder"
     :disabled="isDisabled"
-    @input="$emit('update:modelValue', $event.target.value)">
+    @input="$emit('update:modelValue', $event.target.value)"
+    ref="textInput">
 </template>
 
 <script>
@@ -25,5 +26,10 @@ export default {
     },
   },
   emits: ['update:modelValue'],
+  methods: {
+    focus () {
+      this.$refs.textInput.focus()
+    },
+  },
 }
 </script>

@@ -7,7 +7,8 @@
         <text-input
           class="mb-2"
           placeholder="Email"
-          v-model="email"></text-input>
+          v-model="email"
+          ref="emailInput"></text-input>
         <text-input
           class="mb-4"
           type="password"
@@ -42,6 +43,13 @@ export default {
   components: {
     Modal,
     TextInput,
+  },
+  watch: {
+    open (newValue) {
+      if (newValue) {
+        this.$nextTick(() => this.$refs.emailInput.focus())
+      }
+    },
   },
   methods: {
     closeModal () {
