@@ -16,7 +16,7 @@
           placeholder="Password"
           v-model="password"
           @escape="closeModal()"></text-input>
-        <button class="btn btn-blue px-4 py-1">Log in</button>
+        <button class="btn btn-blue px-4 py-1" :disabled="!isValid">Log in</button>
       </form>
     </div>
   </modal>
@@ -52,6 +52,11 @@ export default {
         this.$nextTick(() => this.$refs.emailInput.focus())
       }
     },
+  },
+  computed: {
+    isValid () {
+      return !!this.email && !!this.password 
+    }
   },
   methods: {
     closeModal () {
