@@ -69,11 +69,11 @@ export default {
           email: this.email,
           password: this.password
         }
-      ).catch(error => {
-        this.toast.error(error)
-      }).then(() => {
+      ).then(() => {
         this.toast.success('You are now logged in!')
         this.closeModal()
+      }).catch(error => {
+        this.toast.error(error)
       })
     },
   },
