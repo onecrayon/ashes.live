@@ -75,7 +75,7 @@ export function trimmed(stringOrFalsey) {
 
 /**
  * localStoreFactory(rootKey)
- * 
+ *
  * Factory funcion for generating local store access functions keyed off rootKey (that is, the
  * local store will include a single rootKey that contains a JSON object with whatever is set
  * via the factory-derived methods).
@@ -113,7 +113,7 @@ export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
     '&': '&amp;',
     '<': '&lt;',
     '"': '&quot;',
-    "'": '\\&#39;'
+    "'": '&#39;'
   }
   if (unescapedHTML.test(text)) {
     text = text.replace(unescapedHTML, (char) => {
@@ -144,11 +144,11 @@ export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
     }
   )
   // Parse card codes
-  text = text.replace(/\[\[(\*?)((?:[a-z -]|\\&#39;)+)(?::([a-z]+))?\]\]|( - )/ig, (input, isImage, primary, secondary, dash) => {
+  text = text.replace(/\[\[(\*?)((?:[a-z -]|&#39;)+)(?::([a-z]+))?\]\]|( - )/ig, (input, isImage, primary, secondary, dash) => {
     if (dash) {
       return ' <i class="divider"><span class="alt-text">-</span></i> '
     }
-    let lowerPrimary = primary.toLowerCase().replace('\\&#39;', '')
+    let lowerPrimary = primary.toLowerCase().replace('&#39;', '')
     secondary = secondary && secondary.toLowerCase()
     if (['discard', 'exhaust'].indexOf(lowerPrimary) > -1) {
       return `<i class="phg-${lowerPrimary}" title="${primary}"></i>`
@@ -171,7 +171,8 @@ export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
     } else if (secondary) {
       return `<i>${lowerPrimary} ${secondary}</i>`
     } else {
-      return `<card-link :card="{name: '${primary}', stub: '${lowerPrimary.replace(/ +/g, '-')}', is_legacy: ${isLegacy}}"></card-link>`
+      // We have to escape single quotes that are passed down to a linked component because otherwise Vue translates them back into single quotes and throws an error
+      return `<card-link :card="{name: '${primary.replace('&#39;', '\\&#39;')}', stub: '${lowerPrimary.replace(/ +/g, '-')}', is_legacy: ${isLegacy}}"></card-link>`
     }
     return `<i class="phg-${lowerPrimary}-${secondary}" title="${primary}${secondary ? ' ' + secondary : ''}"><span class="alt-text">${input}</span></i>`
   })
