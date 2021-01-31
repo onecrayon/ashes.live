@@ -87,6 +87,24 @@ export function trimmed(stringOrFalsey) {
 }
 
 /**
+ * jwtPayload(token)
+ *
+ * Returns the parsed payload object from the given JWT payload (does not attempt to validate it!
+ * Don't trust the data you get out!)
+ *
+ * Source: https://stackoverflow.com/a/38552302/38666
+ */
+export function jwtPayload(token) {
+  const base64Url = token.split('.')[1]
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+  const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+  }).join(''))
+
+  return JSON.parse(jsonPayload)
+}
+
+/**
  * localStoreFactory(rootKey)
  *
  * Factory funcion for generating local store access functions keyed off rootKey (that is, the

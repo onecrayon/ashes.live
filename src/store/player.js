@@ -4,16 +4,28 @@
  * This store saves player authentication, account details, and account options that are persisted
  * to the API.
  */
-import { request, localStoreFactory } from '/src/utils.js'
+import { request, localStoreFactory, jwtPayload } from '/src/utils.js'
 
 const { storeGet, storeSet } = localStoreFactory('player.auth')
 
-// Initial state
+// Check the validity of the token on load
+let baseToken = storeGet('token') || null
+// Check if the token is obviously expired
+if (baseToken) {
+  const payload = jwtPayload(baseToken)
+  // Javascript returns milliseconds from Unix epoch, because why not?
+  const nowTimestamp = Math.floor(Date.now() / 1000)
+  if (payload.exp <= nowTimestamp) {
+    baseToken = null
+  }
+}
+
+// Initial state; populated based on whether we have a seemingly-valid token or not
 const state = () => ({
-  username: storeGet('username') || null,
-  badge: storeGet('badge') || null,
-  token: storeGet('token') || null,
-  isAdmin: storeGet('isAdmin') || false,
+  username: (baseToken && storeGet('username')) || null,
+  badge: (baseToken && storeGet('badge')) || null,
+  token: baseToken,
+  isAdmin: (baseToken && storeGet('isAdmin')) || false,
 })
 
 // Getters
