@@ -46,10 +46,13 @@ const getters = {
 
 // Actions
 const actions = {
-  logIn ({ commit }, { email, password }) {
+  logIn ({ commit }, { email, password, rememberMe }) {
     const formData = new FormData()
     formData.append('username', email)
     formData.append('password', password)
+    if (rememberMe) {
+      formData.append('scope', 'token:longterm')
+    }
 
     return new Promise((resolve, reject) => {
       request('/v2/token', {

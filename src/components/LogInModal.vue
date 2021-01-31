@@ -16,6 +16,9 @@
           placeholder="Password"
           v-model="password"
           @escape="closeModal()"></text-input>
+        <div class="mb-4">
+          <label><input type="checkbox" v-model="rememberMe"> Remember me <span class="text-gray">(1 year)</span></label>
+        </div>
         <button class="btn btn-blue px-4 py-1" :disabled="!isValid">Log in</button>
       </form>
     </div>
@@ -41,6 +44,7 @@ export default {
   data: () => ({
     email: '',
     password: '',
+    rememberMe: false,
   }),
   components: {
     Modal,
@@ -55,19 +59,25 @@ export default {
   },
   computed: {
     isValid () {
-      return !!this.email && !!this.password 
+      return !!this.email && !!this.password
     }
   },
   methods: {
     closeModal () {
       this.$emit('update:open', false)
+      this.$nextTick(() => {
+        this.email = ''
+        this.password = ''
+        this.rememberMe = false
+      })
     },
     submitCredentials () {
       this.$store.dispatch(
         'player/logIn',
         {
           email: this.email,
-          password: this.password
+          password: this.password,
+          rememberMe: this.rememberMe,
         }
       ).then(() => {
         this.toast.success('You are now logged in!')
