@@ -10,7 +10,7 @@
       </div>
       <div class="flex flex-col sm:flex-row">
         <span class="flex-grow text-sm">
-          <user-badge :user="deck.user" />
+          <player-badge :user="deck.user" />
         </span>
         <span class="text-sm float-right text-gray-darker">
           Last updated: {{ lastUpdatedDateFormatted }} ago
@@ -35,7 +35,7 @@ import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import { getPhoenixbornImageUrl } from '/src/utils.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
-import UserBadge from '../users/UserBadge.vue'
+import PlayerBadge from '../shared/PlayerBadge.vue'
 
 export default {
   name: 'Deck',
@@ -47,7 +47,7 @@ export default {
   components: {
     DeckCardsPreview,
     DeckDice,
-    UserBadge,
+    PlayerBadge,
   },
   computed: {
     linkTarget () {

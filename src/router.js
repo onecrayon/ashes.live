@@ -1,12 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from './store/index.js'
 import Home from './components/Home.vue'
+import LogIn from './components/LogIn.vue'
 import NotFound from './components/NotFound.vue'
 import CardListing from './components/cards/CardListing.vue'
 import CardDetails from './components/cards/CardDetails.vue'
-import DeckListing from './components/decks/DeckListing.vue'
+import PublicDecks from './components/decks/PublicDecks.vue'
 import DeckDetails from './components/decks/DeckDetails.vue'
+import PlayerAccount from './components/players/PlayerAccount.vue'
+import PlayerDecks from './components/decks/PlayerDecks.vue'
+import PlayerPublicProfile from './components/players/PlayerPublicProfile.vue'
+import NewPlayer from './components/players/NewPlayer.vue'
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
@@ -47,22 +53,70 @@ export default createRouter({
     {
       path: '/decks/',
       name: 'Decks',
-      component: DeckListing,
+      component: PublicDecks,
       meta: { title: 'Decks' },
     },
     {
       path: '/decks/legacy/',
       name: 'LegacyDecks',
-      component: DeckListing,
+      component: PublicDecks,
       meta: {
         title: 'Browse Legacy Decks',
         showLegacy: true,
       },
     },
     {
-      path: '/decks/:id',
+      path: '/decks/mine/',
+      name: 'PlayerDecks',
+      component: PlayerDecks,
+      meta: {
+        title: 'My Decks',
+        needsAuth: true,
+      },
+    },
+    {
+      path: '/decks/mine/legacy/',
+      name: 'PlayerLegacyDecks',
+      component: PlayerDecks,
+      meta: {
+        title: 'My Legacy Decks',
+        showLegacy: true,
+        needsAuth: true,
+      },
+    },
+    {
+      path: '/decks/:id/',
       name: 'DeckDetails',
       component: DeckDetails,
+      props: true,
+    },
+    {
+      path: '/log-in/',
+      name: 'LogIn',
+      component: LogIn,
+      meta: {
+        title: 'Log In',
+      },
+    },
+    {
+      path: '/players/new/',
+      name: 'NewPlayer',
+      component: NewPlayer,
+      meta: { title: 'Sign Up' },
+    },
+    {
+      path: '/players/me/',
+      name: 'PlayerAccount',
+      component: PlayerAccount,
+      meta: {
+        title: 'My Account',
+        needsAuth: true,
+      },
+    },
+    {
+      path: '/players/:badge/',
+      name: 'PlayerPublicProfile',
+      component: PlayerPublicProfile,
       props: true,
     },
     {
@@ -88,3 +142,13 @@ export default createRouter({
     }
   },
 })
+
+router.beforeEach((to, from) => {
+  if (to.meta.needsAuth && !store.getters['player/isAuthenticated']) {
+    return {name: 'LogIn'}
+  } else if (to.name == 'LogIn' && store.getters['player/isAuthenticated']) {
+    return from.redirectedFrom ? from.redirectedFrom : '/'
+  }
+})
+
+export default router

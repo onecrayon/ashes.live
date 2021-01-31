@@ -7,7 +7,10 @@
  * Only save Reborn (non-legacy) cards because legacy cards simply show the card image on hover.
  */
 
+import { useToast } from 'vue-toastification'
 import { request } from '/src/utils.js'
+
+const toast = useToast()
 
 // Initial state
 const state = () => ({
@@ -31,8 +34,7 @@ const actions = {
         commit('addCard', card)
         resolve(card)
       }).catch(() => {
-        // TODO: figure out how to send this to a toast
-        //toast.error(`Unable to load data for ${card.name ? card.name : card.stub}!`)
+        toast.error(`Unable to load data for ${card.name ? card.name : card.stub}!`)
         reject()
       })
     })

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Nanobar from 'nanobar'
 import { diceList } from './constants.js'
+import store from './store/index.js'
 
 const ASHES_CDN_BASE_URL = import.meta.env.VITE_CDN_URL
 
@@ -21,6 +22,16 @@ export function request(endpoint, options = {}) {
   } else {
     if (endpoint.startsWith('/')) endpoint = endpoint.substr(1)
     options.url = `${import.meta.env.VITE_API_URL}/${endpoint}`
+  }
+  // Always authenticate, if we have a token available
+  if (store.getters['player/isAuthenticated']) {
+    const authHeader = {
+      Authorization: `Bearer ${store.state.player.token}`
+    }
+    options.headers = {
+      ...(options.headers || {}),
+      ...authHeader,
+    }
   }
   const nano = new Nanobar({ autoRun: true })
   return axios.request(options).finally(() => {
@@ -76,6 +87,24 @@ export function trimmed(stringOrFalsey) {
 }
 
 /**
+ * jwtPayload(token)
+ *
+ * Returns the parsed payload object from the given JWT payload (does not attempt to validate it!
+ * Don't trust the data you get out!)
+ *
+ * Source: https://stackoverflow.com/a/38552302/38666
+ */
+export function jwtPayload(token) {
+  const base64Url = token.split('.')[1]
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+  const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+  }).join(''))
+
+  return JSON.parse(jsonPayload)
+}
+
+/**
  * localStoreFactory(rootKey)
  *
  * Factory funcion for generating local store access functions keyed off rootKey (that is, the
@@ -108,7 +137,7 @@ export function localStoreFactory(rootKey) {
  *
  * @param {string} text
  */
-export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
+export function parseFormattedText (text, ensureParagraphs=false, isLegacy=false) {
   // First make sure that we don't have any HTML in our string; no XSS, thanks
   const unescapedHTML = /[&<"']/g
   const escapeMap = {
@@ -247,7 +276,7 @@ export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
  * @param {str} text Card effect text to parse
  */
 export function parseEffectText (text, isLegacy=false) {
-  text = parseCardText(text, true, isLegacy)
+  text = parseFormattedText(text, true, isLegacy)
   // Convert lists to inexhaustible and blue blocks
   text = text.replace('<ul>', '<div class="inexhaustible-effects">')
     .replace('<ol>', '<div class="reaction-effects">')

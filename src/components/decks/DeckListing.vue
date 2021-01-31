@@ -1,23 +1,11 @@
 <template>
-  <h1 class="phg-main-action">Browse decks</h1>
-
-  <p v-if="!showLegacy" class="text-l mb-8">
-    <!-- Using a named view because this is one of the more likely ones to move to a different route -->
-    You are viewing <strong class="text-red">Ashes Reborn</strong> decks. <router-link :to="{name: 'LegacyDecks'}">View Ashes Legacy decks instead</router-link>.
-  </p>
-  <div v-else>
-    <p class="text-l border-2 border-orange rounded bg-inexhaustible px-4 py-2 mb-2">
-      You are viewing <strong class="text-gray-darker">Ashes Legacy</strong> decks. <router-link to="/decks/">View Ashes Reborn decks instead</router-link>.
-    </p>
-  </div>
-
   <div class="md:flex md:flex-no-wrap mb-4">
     <clearable-search
       class="flex-auto h-10 mb-4 md:pr-4 md:mb-0"
       placeholder="Filter by title..."
       v-model:search="filterText"
       :is-disabled="isDisabled"></clearable-search>
-    <phoenixborn-picker 
+    <phoenixborn-picker
       class="flex-auto h-10 mb-4 md:mb-0"
       placeholder="Filter by Phoenixborn..."
       v-model:filter="phoenixborn"
@@ -39,6 +27,7 @@
 
 <script>
 import { watch } from 'vue'
+import { useToast } from 'vue-toastification'
 import DeckTable from './DeckTable.vue'
 import ClearableSearch from '../shared/ClearableSearch.vue'
 import { debounce, trimmed, request } from '/src/utils.js'
@@ -48,6 +37,17 @@ const DECKS_PER_PAGE = 30;
 
 export default {
   name: 'DeckListing',
+  setup () {
+    // Expose toasts for use in other portions of this component
+    const toast = useToast()
+    return { toast }
+  },
+  props: {
+    showMine: {
+      type: Boolean,
+      default: false,
+    }
+  },
   data: () => {
     return {
       isDisabled: false,
@@ -150,13 +150,13 @@ export default {
     },
     fetchDecks ({endpoint = null, options = {}, failureCallback = null} = {}) {
       if (!endpoint) {
-        endpoint = '/v2/decks'
+        endpoint = this.showMine ? '/v2/decks/mine' : '/v2/decks'
       }
       this.isDisabled = true
       request(endpoint, options).then((response) => {
         // Update our query string with the currently set filters
         const query = {}
-        
+
         if (this.filterText) {
           query.q = this.filterText
         }
@@ -178,10 +178,10 @@ export default {
           this.nextDecksURL = null
           return
         }
-     
+
         this.deckCount = response.data.count
         this.decks = response.data.results
-        
+
         // Add decks to the Vuex store so that we don't need to fetch individual cards via AJAX
         // when viewing their details around the site (during this session, at least)
         // this.$store.commit('decks/addDecks', response.data.results)
@@ -223,7 +223,7 @@ export default {
     loadPrevious () {
       this.offset -= DECKS_PER_PAGE
       this.filterList()
-    }
-  }
+    },
+  },
 }
 </script>

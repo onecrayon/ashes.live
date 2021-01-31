@@ -6,15 +6,15 @@
           v-for="(splitCost, splitIndex) of cost"
           :class="$style.cost"
           :key="splitIndex"
-          v-html="parseCardText(splitCost)"></span>
+          v-html="parseFormattedText(splitCost)"></span>
       </span>
-      <span v-else v-html="parseCardText(cost)"></span>
+      <span v-else v-html="parseFormattedText(cost)"></span>
     </li>
   </ol>
 </template>
 
 <script>
-import { parseCardText } from '/src/utils.js'
+import { parseFormattedText } from '/src/utils.js'
 
 export default {
   name: 'CardCosts',
@@ -28,7 +28,7 @@ export default {
     }
   },
   methods: {
-    parseCardText,
+    parseFormattedText,
   },
 }
 </script>
