@@ -1,8 +1,6 @@
 <template>
   <modal :open="open" @update:open="!$event && closeModal()">
-    <div class="sm:w-80 sm:mx-auto">
-      <log-in-form @escape="closeModal()" @auth:success="closeModal()"></log-in-form>
-    </div>
+    <log-in-form @escape="closeModal()" @auth:success="closeModal()" center-form></log-in-form>
   </modal>
 </template>
 

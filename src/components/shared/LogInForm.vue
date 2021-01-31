@@ -3,24 +3,26 @@
 
   <slot></slot>
 
-  <form @submit.prevent="submitCredentials" class="flex flex-col">
-    <text-input
-      class="mb-2"
-      placeholder="Email"
-      v-model="email"
-      ref="emailInput"
-      @escape="$emit('escape')"></text-input>
-    <text-input
-      class="mb-4"
-      type="password"
-      placeholder="Password"
-      v-model="password"
-      @escape="$emit('escape')"></text-input>
-    <div class="mb-4">
-      <label><input type="checkbox" v-model="rememberMe"> Remember me <span class="text-gray">(1 year)</span></label>
-    </div>
-    <button class="btn btn-blue px-4 py-1 mb-4" :disabled="!isValid">Log in</button>
-  </form>
+  <div class="sm:w-80" :class="centerForm ? 'sm:mx-auto' : ''">
+    <form @submit.prevent="submitCredentials" class="flex flex-col">
+      <text-input
+        class="mb-2"
+        placeholder="Email"
+        v-model="email"
+        ref="emailInput"
+        @escape="$emit('escape')"></text-input>
+      <text-input
+        class="mb-4"
+        type="password"
+        placeholder="Password"
+        v-model="password"
+        @escape="$emit('escape')"></text-input>
+      <div class="mb-4">
+        <label><input type="checkbox" v-model="rememberMe"> Remember me <span class="text-gray">(1 year)</span></label>
+      </div>
+      <button class="btn btn-blue px-4 py-1 mb-4" :disabled="!isValid">Log in</button>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -33,6 +35,12 @@ export default {
     // Expose toasts for use in other portions of this component
     const toast = useToast()
     return { toast }
+  },
+  props: {
+    centerForm: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ['escape', 'auth:success'],
   components: {
