@@ -1,5 +1,5 @@
 <template>
-  <modal v-model:open="open">
+  <modal v-bind:open="open" v-on:update:open="closeModal()">
     <div class="sm:w-80 sm:mx-auto">
       <h1 class="phg-illusion-class">Log In</h1>
 
