@@ -4,7 +4,7 @@
  * This store saves player authentication, account details, and account options that are persisted
  * to the API.
  */
-import { request, localStoreFactory, jwtPayload } from '/src/utils.js'
+import { request, parseResponseError, localStoreFactory, jwtPayload } from '/src/utils.js'
 
 const { storeGet, storeSet } = localStoreFactory('player.auth')
 
@@ -67,8 +67,7 @@ const actions = {
         commit('options/setColorizeIcons', user.colorize_icons, { root: true })
         resolve()
       }).catch((error) => {
-        // TODO: make sure to catch situation where we don't have a response at all (or are missing detail key)
-        reject(error.response.data.detail)
+        reject(parseResponseError(error))
       })
     })
   },
@@ -84,7 +83,19 @@ const actions = {
         resolve()
       })
     })
-  }
+  },
+  invite (_, { email }) {
+    return new Promise((resolve, reject) => {
+      request('/v2/players/new', {
+        method: 'post',
+        data: { email: email }
+      }).then(() => {
+        resolve()
+      }).catch(error => {
+        reject(parseResponseError(error))
+      })
+    })
+  },
 }
 
 // Mutations
