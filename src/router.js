@@ -10,6 +10,7 @@ import DeckDetails from './components/decks/DeckDetails.vue'
 import PlayerAccount from './components/players/PlayerAccount.vue'
 import PlayerDecks from './components/decks/PlayerDecks.vue'
 import PlayerPublicProfile from './components/players/PlayerPublicProfile.vue'
+import PlayerRegistration from './components/players/PlayerRegistration.vue'
 import NewPlayer from './components/players/NewPlayer.vue'
 
 const router = createRouter({
@@ -103,6 +104,13 @@ const router = createRouter({
       name: 'NewPlayer',
       component: NewPlayer,
       meta: { title: 'Sign Up' },
+    },
+    {
+      path: '/players/new/:token/',
+      name: 'PlayerRegistration',
+      component: PlayerRegistration,
+      props: true,
+      meta: { title: 'Finalize your account' },
     },
     {
       path: '/players/me/',
