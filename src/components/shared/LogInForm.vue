@@ -1,7 +1,9 @@
 <template>
-  <h1 class="phg-illusion-class">Log In</h1>
+  <div :class="centerForm ? 'sm:w-80 sm:mx-auto': ''">
+    <h1 class="phg-illusion-class">Log In</h1>
 
-  <slot></slot>
+    <slot></slot>
+  </div>
 
   <div class="sm:w-80" :class="centerForm ? 'sm:mx-auto' : ''">
     <form @submit.prevent="submitCredentials" class="flex flex-col">

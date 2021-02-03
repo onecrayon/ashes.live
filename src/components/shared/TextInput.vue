@@ -1,12 +1,15 @@
 <template>
-  <input
-    class="appearance-none border-2 bg-white border-gray-darker rounded-md h-full px-2"
-    :type="type"
-    :placeholder="placeholder"
-    :disabled="isDisabled"
-    @input="$emit('update:modelValue', $event.target.value)"
-    @keyup="handleSpecialKeys"
-    ref="textInput">
+  <div class="h-full">
+    <div v-if="label" class="font-bold text-sm text-gray-darker pl-2">{{ label }}</div>
+    <input
+      class="appearance-none border-2 bg-white border-gray-darker rounded-md px-2 py-1 w-full"
+      :type="type"
+      :placeholder="placeholder"
+      :disabled="isDisabled"
+      @input="$emit('update:modelValue', $event.target.value)"
+      @keyup="handleSpecialKeys"
+      ref="textInput">
+  </div>
 </template>
 
 <script>
@@ -17,6 +20,7 @@ export default {
   props: {
     modelValue: String,
     placeholder: String,
+    label: String,
     type: {
       type: String,
       default: 'text',
