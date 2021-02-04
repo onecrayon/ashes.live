@@ -1,49 +1,115 @@
 <template>
   <h1 class="phg-illusion-class">Finalize your account</h1>
 
-  <p class="text-lg">Welcome to Ashes.live!</p>
+  <div class="sm:flex">
+    <div class="sm:order-2 sm:pl-8 sm:w-1/3">
+      <p class="text-lg">Welcome to Ashes.live!</p>
 
-	<p><strong>Username</strong> can be anything (though please keep it kid-friendly!), and you will be identified around Ashes.live by a combination of your username and an auto-generated badge; e.g. <player-badge :user="{username: 'IsaacBot', badge: '3000'}"></player-badge></p>
-
-  <div class="sm:w-80">
-    <form @submit.prevent="submitRegistration" class="flex flex-col">
-      <text-input
-        class="mb-4"
-        placeholder="Username"
-        label="Username"
-        v-model="username"
-        ref="usernameInput"></text-input>
-      <!-- TODO: LEFT OFF implementing form controls, then need to hook up API call on submit -->
-      <button class="btn btn-blue px-4 py-1 mb-4" :disabled="!isValid">Join Ashes.live!</button>
-    </form>
+      <p><strong>Username</strong> can be anything (though please keep it kid-friendly!), and you will be identified around Ashes.live by a combination of your username and an auto-generated badge; e.g. <player-badge :user="{username: 'IsaacBot', badge: '3000'}"></player-badge>.</p>
+    </div>
+    <div class="sm:w-2/3 sm:order-1">
+      <form @submit.prevent="submitRegistration" class="flex flex-col">
+        <text-input
+          class="mb-4 sm:w-80"
+          placeholder="Username"
+          label="Username"
+          v-model="username"
+          ref="usernameInput"></text-input>
+        <text-input
+          type="password"
+          class="mb-2 sm:w-80"
+          placeholder="Password"
+          label="Password"
+          v-model="password"></text-input>
+        <text-input
+          type="password"
+          class="mb-4 sm:w-80"
+          placeholder="Confirm password"
+          label="Confirm password"
+          v-model="confirmPassword"
+          :is-invalid="!!password && !!confirmPassword && password !== confirmPassword"></text-input>
+        <text-editor
+          class="mb-4"
+          placeholder="Player profile..."
+          label="Description"
+          v-model="description"></text-editor>
+        <div class="mb-4">
+          <label><input type="checkbox" v-model="newsletterOptIn"> Notify me of new site features</label>
+        </div>
+        <button class="btn btn-blue px-4 py-1 mb-4 sm:w-80" :disabled="!isValid">Join Ashes.live!</button>
+      </form>
+    </div>
   </div>
 </template>
 
 <script>
+import { useToast } from 'vue-toastification'
 import PlayerBadge from '../shared/PlayerBadge.vue'
+import TextEditor from '../shared/TextEditor.vue'
 import TextInput from '../shared/TextInput.vue'
+import ValidityErrors from '../shared/ValidityErrors.vue'
 
 export default {
   name: 'PlayerRegistration',
   props: ['token'],
   components: {
     PlayerBadge,
+    TextEditor,
     TextInput,
   },
+  setup () {
+    // Expose toasts for use in other portions of this component
+    const toast = useToast()
+    return { toast }
+  },
   data: () => ({
-    username: ''
+    username: '',
+    password: '',
+    confirmPassword: '',
+    description: '',
+    newsletterOptIn: false,
   }),
   mounted () {
     this.$refs.usernameInput && this.$refs.usernameInput.focus()
   },
   computed: {
     isValid () {
-      return !!this.username
+      return (
+        !!this.username
+        && !!this.password
+        && !!this.confirmPassword
+        && this.password === this.confirmPassword
+      )
     },
   },
   methods: {
     submitRegistration () {
-      // TODO
+      const data = {
+        token: this.token,
+        username: this.username,
+        password: this.password,
+        password_confirm: this.confirmPassword,
+        newsletter_opt_in: this.newsletterOptIn,
+      }
+      if (this.description) {
+        data.description = this.description
+      }
+      this.$store.dispatch('player/register', data).then(() => {
+        this.toast.success(`Welcome to Ashes.live, ${this.username}!`)
+        this.$router.push('/decks/mine/')
+      }).catch(error => {
+        if (typeof error === 'string') {
+          this.toast.error(error)
+          return
+        }
+        // Handle validation failure objects
+        this.toast.error({
+          component: ValidityErrors,
+          props: {
+            errors: error
+          }
+        })
+      })
     },
   },
 }

@@ -46,7 +46,15 @@ const getters = {
 
 // Actions
 const actions = {
-  logIn ({ commit }, { email, password, rememberMe }) {
+  LOG_IN ({ commit }, authResponseData) {
+    const user = authResponseData.user
+    commit('setToken', authResponseData.access_token)
+    commit('setUsername', user.username)
+    commit('setBadge', user.badge)
+    commit('setIsAdmin', user.is_admin)
+    commit('options/setColorizeIcons', user.colorize_icons, { root: true })
+  },
+  logIn ({ dispatch }, { email, password, rememberMe }) {
     const formData = new FormData()
     formData.append('username', email)
     formData.append('password', password)
@@ -59,14 +67,9 @@ const actions = {
         method: 'post',
         data: formData,
       }).then(response => {
-        const user = response.data.user
-        commit('setToken', response.data.access_token)
-        commit('setUsername', user.username)
-        commit('setBadge', user.badge)
-        commit('setIsAdmin', user.is_admin)
-        commit('options/setColorizeIcons', user.colorize_icons, { root: true })
+        dispatch('LOG_IN', response.data)
         resolve()
-      }).catch((error) => {
+      }).catch(error => {
         reject(parseResponseError(error))
       })
     })
@@ -96,6 +99,25 @@ const actions = {
       })
     })
   },
+  register ({ dispatch }, data) {
+    const token = data.token
+    delete data.token
+    return new Promise((resolve, reject) => {
+      request(`/v2/players/new/${token}`, {
+        method: 'post',
+        data: data,
+      }).then(response => {
+        dispatch('LOG_IN', response.data)
+        resolve()
+      }).catch(error => {
+        if (error.response && error.response.status === 404) {
+          reject('This invitation token has already been used or is otherwise invalid.')
+        } else {
+          reject(parseResponseError(error))
+        }
+      })
+    })
+  }
 }
 
 // Mutations
