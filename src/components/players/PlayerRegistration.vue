@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { useToast } from 'vue-toastification'
+import useHandleRequestError from '/src/composites/useHandleRequestError.js'
 import PlayerBadge from '../shared/PlayerBadge.vue'
 import TextEditor from '../shared/TextEditor.vue'
 import TextInput from '../shared/TextInput.vue'
@@ -58,9 +58,8 @@ export default {
     TextInput,
   },
   setup () {
-    // Expose toasts for use in other portions of this component
-    const toast = useToast()
-    return { toast }
+    // Standard composite containing { toast, handleRequestError }
+    return useHandleRequestError()
   },
   data: () => ({
     username: '',
@@ -97,19 +96,7 @@ export default {
       this.$store.dispatch('player/register', data).then(() => {
         this.toast.success(`Welcome to Ashes.live, ${this.username}!`)
         this.$router.push('/decks/mine/')
-      }).catch(error => {
-        if (typeof error === 'string') {
-          this.toast.error(error)
-          return
-        }
-        // Handle validation failure objects
-        this.toast.error({
-          component: ValidityErrors,
-          props: {
-            errors: error
-          }
-        })
-      })
+      }).catch(this.handleRequestError)
     },
   },
 }

@@ -35,8 +35,7 @@ export default {
   name: 'LogInForm',
   setup () {
     // Expose toasts for use in other portions of this component
-    const toast = useToast()
-    return { toast }
+    return { toast: useToast() }
   },
   props: {
     centerForm: {
