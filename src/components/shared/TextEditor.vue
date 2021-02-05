@@ -6,7 +6,7 @@
       ref="textarea"
       :value="modelValue"
       :placeholder="placeholder"
-      :disabled="isDisabled"
+      :disabled="disabled"
       @input="$emit('update:modelValue', $event.target.value)"></textarea>
   </div>
 </template>
@@ -24,7 +24,7 @@ export default {
     modelValue: String,
     label: String,
     placeholder: String,
-    isDisabled: {
+    disabled: {
       type: Boolean,
       default: false,
     },

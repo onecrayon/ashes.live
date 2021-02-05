@@ -6,7 +6,8 @@
       :class="isInvalid ? 'border-red' : 'border-gray-darker'"
       :type="type"
       :placeholder="placeholder"
-      :disabled="isDisabled"
+      :disabled="disabled"
+      :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
       @keyup="handleSpecialKeys"
       ref="textInput">
@@ -28,7 +29,7 @@ export default {
       type: String,
       default: 'text',
     },
-    isDisabled: {
+    disabled: {
       type: Boolean,
       default: false,
     },

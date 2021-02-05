@@ -117,7 +117,34 @@ const actions = {
         }
       })
     })
-  }
+  },
+  loadProfile ({ commit }) {
+    return new Promise((resolve, reject) => {
+      request('/v2/players/me').then(response => {
+        const user = response.data
+        commit('setUsername', user.username)
+        commit('options/setColorizeIcons', user.colorize_icons, { root: true })
+        resolve(user)
+      }).catch(error => {
+        reject(parseResponseError(error))
+      })
+    })
+  },
+  saveProfile ({ commit }, data) {
+    return new Promise((resolve, reject) => {
+      request('/v2/players/me', {
+        method: 'patch',
+        data: data,
+      }).then(response => {
+        const user = response.data
+        commit('setUsername', user.username)
+        commit('options/setColorizeIcons', user.colorize_icons, { root: true })
+        resolve(user)
+      }).catch(error => {
+        reject(parseResponseError(error))
+      })
+    })
+  },
 }
 
 // Mutations

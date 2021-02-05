@@ -5,7 +5,7 @@
     <div class="sm:order-2 sm:pl-8 sm:w-1/3">
       <p class="text-lg">Welcome to Ashes.live!</p>
 
-      <p><strong>Username</strong> can be anything (though please keep it kid-friendly!), and you will be identified around Ashes.live by a combination of your username and an auto-generated badge; e.g. <player-badge :user="{username: 'IsaacBot', badge: '3000'}"></player-badge>.</p>
+      <p><strong>Username</strong> can be anything (though please keep it kid-friendly!), and you will be identified around Ashes.live by a combination of your username and an auto-generated badge; e.g. <player-badge :user="{username: 'IsaacBot', badge: '3000'}" no-link></player-badge>.</p>
     </div>
     <div class="sm:w-2/3 sm:order-1">
       <form @submit.prevent="submitRegistration" class="flex flex-col">

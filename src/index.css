@@ -13,6 +13,7 @@
   --color-orange: #b05000;
   --color-green: #006600;
   --color-green-light: #5e8664;
+  --color-green-lightest: #BFD9BF;
   /* Special coloring schemes specific to Ashes card behavior */
   --color-inexhaustible: #f7f5e8;
   --color-inexhaustible-dark: #8d7b53;
@@ -63,7 +64,7 @@ hr {
 }
 
 .btn {
-  @apply appearance-none border-2 border-gray-darker bg-gray-light rounded-md px-2 text-gray-darker font-bold;
+  @apply appearance-none border-2 border-gray-darker bg-gray-light rounded-md px-2 text-gray-darker font-bold text-center;
 
   &.active {
     @apply bg-gray-darker text-gray-light;
@@ -84,6 +85,10 @@ hr {
 
 .btn-blue {
   @apply border-blue text-blue bg-blue-light;
+}
+
+.btn-green {
+  @apply border-green text-green bg-green-lightest;
 }
 
 .nanobar .bar {

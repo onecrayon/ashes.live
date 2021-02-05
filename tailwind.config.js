@@ -26,6 +26,7 @@ module.exports = {
       green: {
         DEFAULT: 'var(--color-green)',
         light: 'var(--color-green-light)',
+        lightest: 'var(--color-green-lightest)',
       },
       // Special coloring schemes specific to Ashes card behavior
       inexhaustible: {
