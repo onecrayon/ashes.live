@@ -46,7 +46,15 @@ const getters = {
 
 // Actions
 const actions = {
-  logIn ({ commit }, { email, password, rememberMe }) {
+  LOG_IN ({ commit }, authResponseData) {
+    const user = authResponseData.user
+    commit('setToken', authResponseData.access_token)
+    commit('setUsername', user.username)
+    commit('setBadge', user.badge)
+    commit('setIsAdmin', user.is_admin)
+    commit('options/setColorizeIcons', user.colorize_icons, { root: true })
+  },
+  logIn ({ dispatch }, { email, password, rememberMe }) {
     const formData = new FormData()
     formData.append('username', email)
     formData.append('password', password)
@@ -59,17 +67,8 @@ const actions = {
         method: 'post',
         data: formData,
       }).then(response => {
-        const user = response.data.user
-        commit('setToken', response.data.access_token)
-        commit('setUsername', user.username)
-        commit('setBadge', user.badge)
-        commit('setIsAdmin', user.is_admin)
-        commit('options/setColorizeIcons', user.colorize_icons, { root: true })
-        resolve()
-      }).catch((error) => {
-        // TODO: make sure to catch situation where we don't have a response at all (or are missing detail key)
-        reject(error.response.data.detail)
-      })
+        dispatch('LOG_IN', response.data).then(resolve)
+      }).catch(reject)
     })
   },
   logOut ({ commit }) {
@@ -83,6 +82,67 @@ const actions = {
         commit('setIsAdmin', false)
         resolve()
       })
+    })
+  },
+  invite (_, { email }) {
+    return new Promise((resolve, reject) => {
+      request('/v2/players/new', {
+        method: 'post',
+        data: { email: email }
+      }).then(resolve).catch(reject)
+    })
+  },
+  register ({ dispatch }, data) {
+    const token = data.token
+    delete data.token
+    return new Promise((resolve, reject) => {
+      request(`/v2/players/new/${token}`, {
+        method: 'post',
+        data: data,
+      }).then(response => {
+        dispatch('LOG_IN', response.data).then(resolve)
+      }).catch(error => {
+        if (error.response && error.response.status === 404) {
+          reject('This invitation token has already been used or is otherwise invalid.')
+        } else {
+          reject(error)
+        }
+      })
+    })
+  },
+  loadProfile ({ commit }) {
+    return new Promise((resolve, reject) => {
+      request('/v2/players/me').then(response => {
+        const user = response.data
+        commit('setUsername', user.username)
+        commit('options/setColorizeIcons', user.colorize_icons, { root: true })
+        resolve(user)
+      }).catch(reject)
+    })
+  },
+  saveProfile ({ commit }, data) {
+    return new Promise((resolve, reject) => {
+      request('/v2/players/me', {
+        method: 'patch',
+        data: data,
+      }).then(response => {
+        const user = response.data
+        commit('setUsername', user.username)
+        commit('options/setColorizeIcons', user.colorize_icons, { root: true })
+        resolve(user)
+      }).catch(reject)
+    })
+  },
+  resetPassword ({ dispatch }, data) {
+    const token = data.token
+    delete data.token
+    return new Promise((resolve, reject) => {
+      request(`/v2/reset/${token}`, {
+        method: 'post',
+        data: data,
+      }).then(response => {
+        dispatch('LOG_IN', response.data).then(resolve)
+      }).catch(reject)
     })
   }
 }

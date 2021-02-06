@@ -1,6 +1,9 @@
 <template>
-  <router-link :to="profileURL">
-    <span>{{ user.username }}</span><span class="text-gray">#{{ user.badge }}</span>
+  <span v-if="noLink">
+    {{ user.username }}<span class="text-gray">#{{ user.badge }}</span>
+  </span>
+  <router-link v-else :to="profileURL">
+    {{ user.username }}<span class="text-gray">#{{ user.badge }}</span>
   </router-link>
 </template>
 
@@ -11,6 +14,10 @@ export default {
     user: {
       username: '',
       badge: '',
+    },
+    noLink: {
+      type: Boolean,
+      default: true,
     },
   },
   computed: {

@@ -1,7 +1,9 @@
 <template>
-  <h1 class="phg-illusion-class">Log In</h1>
+  <div :class="centerForm ? 'sm:w-80 sm:mx-auto': ''">
+    <h1 class="phg-illusion-class">Log In</h1>
 
-  <slot></slot>
+    <slot></slot>
+  </div>
 
   <div class="sm:w-80" :class="centerForm ? 'sm:mx-auto' : ''">
     <form @submit.prevent="submitCredentials" class="flex flex-col">
@@ -22,19 +24,21 @@
       </div>
       <button class="btn btn-blue px-4 py-1 mb-4" :disabled="!isValid">Log in</button>
     </form>
+    <div v-if="$route.name !== 'RequestReset' && $route.name !== 'ResetPassword'" class="text-right">
+      <router-link to="/players/reset/">Forgot your password?</router-link>
+    </div>
   </div>
 </template>
 
 <script>
-import { useToast } from 'vue-toastification'
+import useHandleResponseError from '/src/composites/useHandleResponseError.js'
 import TextInput from './TextInput.vue'
 
 export default {
   name: 'LogInForm',
   setup () {
-    // Expose toasts for use in other portions of this component
-    const toast = useToast()
-    return { toast }
+    // Standard composite containing { toast, handleResponseError }
+    return useHandleResponseError()
   },
   props: {
     centerForm: {
@@ -76,9 +80,7 @@ export default {
       ).then(() => {
         this.toast.success('You are now logged in!')
         this.$emit('auth:success')
-      }).catch(error => {
-        this.toast.error(error)
-      })
+      }).catch(this.handleResponseError)
     },
   },
 }

@@ -49,9 +49,7 @@ const actions = {
         const phoenixborns = cards.map(i => { return {name: i.name, stub: i.stub} })
         commit('savePhoenixborns', phoenixborns)
         resolve(phoenixborns)
-      }).catch(() => {
-        reject()
-      })
+      }).catch(reject)
     })
   },
   fetchLegacyPhoenixborns ({ commit, state }) {
@@ -64,9 +62,7 @@ const actions = {
         const phoenixborns = cards.map(i => { return {name: i.name, stub: i.stub} })
         commit('saveLegacyPhoenixborns', phoenixborns)
         resolve(phoenixborns)
-      }).catch(() => {
-        reject()
-      })
+      }).catch(reject)
     })
   }
 }

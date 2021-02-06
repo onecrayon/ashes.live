@@ -1,27 +1,39 @@
 <template>
-  <input
-    class="appearance-none border-2 bg-white border-gray-darker rounded-md h-full px-2"
-    :type="type"
-    :placeholder="placeholder"
-    :disabled="isDisabled"
-    @input="$emit('update:modelValue', $event.target.value)"
-    @keyup="handleSpecialKeys"
-    ref="textInput">
+  <div class="h-full">
+    <div v-if="label" class="font-bold text-sm text-gray-darker pl-2">{{ label }}</div>
+    <input
+      class="appearance-none border-2 bg-white rounded-md px-2 py-1 w-full"
+      :class="isInvalid ? 'border-red' : 'border-gray-darker'"
+      :type="type"
+      :placeholder="placeholder"
+      :disabled="disabled"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
+      @keyup="handleSpecialKeys"
+      ref="textInput">
+  </div>
 </template>
 
 <script>
-
-
+/**
+ * TextInput is a simple wrapper around `<input type="text">` that applies standardized styling.
+ * Used for most simple text entries in forms across the site.
+ */
 export default {
   name: 'TextInput',
   props: {
     modelValue: String,
     placeholder: String,
+    label: String,
     type: {
       type: String,
       default: 'text',
     },
-    isDisabled: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    isInvalid: {
       type: Boolean,
       default: false,
     },
