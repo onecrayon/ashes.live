@@ -77,7 +77,6 @@ import useHandleResponseError from '/src/composites/useHandleResponseError.js'
 import PlayerBadge from '../shared/PlayerBadge.vue'
 import TextEditor from '../shared/TextEditor.vue'
 import TextInput from '../shared/TextInput.vue'
-import ValidityErrors from '../shared/ValidityErrors.vue'
 
 export default {
   name: 'PlayerAccount',

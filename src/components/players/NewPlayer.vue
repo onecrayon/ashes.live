@@ -18,7 +18,6 @@
 <script>
 import useHandleResponseError from '/src/composites/useHandleResponseError.js'
 import TextInput from '../shared/TextInput.vue'
-import ValidityErrors from '../shared/ValidityErrors.vue'
 
 export default {
   name: 'NewPlayer',
