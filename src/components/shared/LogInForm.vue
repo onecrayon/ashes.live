@@ -28,14 +28,14 @@
 </template>
 
 <script>
-import { useToast } from 'vue-toastification'
+import useHandleResponseError from '/src/composites/useHandleResponseError.js'
 import TextInput from './TextInput.vue'
 
 export default {
   name: 'LogInForm',
   setup () {
-    // Expose toasts for use in other portions of this component
-    return { toast: useToast() }
+    // Standard composite containing { toast, handleResponseError }
+    return useHandleResponseError()
   },
   props: {
     centerForm: {
@@ -77,9 +77,7 @@ export default {
       ).then(() => {
         this.toast.success('You are now logged in!')
         this.$emit('auth:success')
-      }).catch(error => {
-        this.toast.error(error)
-      })
+      }).catch(this.handleResponseError)
     },
   },
 }

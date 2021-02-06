@@ -1,6 +1,6 @@
 <template>
   <modal :open="open" @update:open="!$event && closeModal()">
-    <log-in-form @escape="closeModal()" @auth:success="closeModal()" center-form></log-in-form>
+    <log-in-form @escape="closeModal()" @auth:success="closeModal()" center-form ref="loginForm"></log-in-form>
   </modal>
 </template>
 
@@ -21,7 +21,7 @@ export default {
   watch: {
     open (newValue) {
       if (newValue) {
-        this.$nextTick(() => this.$refs.emailInput.focus())
+        this.$nextTick(() => this.$refs.loginForm.focus())
       }
     },
   },
