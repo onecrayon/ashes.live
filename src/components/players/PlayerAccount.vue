@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import useHandleRequestError from '/src/composites/useHandleRequestError.js'
+import useHandleResponseError from '/src/composites/useHandleResponseError.js'
 import PlayerBadge from '../shared/PlayerBadge.vue'
 import TextEditor from '../shared/TextEditor.vue'
 import TextInput from '../shared/TextInput.vue'
@@ -87,8 +87,8 @@ export default {
     TextInput,
   },
   setup () {
-    // Standard composite containing { toast, handleRequestError }
-    return useHandleRequestError()
+    // Standard composite containing { toast, handleResponseError }
+    return useHandleResponseError()
   },
   data: () => ({
     passwordModal: false,
@@ -130,7 +130,7 @@ export default {
         colorize_icons: this.colorizeIcons,
       }).then(() => {
         this.toast.success('Account settings saved!')
-      }).catch(this.handleRequestError).finally(() => {
+      }).catch(this.handleResponseError).finally(() => {
         this.isSubmitting = false
       })
     },

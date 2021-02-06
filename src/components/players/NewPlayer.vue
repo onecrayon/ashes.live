@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import useHandleRequestError from '/src/composites/useHandleRequestError.js'
+import useHandleResponseError from '/src/composites/useHandleResponseError.js'
 import TextInput from '../shared/TextInput.vue'
 import ValidityErrors from '../shared/ValidityErrors.vue'
 
@@ -26,8 +26,8 @@ export default {
     TextInput,
   },
   setup () {
-    // Standard composite containing { toast, handleRequestError }
-    return useHandleRequestError()
+    // Standard composite containing { toast, handleResponseError }
+    return useHandleResponseError()
   },
   data: () => ({
     email: '',
@@ -42,7 +42,7 @@ export default {
     submitInvite () {
       this.$store.dispatch('player/invite', { email: this.email }).then(() => {
         this.toast.success('Your account invitation has been sent! Please follow the instructions in your email to finalize your account.')
-      }).catch(this.handleRequestError)
+      }).catch(this.handleResponseError)
     },
   },
 }

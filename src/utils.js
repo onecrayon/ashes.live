@@ -40,31 +40,6 @@ export function request(endpoint, options = {}) {
 }
 
 /**
- * parseResponseError(error)
- *
- * Standard logic for parsing API error responses. Converts them into a legible string.
- */
-export function parseResponseError(error) {
-  if (!error || !error.response || !error.response.data || !error.response.data.detail) {
-    return 'Unknown server error: please report this!'
-  }
-  // Parse validation errors, if one comes down the pipe
-  if (error.response.status === 422) {
-    let errors = []
-    for (const failure of error.response.data.detail) {
-      // TODO: figure out a better way to handle the location data, because this won't cut it for decks
-      errors.push({
-        loc: failure.loc[failure.loc.length - 1],
-        msg: failure.msg
-      })
-    }
-    return errors
-  }
-  // Default to just returning the details
-  return error.response.data.detail
-}
-
-/**
  * debounce(callback, wait)
  *
  * Debounces the given callback such that it will only be called a single time after `wait`

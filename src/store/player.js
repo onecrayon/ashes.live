@@ -4,7 +4,7 @@
  * This store saves player authentication, account details, and account options that are persisted
  * to the API.
  */
-import { request, parseResponseError, localStoreFactory, jwtPayload } from '/src/utils.js'
+import { request, localStoreFactory, jwtPayload } from '/src/utils.js'
 
 const { storeGet, storeSet } = localStoreFactory('player.auth')
 
@@ -69,9 +69,7 @@ const actions = {
       }).then(response => {
         dispatch('LOG_IN', response.data)
         resolve()
-      }).catch(error => {
-        reject(parseResponseError(error))
-      })
+      }).catch(reject)
     })
   },
   logOut ({ commit }) {
@@ -94,9 +92,7 @@ const actions = {
         data: { email: email }
       }).then(() => {
         resolve()
-      }).catch(error => {
-        reject(parseResponseError(error))
-      })
+      }).catch(reject)
     })
   },
   register ({ dispatch }, data) {
@@ -113,7 +109,7 @@ const actions = {
         if (error.response && error.response.status === 404) {
           reject('This invitation token has already been used or is otherwise invalid.')
         } else {
-          reject(parseResponseError(error))
+          reject(error)
         }
       })
     })
@@ -125,9 +121,7 @@ const actions = {
         commit('setUsername', user.username)
         commit('options/setColorizeIcons', user.colorize_icons, { root: true })
         resolve(user)
-      }).catch(error => {
-        reject(parseResponseError(error))
-      })
+      }).catch(reject)
     })
   },
   saveProfile ({ commit }, data) {
@@ -140,9 +134,7 @@ const actions = {
         commit('setUsername', user.username)
         commit('options/setColorizeIcons', user.colorize_icons, { root: true })
         resolve(user)
-      }).catch(error => {
-        reject(parseResponseError(error))
-      })
+      }).catch(reject)
     })
   },
 }
