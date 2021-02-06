@@ -24,6 +24,9 @@
       </div>
       <button class="btn btn-blue px-4 py-1 mb-4" :disabled="!isValid">Log in</button>
     </form>
+    <div v-if="$route.name !== 'RequestReset' && $route.name !== 'ResetPassword'" class="text-right">
+      <router-link to="/players/reset/">Forgot your password?</router-link>
+    </div>
   </div>
 </template>
 

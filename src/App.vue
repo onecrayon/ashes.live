@@ -132,6 +132,7 @@ export default {
     $route(to, from) {
       // Set the page title when we navigate to a new page
       document.title = siteTitle(to)
+      this.isLogInModalOpen = false
     },
   },
   methods: {
