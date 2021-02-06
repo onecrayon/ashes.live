@@ -6,7 +6,7 @@
   <div class="sm:w-80">
     <form @submit.prevent="submitEmail" class="flex flex-col">
       <text-input
-        class="mb-2"
+        class="mb-4"
         placeholder="Email"
         v-model="email"
         ref="emailInput"></text-input>

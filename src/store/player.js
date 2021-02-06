@@ -67,8 +67,7 @@ const actions = {
         method: 'post',
         data: formData,
       }).then(response => {
-        dispatch('LOG_IN', response.data)
-        resolve()
+        dispatch('LOG_IN', response.data).then(resolve)
       }).catch(reject)
     })
   },
@@ -90,9 +89,7 @@ const actions = {
       request('/v2/players/new', {
         method: 'post',
         data: { email: email }
-      }).then(() => {
-        resolve()
-      }).catch(reject)
+      }).then(resolve).catch(reject)
     })
   },
   register ({ dispatch }, data) {
@@ -103,8 +100,7 @@ const actions = {
         method: 'post',
         data: data,
       }).then(response => {
-        dispatch('LOG_IN', response.data)
-        resolve()
+        dispatch('LOG_IN', response.data).then(resolve)
       }).catch(error => {
         if (error.response && error.response.status === 404) {
           reject('This invitation token has already been used or is otherwise invalid.')
@@ -137,6 +133,18 @@ const actions = {
       }).catch(reject)
     })
   },
+  resetPassword ({ dispatch }, data) {
+    const token = data.token
+    delete data.token
+    return new Promise((resolve, reject) => {
+      request(`/v2/players/reset/${token}`, {
+        method: 'post',
+        data: data,
+      }).then(response => {
+        dispatch('LOG_IN', response.data).then(resolve)
+      }).catch(reject)
+    })
+  }
 }
 
 // Mutations
