@@ -1,6 +1,8 @@
 <template>
   <h1 class="phg-charm-power">Reset your password</h1>
 
+  <p>Enter your new password below to reset your password and log into the site.</p>
+
   <div class="sm:w-80">
     <form @submit.prevent="submitPassword" class="flex flex-col">
       <text-input
@@ -37,12 +39,17 @@ export default {
   components: {
     TextInput,
   },
+  computed: {
+    isValid () {
+      return this.password && this.confirmPassword && this.password === this.confirmPassword
+    },
+  },
   methods: {
     submitPassword () {
       this.$store.dispatch('player/resetPassword', {
         token: this.token,
         password: this.password,
-        confirm_password: this.confirmPassword,
+        password_confirm: this.confirmPassword,
       }).then(() => {
         this.toast.success('You have successfully changed your password and logged in!')
         this.$router.push('/')

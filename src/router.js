@@ -133,6 +133,7 @@ const router = createRouter({
       path: '/players/reset/:token/',
       name: 'ResetPassword',
       component: ResetPassword,
+      props: true,
       meta: { title: 'Reset Password' },
     },
     {

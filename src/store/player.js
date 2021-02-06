@@ -137,7 +137,7 @@ const actions = {
     const token = data.token
     delete data.token
     return new Promise((resolve, reject) => {
-      request(`/v2/players/reset/${token}`, {
+      request(`/v2/reset/${token}`, {
         method: 'post',
         data: data,
       }).then(response => {

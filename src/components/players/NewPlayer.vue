@@ -10,7 +10,7 @@
         placeholder="Email"
         v-model="email"
         ref="emailInput"></text-input>
-      <button class="btn btn-blue px-4 py-1 mb-4" :disabled="!isValid">Create Account</button>
+      <button class="btn btn-blue px-4 py-1 mb-4" :disabled="!isValid">Create account</button>
     </form>
   </div>
 </template>
