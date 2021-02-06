@@ -12,6 +12,8 @@ import PlayerDecks from './components/decks/PlayerDecks.vue'
 import PlayerPublicProfile from './components/players/PlayerPublicProfile.vue'
 import PlayerRegistration from './components/players/PlayerRegistration.vue'
 import NewPlayer from './components/players/NewPlayer.vue'
+import RequestReset from './components/players/RequestReset.vue'
+import ResetPassword from './components/players/ResetPassword.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -100,6 +102,15 @@ const router = createRouter({
       },
     },
     {
+      path: '/players/me/',
+      name: 'PlayerAccount',
+      component: PlayerAccount,
+      meta: {
+        title: 'My Account',
+        needsAuth: true,
+      },
+    },
+    {
       path: '/players/new/',
       name: 'NewPlayer',
       component: NewPlayer,
@@ -110,16 +121,19 @@ const router = createRouter({
       name: 'PlayerRegistration',
       component: PlayerRegistration,
       props: true,
-      meta: { title: 'Finalize your account' },
+      meta: { title: 'Finalize Your Account' },
     },
     {
-      path: '/players/me/',
-      name: 'PlayerAccount',
-      component: PlayerAccount,
-      meta: {
-        title: 'My Account',
-        needsAuth: true,
-      },
+      path: '/players/reset/',
+      name: 'RequestReset',
+      component: RequestReset,
+      meta: { title: 'Forgotten Password' },
+    },
+    {
+      path: '/players/reset/:token/',
+      name: 'ResetPassword',
+      component: ResetPassword,
+      meta: { title: 'Reset Password' },
     },
     {
       path: '/players/:badge/',
@@ -154,8 +168,14 @@ const router = createRouter({
 router.beforeEach((to, from) => {
   if (to.meta.needsAuth && !store.getters['player/isAuthenticated']) {
     return {name: 'LogIn'}
-  } else if (to.name == 'LogIn' && store.getters['player/isAuthenticated']) {
-    return from.redirectedFrom ? from.redirectedFrom : '/'
+  } else if (store.getters['player/isAuthenticated']) {
+    if (to.name == 'LogIn') {
+      // Send 'em back where they came from if they try to hit the login while logged in
+      return from.redirectedFrom ? from.redirectedFrom : '/'
+    } else if (to.name == 'RequestReset' || to.name == 'ResetPassword') {
+      // Redirect to account settings if they try to visit the reset pages while logged in
+      return {name: 'PlayerAccount'}
+    }
   }
 })
 
