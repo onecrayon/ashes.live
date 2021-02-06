@@ -46,19 +46,19 @@
             </router-link>
           </li>
         </ul>
-        <ul v-else class="flex py-1">
-          <li class="flex-initial px-2">
+        <ul v-else class="flex flex-wrap py-1">
+          <li class="flex-none px-2">
             <router-link to="/players/me/" class="text-black">
               <i class="fas fa-user text-xl"></i>
               {{ myUsername }}<span class="text-gray">#{{ myBadge }}</span>
             </router-link>
           </li>
-          <li class="flex-initial px-2">
+          <li class="flex-none px-2">
             <router-link to="/decks/mine/" class="text-black">
               <i class="fas fa-th-list text-xl"></i> My Decks
             </router-link>
           </li>
-          <li class="flex-initial px-2">
+          <li class="flex-none px-2">
             <link-alike @click="logOut" use-underline>
               <i class="fas fa-user-slash text-xl"></i> Log Out
             </link-alike>
