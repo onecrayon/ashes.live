@@ -79,6 +79,9 @@ import { debounce } from '/src/utils.js'
 import CardCodes from './CardCodes.vue'
 import CardCosts from './CardCosts.vue'
 
+// The number of pixels offscreen within which the image should be loaded
+const LOAD_IMAGE_IF_WITHIN_PIXELS = 500
+
 export default {
   name: 'Card',
   props: {
@@ -133,9 +136,9 @@ export default {
   },
   methods: {
     scrollCheck () {
-      // Check if our scrolling element is visible or within 100 pixels of being visible
+      // Check if our scrolling element is visible or within our desired overlap
       const elementBounding = this.$el.getBoundingClientRect()
-      if (elementBounding.top <= window.innerHeight + 100 && elementBounding.bottom >= -100) {
+      if (elementBounding.top <= window.innerHeight + LOAD_IMAGE_IF_WITHIN_PIXELS && elementBounding.bottom >= -LOAD_IMAGE_IF_WITHIN_PIXELS) {
         this.showImage = true
       } else {
         this.showImage = false
