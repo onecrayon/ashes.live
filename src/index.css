@@ -231,5 +231,22 @@ hr {
   transform: translateY(35%);
 }
 
+/* Usage: <transition name="right-sidebar"> */
+.right-sidebar-enter-active, .right-sidebar-leave-active {
+  position: absolute;
+  right: 0;
+  transition: transform .25s ease-in-out .15s, opacity .25s ease-in-out .15s;
+}
+
+.right-sidebar-enter-from {
+  opacity: 0;
+  transform: translateX(150%);
+}
+
+.right-sidebar-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
 @tailwind components;
 @tailwind utilities;
