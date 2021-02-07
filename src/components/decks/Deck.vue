@@ -5,7 +5,9 @@
     :style="`background-image: url(${phoenixbornImagePath})`">
     <div class="p-2 text-xs">
       <div class="m-0 font-bold text-xl flex flex-col sm:flex-row">
-        <router-link :to="linkTarget" class="text-black flex-grow pt-0 sm:pt-2">{{ deck.title }}</router-link>
+        <span class="flex-grow pt-0 sm:pt-2">
+          <router-link :to="linkTarget" class="text-black">{{ deck.title }}</router-link>
+        </span>
         <deck-dice :dice="deck.dice" />
       </div>
       <div class="flex flex-col sm:flex-row">
@@ -42,6 +44,10 @@ export default {
   props: {
     deck: {
       required: true,
+    },
+    showMine: {
+      type: Boolean,
+      default: false,
     },
   },
   components: {

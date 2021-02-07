@@ -22,7 +22,9 @@
     @load-previous="loadPrevious"
     @load-next="loadNext"
     :currentPage="currentPage"
-    :totalPage="totalPage"></deck-table>
+    :totalPage="totalPage"
+    :show-mine="showMine"
+    :have-filters="!!filterText || !!phoenixborn"></deck-table>
 </template>
 
 <script>
@@ -45,7 +47,7 @@ export default {
     showMine: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   data: () => {
     return {
