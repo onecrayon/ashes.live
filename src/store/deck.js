@@ -8,7 +8,7 @@
 import { request } from '/src/utils.js'
 
 // Initial state
-const state = () => ({
+const getBaseState = () => ({
   enabled: false,
   // This is used internally to track whether we have local changes that have failed to save
   isDirty: false,
@@ -30,6 +30,7 @@ const state = () => ({
     conjurations: [],
   },
 })
+const state = getBaseState
 
 // Getters
 const getters = {}
@@ -76,14 +77,33 @@ const actions = {
       })
     })
   },
+  reset ({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      if (!state.enabled) return resolve()
+      if (state.isSaving) return reject('You cannot exit the deckbuilder while changes are being saved.')
+      // Reset to the base state
+      commit('RESET_STATE')
+      resolve()
+    })
+  },
 }
 
 // Mutations
 const mutations = {
-  setIsDirty(state, value) {
+  RESET_STATE (state) {
+    Object.assign(state, getBaseState())
+  },
+  // One of the few mutations intended to be used publicly for this store; enables the deckbuilder
+  enableDeckbuilder (state) {
+    if (!state.enabled) state.enabled = true
+  },
+  disableDeckbuilder (state) {
+    state.enabled = false
+  },
+  setIsDirty (state, value) {
     state.isDirty = value
   },
-  setIsSaving(state, value) {
+  setIsSaving (state, value) {
     state.isSaving = value
   },
 }
