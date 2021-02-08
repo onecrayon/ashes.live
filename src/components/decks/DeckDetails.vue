@@ -10,7 +10,7 @@
     <h1 class="phg-main-action text-gray"><i class="fas fa-circle-notch fa-spin"></i> Loading...</h1>
   </div>
   <div v-else>
-    <h1 class="phg-main-action">{{ deck.title }}</h1>
+    <h1 class="phg-main-action" :class="{'italic font-normal': !deck.title}">{{ title }}</h1>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <div
         class="mb-4 col-span-2 flex flex-row"
@@ -117,7 +117,10 @@ export default {
     formatReleases() {
       const releaseNames = this.releases.map(r => r.name)
       return releaseNames.join(', ')
-    }
+    },
+    title () {
+      return this.deck.title || `Untitled ${this.deck.phoenixborn.name}`
+    },
   },
 }
 </script>

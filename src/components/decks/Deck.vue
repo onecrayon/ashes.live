@@ -6,7 +6,7 @@
     <div class="p-2 text-xs">
       <div class="m-0 font-bold text-xl flex flex-col sm:flex-row">
         <span class="flex-grow pt-0 sm:pt-2">
-          <router-link :to="linkTarget" class="text-black">{{ deck.title }}</router-link>
+          <router-link :to="linkTarget" class="text-black" :class="{'italic font-normal': !deck.title}">{{ title }}</router-link>
         </span>
         <deck-dice :dice="deck.dice" />
       </div>
@@ -72,7 +72,10 @@ export default {
     },
     phoenixbornImagePath () {
       return getPhoenixbornImageUrl(this.deck.phoenixborn.stub, false, this.deck.is_legacy)
-    }
+    },
+    title () {
+      return this.deck.title || `Untitled ${this.deck.phoenixborn.name}`
+    },
   },
 }
 </script>
