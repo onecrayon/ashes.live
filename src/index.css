@@ -234,7 +234,7 @@ hr {
 /* Usage: <transition name="right-sidebar"> */
 .right-sidebar-enter-active, .right-sidebar-leave-active {
   position: absolute;
-  right: 0;
+  right: 6px;
   transition: transform .25s ease-in-out .15s, opacity .25s ease-in-out .15s;
 }
 
