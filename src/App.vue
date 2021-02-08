@@ -147,7 +147,7 @@ export default {
       return this.$store.state.player.badge
     },
     isDeckbuilding () {
-      return this.$store.state.deck.enabled
+      return this.$store.state.builder.enabled
     }
   },
   watch: {
@@ -159,14 +159,14 @@ export default {
   },
   methods: {
     newDeck () {
-      this.$store.commit('deck/enableDeckbuilder')
+      this.$store.commit('builder/enable')
       this.$router.push({
         name: 'Cards',
         query: { types: ['phoenixborn'] },
       })
     },
     exitDeckbuilder () {
-      this.$store.dispatch('deck/reset')
+      this.$store.dispatch('builder/reset')
     },
     logOut () {
       this.$store.dispatch('player/logOut')

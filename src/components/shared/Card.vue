@@ -1,72 +1,89 @@
 <template>
-  <div
-    class="border border-gray bg-white"
-    :class="[$style.card]">
-    <div class="bg-gray-light text-gray text-center relative border-b border-gray-light">
-      <i class="text-2xl" :class="[typeIcon, $style.centerIcon]"></i>
-      <img
-        class="relative"
-        width="300"
-        height="75"
-        alt=" "
-        :src="cardImageURL">
+  <div :class="[$style.card]">
+    <div v-if="isDeckbuilderActive && isNotConjuration" class="text-xl">
+      <div v-if="isPhoenixborn">
+        <span v-if="deckPhoenixborn && deckPhoenixborn.stub == card.stub" :class="[$style.btn, $style.btnActive, $style.btnFirst, $style.btnLast]" title="Currently selected"><i class="fas fa-check-square"></i></span>
+        <button v-else :class="[$style.btn, $style.btnFirst, $style.btnLast]" :title="!deckPhoenixborn ? 'Use' : 'Use instead'" @click="usePhoenixborn">
+          <i v-if="!deckPhoenixborn" class="fas fa-plus"></i>
+          <i v-else class="fas fa-exchange-alt"></i>
+        </button>
+      </div>
+      <div v-else>
+        <button
+          v-for="count of Array(4).keys()" :key="count"
+          :class="[$style.btn, deckCount === count ? $style.btnActive : '', count === 0 ? $style.btnFirst : '', count === 3 ? $style.btnLast : '']"
+          @click="setCardCount(card, count)">
+            {{ count }}
+          </button>
+      </div>
     </div>
-    <div class="flow-root">
-      <card-costs class="p-2 float-right text-right" :costs="card.cost"></card-costs>
-      <div class="px-2 py-px text-xs">
-        <p class="m-0 font-bold text-lg">
-          <router-link :to="linkTarget" class="text-black">{{ card.name }}</router-link>
-          <span v-if="card.phoenixborn" class="text-gray font-normal" :title="card.phoenixborn">
-            ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
-          </span>
-        </p>
-        <p class="m-0 text-xs">
-          {{ card.type }}
-          <span v-if="card.placement">
-            <span class="divider"><span class="alt-text">-</span></span>
-            {{ card.placement }}
-          </span>
-        </p>
-        <div v-if="isPhoenixborn" class="text-center my-2">
-          <strong
-            v-if="card.battlefield !== undefined"
-            class="inline-block border border-red-light px-1">Battlefield {{ card.battlefield }}</strong>
-          <strong
-            v-if="card.life !== undefined"
-            class="inline-block border border-green-light px-1 mx-1">Life {{ card.life }}</strong>
-          <strong
-            v-if="card.spellboard !== undefined"
-            class="inline-block border border-blue-dark px-1">Spellboard {{ card.spellboard }}</strong>
-        </div>
-        <div v-if="card.text">
-          <hr v-if="!isPhoenixborn" class="my-2 border-gray-light">
-          <div class="leading-snug" :class="$style.effectText">
-            <card-codes
-              :content="card.text"
-              :is-legacy="card.is_legacy"
-              is-card-effect></card-codes>
+    <div class="border border-gray bg-white" :class="[isDeckbuilderActive && !isNotConjuration ? $style.offsetTop : '']">
+      <div class="bg-gray-light text-gray text-center relative border-b border-gray-light">
+        <i class="text-2xl" :class="[typeIcon, $style.centerIcon]"></i>
+        <img
+          class="relative"
+          width="300"
+          height="75"
+          alt=" "
+          :src="cardImageURL">
+      </div>
+      <div class="flow-root">
+        <card-costs class="p-2 float-right text-right" :costs="card.cost"></card-costs>
+        <div class="px-2 py-px text-xs">
+          <p class="m-0 font-bold text-lg">
+            <router-link :to="linkTarget" class="text-black">{{ card.name }}</router-link>
+            <span v-if="card.phoenixborn" class="text-gray font-normal" :title="card.phoenixborn">
+              ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
+            </span>
+          </p>
+          <p class="m-0 text-xs">
+            {{ card.type }}
+            <span v-if="card.placement">
+              <span class="divider"><span class="alt-text">-</span></span>
+              {{ card.placement }}
+            </span>
+          </p>
+          <div v-if="isPhoenixborn" class="text-center my-2">
+            <strong
+              v-if="card.battlefield !== undefined"
+              class="inline-block border border-red-light px-1">Battlefield {{ card.battlefield }}</strong>
+            <strong
+              v-if="card.life !== undefined"
+              class="inline-block border border-green-light px-1 mx-1">Life {{ card.life }}</strong>
+            <strong
+              v-if="card.spellboard !== undefined"
+              class="inline-block border border-blue-dark px-1">Spellboard {{ card.spellboard }}</strong>
           </div>
-        </div>
-        <div v-if="hasStats && !isPhoenixborn" class="text-center my-2 clear-fix">
-          <!-- Placeholders ensure that our stats are always in about the same locations -->
-          <span
-            v-if="card.copies !== undefined"
-            class="border border-gray-dark float-left px-1">{{ card.copies }}</span>
+          <div v-if="card.text">
+            <hr v-if="!isPhoenixborn" class="my-2 border-gray-light">
+            <div class="leading-snug" :class="$style.effectText">
+              <card-codes
+                :content="card.text"
+                :is-legacy="card.is_legacy"
+                is-card-effect></card-codes>
+            </div>
+          </div>
+          <div v-if="hasStats && !isPhoenixborn" class="text-center my-2 clear-fix">
+            <!-- Placeholders ensure that our stats are always in about the same locations -->
+            <span
+              v-if="card.copies !== undefined"
+              class="border border-gray-dark float-left px-1">{{ card.copies }}</span>
 
-          <strong
-            v-if="card.attack !== undefined"
-            class="inline-block border border-red-light px-1">Attack {{ card.attack }}</strong>
-          <span v-else class="inline-block invisible">Attack --</span>
+            <strong
+              v-if="card.attack !== undefined"
+              class="inline-block border border-red-light px-1">Attack {{ card.attack }}</strong>
+            <span v-else class="inline-block invisible">Attack --</span>
 
-          <strong
-            v-if="card.life !== undefined"
-            class="inline-block border border-green-light px-1 mx-1">Life {{ card.life }}</strong>
-          <span v-else class="inline-block invisible mx-1">Life --</span>
+            <strong
+              v-if="card.life !== undefined"
+              class="inline-block border border-green-light px-1 mx-1">Life {{ card.life }}</strong>
+            <span v-else class="inline-block invisible mx-1">Life --</span>
 
-          <strong
-            v-if="card.recover !== undefined"
-            class="inline-block border border-blue-dark px-1">Recover {{ card.recover }}</strong>
-          <span v-else class="inline-block invisible">Recover --</span>
+            <strong
+              v-if="card.recover !== undefined"
+              class="inline-block border border-blue-dark px-1">Recover {{ card.recover }}</strong>
+            <span v-else class="inline-block invisible">Recover --</span>
+          </div>
         </div>
       </div>
     </div>
@@ -133,6 +150,18 @@ export default {
         params: { stub: this.card.stub },
       }
     },
+    isDeckbuilderActive () {
+      return this.$store.state.builder.enabled
+    },
+    isNotConjuration () {
+      return this.card.type !== 'Conjuration' && this.card.type !== 'Conjured Alteration Spell'
+    },
+    deckPhoenixborn () {
+      return this.$store.state.builder.deck.phoenixborn
+    },
+    deckCount () {
+      return this.$store.state.builder.countMap[this.card.stub] || 0
+    },
   },
   methods: {
     scrollCheck () {
@@ -144,6 +173,15 @@ export default {
         this.showImage = false
       }
     },
+    usePhoenixborn () {
+      this.$store.dispatch('builder/setPhoenixborn', this.card)
+    },
+    setCardCount (card, count) {
+      this.$store.dispatch('builder/setCardCount', {
+        card,
+        count,
+      })
+    }
   },
 }
 </script>
@@ -165,5 +203,26 @@ export default {
   & p {
     @apply my-2;
   }
+}
+
+.btn {
+  @apply appearance-none inline-block border-gray-darker bg-gray-light leading-none px-2 py-1 text-gray-darker font-bold text-center border-t-2 border-l-2;
+  min-width: 32px;
+}
+
+.btnFirst {
+  @apply rounded-tl-md;
+}
+
+.btnLast {
+  @apply rounded-tr-md border-r-2;
+}
+
+.btnActive {
+  @apply bg-gray-darker text-gray-light;
+}
+
+.offsetTop {
+  margin-top: 30px;
 }
 </style>
