@@ -195,7 +195,7 @@ export default {
         card,
         count,
       })
-    }
+    },
   },
 }
 </script>

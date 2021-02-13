@@ -1,4 +1,31 @@
 <template>
+  <div v-if="isDeckbuilderActive">
+    <div v-if="isPhoenixborn">
+        <span v-if="deckPhoenixborn && deckPhoenixborn.stub == card.stub"
+          class="w-full"
+          :class="[$style.btn, $style.btnActive, $style.btnFirst, $style.btnLast]">
+          <i class="fas fa-check-square"></i> In use
+        </span>
+        <button v-else
+          class="w-full"
+          :class="[$style.btn, $style.btnFirst, $style.btnLast]" @click="usePhoenixborn">
+          <span v-if="!deckPhoenixborn">
+            <i class="fas fa-plus"></i> Use
+          </span>
+          <span v-else>
+            <i class="fas fa-exchange-alt"></i> Swap
+          </span>
+        </button>
+      </div>
+      <div v-else>
+        <button
+          v-for="count of Array(4).keys()" :key="count"
+          :class="[$style.btn, deckCount === count ? $style.btnActive : '', count === 0 ? $style.btnFirst : '', count === 3 ? $style.btnLast : '']"
+          @click="setCardCount(card, count)">
+            {{ count }}
+          </button>
+      </div>
+  </div>
   <div class="w-8 text-center p-1 sm:border-b border-gray-light" :title="card.type">
     <i :class="[typeIcon(card)]"></i>
   </div>
@@ -30,7 +57,13 @@
       <span v-else>&ndash;</span>
     </div>
   </div>
-  <div class="col-start-1 col-span-4 sm:col-start-4 sm:col-span-1 pr-2 pl-8 sm:pl-2 -mt-2 sm:mt-0 border-b border-gray-light sm:text-right" :class="{'py-1': card.cost && card.cost.length}">
+  <div
+    class="pr-2 pl-8 sm:pl-2 -mt-2 sm:mt-0 border-b border-gray-light sm:text-right"
+    :class="{
+      'py-1': card.cost && card.cost.length,
+      'col-start-1 col-span-4 sm:col-start-4 sm:col-span-1': !isDeckbuilderActive,
+      'col-start-2 col-span-4 sm:col-start-5 sm:col-span-1': isDeckbuilderActive,
+    }">
     <card-costs :costs="card.cost" is-horizontal class="ml-1 sm:ml-0"></card-costs>
   </div>
 </template>
@@ -48,6 +81,23 @@ export default {
   },
   components: {
     CardCosts,
+  },
+  computed: {
+    isDeckbuilderActive () {
+      return this.$store.state.builder.enabled
+    },
+    isPhoenixborn () {
+      return this.card.type === 'Phoenixborn'
+    },
+    isNotConjuration () {
+      return this.card.type !== 'Conjuration' && this.card.type !== 'Conjured Alteration Spell'
+    },
+    deckPhoenixborn () {
+      return this.$store.state.builder.deck.phoenixborn
+    },
+    deckCount () {
+      return this.$store.state.builder.countMap[this.card.stub] || 0
+    },
   },
   methods: {
     typeIcon (card) {
@@ -70,6 +120,34 @@ export default {
         ...conjuration
       }
     },
+    usePhoenixborn () {
+      this.$store.dispatch('builder/setPhoenixborn', this.card)
+    },
+    setCardCount (card, count) {
+      this.$store.dispatch('builder/setCardCount', {
+        card,
+        count,
+      })
+    },
   }
 }
 </script>
+
+<style lang="postcss" module>
+.btn {
+  @apply appearance-none inline-block border-gray-darker bg-gray-light leading-none px-2 py-1 text-gray-darker font-bold text-center border-2 border-r-0;
+  min-width: 32px;
+}
+
+.btnFirst {
+  @apply rounded-tl-md rounded-bl-md;
+}
+
+.btnLast {
+  @apply rounded-tr-md rounded-br-md border-r-2;
+}
+
+.btnActive {
+  @apply bg-gray-darker text-gray-light;
+}
+</style>

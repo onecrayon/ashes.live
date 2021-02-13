@@ -7,7 +7,12 @@
     </p>
   </div>
   <div v-else-if="cards && cards.length">
-    <div v-if="galleryStyle === 'list'" class="grid gap-0" :class="[$style.listColumns]">
+    <div v-if="galleryStyle === 'list'"
+      class="grid gap-0"
+      :class="{
+        [$style.deckbuilderListColumns]: isDeckbuilderActive,
+        [$style.listColumns]: !isDeckbuilderActive,
+      }">
       <card-table-row v-for="card of cards" :key="card.stub" :card="card"></card-table-row>
     </div>
     <div v-else class="grid gap-4 grid-flow-row auto-cols-auto" :class="[$style.cardColumns]">
@@ -55,6 +60,11 @@ export default {
   beforeUnmount () {
     window.removeEventListener('scroll', this.debouncedScrollListener)
   },
+  computed: {
+    isDeckbuilderActive () {
+      return this.$store.state.builder.enabled
+    },
+  },
   methods: {
     scrollLoadCheck () {
       // Don't process scroll checks when we're already loading stuff
@@ -72,6 +82,10 @@ export default {
 <style lang="postcss" module>
 .listColumns {
   grid-template-columns: auto 1fr auto max-content;
+}
+
+.deckbuilderListColumns {
+  grid-template-columns: auto auto 1fr auto max-content;
 }
 
 .cardColumns {
