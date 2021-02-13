@@ -1,14 +1,14 @@
 <template>
   <div :class="[$style.card]">
     <div v-if="isDeckbuilderActive && isNotConjuration" class="text-xl">
-      <div v-if="isPhoenixborn">
+      <div v-if="isPhoenixborn" class="inline-block" :class="{shadow: isPopup}">
         <span v-if="deckPhoenixborn && deckPhoenixborn.stub == card.stub" :class="[$style.btn, $style.btnActive, $style.btnFirst, $style.btnLast]" title="Currently selected"><i class="fas fa-check-square"></i></span>
         <button v-else :class="[$style.btn, $style.btnFirst, $style.btnLast]" :title="!deckPhoenixborn ? 'Use' : 'Use instead'" @click="usePhoenixborn">
           <i v-if="!deckPhoenixborn" class="fas fa-plus"></i>
           <i v-else class="fas fa-exchange-alt"></i>
         </button>
       </div>
-      <div v-else>
+      <div v-else class="inline-block" :class="{shadow: isPopup}">
         <button
           v-for="count of Array(4).keys()" :key="count"
           :class="[$style.btn, deckCount === count ? $style.btnActive : '', count === 0 ? $style.btnFirst : '', count === 3 ? $style.btnLast : '']"
@@ -17,7 +17,12 @@
           </button>
       </div>
     </div>
-    <div class="border border-gray bg-white" :class="[isDeckbuilderActive && !isNotConjuration ? $style.offsetTop : '']">
+    <div
+      class="border border-gray bg-white"
+      :class="{
+        [$style.offsetTop]: isDeckbuilderActive && !isNotConjuration,
+        shadow: isPopup,
+      }">
       <div class="bg-gray-light text-gray text-center relative border-b border-gray-light">
         <i class="text-2xl" :class="[typeIcon, $style.centerIcon]"></i>
         <img
@@ -104,6 +109,10 @@ export default {
   props: {
     card: {
       required: true,
+    },
+    isPopup: {
+      type: Boolean,
+      default: false,
     },
   },
   components: {

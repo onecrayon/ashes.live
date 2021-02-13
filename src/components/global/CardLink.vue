@@ -26,8 +26,9 @@
     <card
       v-else-if="areDetailsShowing"
       ref="popup"
-      class="shadow text-left text-black"
-      :card="details"></card>
+      class="text-left text-black"
+      :card="details"
+      is-popup></card>
   </div>
 </template>
 
