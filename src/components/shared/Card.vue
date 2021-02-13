@@ -104,7 +104,7 @@ export default {
   },
   watch: {
     card () {
-      this.showImage = true
+      this.scrollCheck()
     }
   },
   computed: {
