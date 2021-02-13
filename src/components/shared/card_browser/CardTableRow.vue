@@ -1,30 +1,30 @@
 <template>
   <div v-if="isDeckbuilderActive">
     <div v-if="isPhoenixborn">
-        <span v-if="deckPhoenixborn && deckPhoenixborn.stub == card.stub"
-          class="w-full"
-          :class="[$style.btn, $style.btnActive, $style.btnFirst, $style.btnLast]">
-          <i class="fas fa-check-square"></i> In use
+      <span v-if="deckPhoenixborn && deckPhoenixborn.stub == card.stub"
+        class="w-full"
+        :class="[$style.btn, $style.btnActive, $style.btnFirst, $style.btnLast]">
+        <i class="fas fa-check-square"></i> In use
+      </span>
+      <button v-else
+        class="w-full"
+        :class="[$style.btn, $style.btnFirst, $style.btnLast]" @click="usePhoenixborn">
+        <span v-if="!deckPhoenixborn">
+          <i class="fas fa-plus"></i> Use
         </span>
-        <button v-else
-          class="w-full"
-          :class="[$style.btn, $style.btnFirst, $style.btnLast]" @click="usePhoenixborn">
-          <span v-if="!deckPhoenixborn">
-            <i class="fas fa-plus"></i> Use
-          </span>
-          <span v-else>
-            <i class="fas fa-exchange-alt"></i> Swap
-          </span>
+        <span v-else>
+          <i class="fas fa-exchange-alt"></i> Swap
+        </span>
+      </button>
+    </div>
+    <div v-else-if="isNotConjuration">
+      <button
+        v-for="count of Array(4).keys()" :key="count"
+        :class="[$style.btn, deckCount === count ? $style.btnActive : '', count === 0 ? $style.btnFirst : '', count === 3 ? $style.btnLast : '']"
+        @click="setCardCount(card, count)">
+          {{ count }}
         </button>
-      </div>
-      <div v-else>
-        <button
-          v-for="count of Array(4).keys()" :key="count"
-          :class="[$style.btn, deckCount === count ? $style.btnActive : '', count === 0 ? $style.btnFirst : '', count === 3 ? $style.btnLast : '']"
-          @click="setCardCount(card, count)">
-            {{ count }}
-          </button>
-      </div>
+    </div>
   </div>
   <div class="w-8 text-center p-1 sm:border-b border-gray-light" :title="card.type">
     <i :class="[typeIcon(card)]"></i>
