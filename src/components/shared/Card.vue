@@ -103,6 +103,11 @@ export default {
   beforeUnmount () {
     window.removeEventListener('scroll', this.debouncedScrollListener)
   },
+  watch: {
+    card () {
+      this.scrollCheck()
+    }
+  },
   computed: {
     cardImageURL () {
       return this.showImage ? `${import.meta.env.VITE_CDN_URL}/images/slices/${this.card.stub}.jpg` : ''
