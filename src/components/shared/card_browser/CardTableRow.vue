@@ -1,30 +1,7 @@
 <template>
-  <div v-if="isDeckbuilderActive">
-    <div v-if="isPhoenixborn">
-      <span v-if="deckPhoenixborn && deckPhoenixborn.stub == card.stub"
-        class="w-full"
-        :class="[$style.btn, $style.btnActive, $style.btnFirst, $style.btnLast]">
-        <i class="fas fa-check-square"></i> In use
-      </span>
-      <button v-else
-        class="w-full"
-        :class="[$style.btn, $style.btnFirst, $style.btnLast]" @click="usePhoenixborn">
-        <span v-if="!deckPhoenixborn">
-          <i class="fas fa-plus"></i> Use
-        </span>
-        <span v-else>
-          <i class="fas fa-exchange-alt"></i> Swap
-        </span>
-      </button>
-    </div>
-    <div v-else-if="isNotConjuration">
-      <button
-        v-for="count of Array(4).keys()" :key="count"
-        :class="[$style.btn, deckCount === count ? $style.btnActive : '', count === 0 ? $style.btnFirst : '', count === 3 ? $style.btnLast : '']"
-        @click="setCardCount(card, count)">
-          {{ count }}
-        </button>
-    </div>
+  <!-- This isn't necessary from the standpoint of the quantity buttons component, but we need an empty div as a placeholder for the grid to work -->
+  <div v-if="isDeckbuilderActive" class="pr-1">
+    <deck-qty-buttons :card="card" standalone></deck-qty-buttons>
   </div>
   <div class="w-8 text-center p-1 sm:border-b border-gray-light" :title="card.type">
     <i :class="[typeIcon(card)]"></i>
@@ -71,6 +48,7 @@
 <script>
 import { typeToFontAwesome } from '/src/constants.js'
 import CardCosts from '../CardCosts.vue'
+import DeckQtyButtons from '../DeckQtyButtons.vue'
 
 export default {
   name: 'CardTableRow',
@@ -81,22 +59,11 @@ export default {
   },
   components: {
     CardCosts,
+    DeckQtyButtons,
   },
   computed: {
     isDeckbuilderActive () {
       return this.$store.state.builder.enabled
-    },
-    isPhoenixborn () {
-      return this.card.type === 'Phoenixborn'
-    },
-    isNotConjuration () {
-      return this.card.type !== 'Conjuration' && this.card.type !== 'Conjured Alteration Spell'
-    },
-    deckPhoenixborn () {
-      return this.$store.state.builder.deck.phoenixborn
-    },
-    deckCount () {
-      return this.$store.state.builder.countMap[this.card.stub] || 0
     },
   },
   methods: {
@@ -120,34 +87,6 @@ export default {
         ...conjuration
       }
     },
-    usePhoenixborn () {
-      this.$store.dispatch('builder/setPhoenixborn', this.card)
-    },
-    setCardCount (card, count) {
-      this.$store.dispatch('builder/setCardCount', {
-        card,
-        count,
-      })
-    },
   }
 }
 </script>
-
-<style lang="postcss" module>
-.btn {
-  @apply appearance-none inline-block border-gray-darker bg-gray-light leading-none px-2 py-1 text-gray-darker font-bold text-center border-2 border-r-0;
-  min-width: 32px;
-}
-
-.btnFirst {
-  @apply rounded-tl-md rounded-bl-md;
-}
-
-.btnLast {
-  @apply rounded-tr-md rounded-br-md border-r-2;
-}
-
-.btnActive {
-  @apply bg-gray-darker text-gray-light;
-}
-</style>
