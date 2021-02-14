@@ -39,7 +39,24 @@ const getters = {}
 
 // Actions
 const actions = {
-  SAVE_DECK ({ commit, state }) {
+  PERSIST_DECK ({ commit }, deck) {
+    // This persists a deck locally that has been loaded from the API
+    return new Promise(resolve => {
+      commit('setDeckID', deck.id)
+      commit('setPhoenixborn', deck.phoenixborn)
+      if (deck.cards) {
+        for (const card of deck.cards) {
+          commit('setCardCount', {
+            card: card,
+            count: card.count,
+          })
+        }
+      }
+      // TODO: persist everything else, once those data mutations are supported
+      resolve()
+    })
+  },
+  SAVE_DECK ({ commit, dispatch, state }) {
     return new Promise((resolve, reject) => {
       // A Phoenixborn is required to save a deck at all, so check for that first
       if (!state.deck.phoenixborn) {
@@ -69,14 +86,33 @@ const actions = {
         method: 'put',
         data: data,
       }).then(response => {
-        commit('setDeckID', response.data.id)
-        // TODO: Save our response data back in, just in case there was drift
-        // And note that we're not dirty anymore
-        commit('setIsDirty', false)
-        resolve()
+        // Persist our response data, just in case there was drift
+        dispatch('PERSIST_DECK', response.data).then(() => {
+          // And note that we're not dirty anymore
+          commit('setIsDirty', false)
+          resolve()
+        })
       }).catch(error => {
         // Ensure that our dirty flag is toggled
         commit('setIsDirty', true)
+        reject(error)
+      }).finally(() => {
+        commit('setIsSaving', false)
+      })
+    })
+  },
+  editDeck ({ commit, dispatch, state }, id) {
+    return new Promise((resolve, reject) => {
+      if (state.deck.id === id) return resolve()
+      commit('setIsSaving', true)
+      request(`/v2/decks/${id}`, {
+        params: { show_saved: true },
+      }).then(response => {
+        // Load in our new deck!
+        commit('RESET_STATE')
+        commit('enable')
+        dispatch('PERSIST_DECK', response.data.deck).then(resolve)
+      }).catch(error => {
         reject(error)
       }).finally(() => {
         commit('setIsSaving', false)

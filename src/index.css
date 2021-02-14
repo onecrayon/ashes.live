@@ -10,6 +10,7 @@
   --color-blue-light: #d4e2f3;
   --color-red: #b00000;
   --color-red-light: #b25864;
+  --color-red-lightest: #FFD0D0;
   --color-orange: #b05000;
   --color-green: #006600;
   --color-green-light: #5e8664;
@@ -89,6 +90,10 @@ hr {
 
 .btn-green {
   @apply border-green text-green bg-green-lightest;
+}
+
+.btn-red {
+  @apply border-red text-red bg-red-lightest;
 }
 
 .nanobar .bar {

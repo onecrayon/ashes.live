@@ -1,7 +1,6 @@
 <template>
   <div
-    class="border border-gray bg-white mt-4 mb-4 pl-12"
-    :class="$style.deckItem"
+    class="border border-gray bg-white mt-4 mb-4 pl-12 bg-no-repeat"
     :style="`background-image: url(${phoenixbornImagePath})`">
     <div class="p-2 text-xs">
       <div class="m-0 font-bold text-xl flex flex-col sm:flex-row">
@@ -10,9 +9,24 @@
         </span>
         <deck-dice :dice="deck.dice" />
       </div>
-      <div class="flex flex-col sm:flex-row">
+      <div class="flex flex-col sm:flex-row sm:items-end">
         <span class="flex-grow text-sm">
-          <player-badge :user="deck.user" />
+          <player-badge v-if="!showMine" :user="deck.user" />
+          <span v-else>
+            <button
+              class="btn px-2"
+              :class="{'active': isCurrentlyEditing}"
+              :disabled="isCurrentlyEditing"
+              @click="editThisDeck()">
+              <i class="fas fa-edit mr-1"></i>
+              <span v-if="isCurrentlyEditing">Editing</span>
+              <span v-else>Edit</span>
+            </button>
+            <!-- TODO: <button class="btn btn-last btn-red">
+              <i class="far fa-trash-alt"></i>
+              Delete
+            </button> -->
+          </span>
         </span>
         <span class="text-sm float-right text-gray-darker">
           Last updated: {{ lastUpdatedDateFormatted }} ago
@@ -23,7 +37,7 @@
         <span class="text-lg">
           <card-link :card="deck.phoenixborn"></card-link>
         </span>
-        <span class="text-sm float-right font-bold" :class="[ cardsCount != 30 ? $style.deckNotFull : '']">
+        <span class="text-sm float-right font-bold" :class="{'text-red': cardsCount != 30}">
           {{ cardsCount }}/30
         </span>
       </div>
@@ -76,15 +90,14 @@ export default {
     title () {
       return this.deck.title || `Untitled ${this.deck.phoenixborn.name}`
     },
+    isCurrentlyEditing () {
+      return this.$store.state.builder.deck.id === this.deck.id
+    },
+  },
+  methods: {
+    editThisDeck () {
+      this.$store.dispatch('builder/editDeck', this.deck.id)
+    },
   },
 }
 </script>
-<style lang="postcss" module>
-.deckNotFull {
-  color: var(--color-red);
-}
-
-.deckItem {
-  background-repeat: no-repeat;
-}
-</style>

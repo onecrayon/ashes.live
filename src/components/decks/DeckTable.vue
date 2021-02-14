@@ -4,6 +4,12 @@
       <p class="text-lg mb-8">
         You have not created any decks yet!
       </p>
+      <p>
+        <button class="btn btn-green px-4 py-2" @click="newDeck">
+          <i class="fas fa-plus"></i>
+          Create your first deck
+        </button>
+      </p>
     </div>
     <div v-else-if="!haveFilters && showMine && showLegacy">
       <p class="text-lg mb-8">
@@ -65,6 +71,15 @@ export default {
   computed: {
     showLegacy () {
       return !!this.$route.meta.showLegacy
+    },
+  },
+  methods: {
+    newDeck () {
+      this.$store.commit('builder/enable')
+      this.$router.push({
+        name: 'Cards',
+        query: { types: ['phoenixborn'] },
+      })
     },
   },
 }

@@ -49,17 +49,15 @@ export default {
       default: false,
     },
   },
-  data: () => {
-    return {
-      isDisabled: false,
-      filterText: '',
-      phoenixborn: null,
-      offset: 0,
-      // This is the list of decks currently shown
-      decks: null,
-      deckCount: 0,
-    }
-  },
+  data: () => ({
+    isDisabled: false,
+    filterText: '',
+    phoenixborn: null,
+    offset: 0,
+    // This is the list of decks currently shown
+    decks: null,
+    deckCount: 0,
+  }),
   components: {
     DeckTable,
     ClearableSearch,
