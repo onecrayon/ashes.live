@@ -49,6 +49,7 @@
 <script>
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import { getPhoenixbornImageUrl } from '/src/utils.js'
+import useHandleResponseError from '/src/composites/useHandleResponseError.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
 import PlayerBadge from '../shared/PlayerBadge.vue'
@@ -63,6 +64,10 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  setup () {
+    // Standard composite containing { toast, handleResponseError }
+    return useHandleResponseError()
   },
   components: {
     DeckCardsPreview,
@@ -96,7 +101,9 @@ export default {
   },
   methods: {
     editThisDeck () {
-      this.$store.dispatch('builder/editDeck', this.deck.id)
+      this.$store.dispatch('builder/editDeck', this.deck.id).then(() => {
+        this.$router.push('/cards')
+      }).catch(this.handleResponseError)
     },
   },
 }
