@@ -86,9 +86,7 @@
       <router-view :key="$route.path"></router-view>
     </div>
     <transition name="right-sidebar">
-      <section v-if="isDeckbuilding" class="pl-8 w-1/3">
-        <h1 class="phg-time-class">Deckbuilder goes here</h1>
-      </section>
+      <builder v-if="isDeckbuilding" class="pl-8 w-1/3"></builder>
     </transition>
   </div>
   <footer class="container mx-auto p-4 pt-10 text-center text-xs">
@@ -102,6 +100,7 @@ import axios from 'axios'
 import qs from 'qs'
 import { useToast } from 'vue-toastification'
 import LogInModal from './components/LogInModal.vue'
+import Builder from './components/decks/Builder.vue'
 import LinkAlike from './components/shared/LinkAlike.vue'
 
 // Set up sensible Axios defaults for query string array handling
@@ -120,6 +119,7 @@ export default {
     return { toast: useToast() }
   },
   components: {
+    Builder,
     LinkAlike,
     LogInModal,
   },

@@ -232,6 +232,9 @@ const mutations = {
       state.deck.cards[index].count = count
     }
   },
+  setTitle (state, title) {
+    state.deck.title = title
+  },
 }
 
 export default {

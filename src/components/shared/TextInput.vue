@@ -10,6 +10,8 @@
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
       @keyup="handleSpecialKeys"
+      @focus="$emit('focus', $event)"
+      @blur="$emit('blur', $event)"
       ref="textInput">
   </div>
 </template>
@@ -38,7 +40,7 @@ export default {
       default: false,
     },
   },
-  emits: ['escape', 'update:modelValue'],
+  emits: ['focus', 'blur', 'enter', 'escape', 'update:modelValue'],
   methods: {
     focus () {
       this.$refs.textInput.focus()
@@ -46,6 +48,8 @@ export default {
     handleSpecialKeys (event) {
       if (event.key === 'Escape' || event.key === 'Esc') {
         this.$emit('escape')
+      } else if (event.key === 'Enter') {
+        this.$emit('enter')
       }
     },
   },
