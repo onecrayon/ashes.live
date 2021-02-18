@@ -33,15 +33,15 @@
             </span>
           </p>
           <div v-if="isPhoenixborn" class="text-center my-2">
-            <strong
+            <span
               v-if="card.battlefield !== undefined"
-              class="inline-block border border-red-light px-1">Battlefield {{ card.battlefield }}</strong>
-            <strong
+              class="inline-block border border-red-light px-1">Battlefield <strong>{{ card.battlefield }}</strong></span>
+            <span
               v-if="card.life !== undefined"
-              class="inline-block border border-green-light px-1 mx-1">Life {{ card.life }}</strong>
-            <strong
+              class="inline-block border border-green-light px-1 mx-1">Life <strong>{{ card.life }}</strong></span>
+            <span
               v-if="card.spellboard !== undefined"
-              class="inline-block border border-blue-dark px-1">Spellboard {{ card.spellboard }}</strong>
+              class="inline-block border border-blue-dark px-1">Spellboard <strong>{{ card.spellboard }}</strong></span>
           </div>
           <div v-if="card.text">
             <hr v-if="!isPhoenixborn" class="my-2 border-gray-light">
@@ -58,19 +58,19 @@
               v-if="card.copies !== undefined"
               class="border border-gray-dark float-left px-1">{{ card.copies }}</span>
 
-            <strong
+            <span
               v-if="card.attack !== undefined"
-              class="inline-block border border-red-light px-1">Attack {{ card.attack }}</strong>
+              class="inline-block border border-red-light px-1">Attack <strong>{{ card.attack }}</strong></span>
             <span v-else class="inline-block invisible">Attack --</span>
 
-            <strong
+            <span
               v-if="card.life !== undefined"
-              class="inline-block border border-green-light px-1 mx-1">Life {{ card.life }}</strong>
+              class="inline-block border border-green-light px-1 mx-1">Life <strong>{{ card.life }}</strong></span>
             <span v-else class="inline-block invisible mx-1">Life --</span>
 
-            <strong
+            <span
               v-if="card.recover !== undefined"
-              class="inline-block border border-blue-dark px-1">Recover {{ card.recover }}</strong>
+              class="inline-block border border-blue-dark px-1">Recover <strong>{{ card.recover }}</strong></span>
             <span v-else class="inline-block invisible">Recover --</span>
           </div>
         </div>

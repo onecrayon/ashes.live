@@ -101,9 +101,7 @@ export default {
   },
   methods: {
     editThisDeck () {
-      this.$store.dispatch('builder/editDeck', this.deck.id).then(() => {
-        this.$router.push('/cards')
-      }).catch(this.handleResponseError)
+      this.$store.dispatch('builder/editDeck', this.deck.id).catch(this.handleResponseError)
     },
   },
 }

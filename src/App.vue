@@ -160,10 +160,6 @@ export default {
   methods: {
     newDeck () {
       this.$store.commit('builder/enable')
-      this.$router.push({
-        name: 'Cards',
-        query: { types: ['phoenixborn'] },
-      })
     },
     exitDeckbuilder () {
       this.$store.dispatch('builder/reset')
