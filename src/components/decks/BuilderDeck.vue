@@ -1,7 +1,7 @@
 <template>
   <div class="flex mb-4">
-    <h2 class="text-lg flex-grow m-0">
-      <card-link :card="phoenixborn"></card-link>
+    <h2 class="text-lg flex-grow m-0 font-bold">
+      {{ phoenixborn.name }}
     </h2>
     <button class="flex-none text-xl" title="Toggle Phoenixborn details" @click="showPhoenixbornDetails = !showPhoenixbornDetails">
       <i class="fas" :class="{
