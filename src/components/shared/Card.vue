@@ -1,5 +1,5 @@
 <template>
-  <div :class="[$style.card]">
+  <div :class="[$style.card]" role="complementary" :aria-label="card.name">
     <deck-qty-buttons class="text-xl" :card="card" :is-popup="isPopup"></deck-qty-buttons>
     <div
       class="border border-gray bg-white"

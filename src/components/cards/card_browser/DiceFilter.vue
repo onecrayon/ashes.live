@@ -1,18 +1,18 @@
 <template>
-  <div class="flex flex-wrap-none">
+  <div class="flex flex-wrap-none" role="group" aria-label="Filter by dice type">
     <button class="btn btn-first px-1 text-l w-16 sm:px-2"
       :class="{active: isDiceLogicAll}"
       :title="diceLogicTooltip"
       :disabled="isDisabled"
       @click="toggleFilterLogic">
-      {{ diceLogicText }}:
+      {{ diceLogicText }}<span class="alt-text"> dice type{{ isDiceLogiAll ? 's' : '' }}</span>:
     </button
     ><button class="phg-basic-magic btn btn-inner text-2xl px-1 sm:px-2"
-      title="Basic Magic"
       :class="{active: isDieActive('basic')}"
       :disabled="isDiceLogicAll || isDisabled"
-      @click="toggleDie('basic')"></button
-    ><button
+      @click="toggleDie('basic')">
+      <span class="alt-text">Basic Magic{{ isDieActive('basic') ? ' (active)' : '' }}</span>
+    </button><button
       v-for="(dieType, index) of diceList" :key="dieType"
       class="appearance-none btn text-2xl px-1 sm:px-2"
       :class="[
@@ -21,8 +21,9 @@
         isDieActive(dieType) ? 'active' : ''
       ]"
       :disabled="isDisabled"
-      :title="capitalize(dieType) + ' Magic'"
-      @click="toggleDie(dieType)"></button>
+      @click="toggleDie(dieType)">
+        <span class="alt-text">{{ capitalize(dieType) }} Magic{{ isDieActive(dieType) ? ' (active)' : '' }}</span>
+      </button>
   </div>
 </template>
 
