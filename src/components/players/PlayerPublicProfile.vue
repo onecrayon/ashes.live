@@ -20,15 +20,13 @@
 import { request } from '/src/utils.js'
 import CardCodes from '../shared/CardCodes.vue'
 import DeckListing from '../decks/DeckListing.vue'
-import SideDrawer from '../shared/SideDrawer.vue'
 
 export default {
   name: 'PlayerPublicProfile',
   props: ['badge'],
   components: {
     CardCodes,
-    DeckListing,
-    SideDrawer
+    DeckListing
   },
   data: () => ({
     username: null,
