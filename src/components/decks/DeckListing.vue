@@ -5,12 +5,38 @@
       placeholder="Filter by title..."
       v-model:search="filterText"
       :is-disabled="isDisabled"></clearable-search>
+    <div
+      v-if="screenWidth < 768"
+      class="flex">
+      <phoenixborn-picker
+        class="flex-auto h-10 mb-4 pr-2 md:mb-0"
+        placeholder="Filter by Phoenixborn..."
+        v-model:filter="phoenixborn"
+        :is-legacy="shouldShowLegacyDecks"
+      />
+      <button
+        :class="[shouldShowLegacyDecks ? 'btn active h-10' : 'btn h-10']"
+        :title="[shouldShowLegacyDecks ? 'Show Reborn decks' : 'Show Legacy decks']"
+        @click="shouldShowLegacyDecks = !shouldShowLegacyDecks"
+      >
+        <i class="fas fa-archive"></i>
+      </button>
+    </div>
     <phoenixborn-picker
-      class="flex-auto h-10 mb-4 md:mb-0"
+      v-if="screenWidth >= 768"
+      class="flex-auto h-10 mb-4 md:pr-4 md:mb-0"
       placeholder="Filter by Phoenixborn..."
       v-model:filter="phoenixborn"
-      :is-legacy="showLegacy"
+      :is-legacy="shouldShowLegacyDecks"
     />
+    <button
+      v-if="screenWidth >= 768"
+      :class="[shouldShowLegacyDecks ? 'btn active h-10' : 'btn']"
+      :title="[shouldShowLegacyDecks ? 'Show Reborn decks' : 'Show Legacy decks']"
+      @click="shouldShowLegacyDecks = !shouldShowLegacyDecks"
+    >
+      <i class="fas fa-archive"></i>
+    </button>
   </div>
 
   <deck-table
@@ -32,6 +58,7 @@ import DeckTable from './DeckTable.vue'
 import ClearableSearch from '../shared/ClearableSearch.vue'
 import { debounce, trimmed, request } from '/src/utils.js'
 import PhoenixbornPicker from '../shared/PhoenixbornPicker.vue'
+import FormatPicker from '../shared/FormatPicker.vue'
 
 const DECKS_PER_PAGE = 30;
 
@@ -46,6 +73,10 @@ export default {
     showMine: {
       type: Boolean,
       default: false,
+    },
+    showForUser: {
+      type: Number,
+      default: 0
     }
   },
   data: () => {
@@ -53,21 +84,21 @@ export default {
       isDisabled: false,
       filterText: '',
       phoenixborn: null,
+      shouldShowLegacyDecks: false,
       offset: 0,
       // This is the list of decks currently shown
       decks: null,
       deckCount: 0,
+      screenWidth: screen.width
     }
   },
   components: {
     DeckTable,
     ClearableSearch,
     PhoenixbornPicker,
+    FormatPicker
   },
   computed: {
-    showLegacy () {
-      return !!this.$route.meta.showLegacy
-    },
     havePreviousDecks () {
       return this.offset > 0
     },
@@ -83,9 +114,10 @@ export default {
   },
   created () {
     // Before we do anything, we need to translate any query parameters into filters
-    if (this.$route.query.q) {
+    if (this.$route.query) {
       this.filterText = this.$route.query.q
       this.phoenixborn = this.$route.query.phoenixborn
+      this.shouldShowLegacyDecks = this.$route.query['show_legacy'] === 'true'
       this.offset = this.$route.query.offset
     }
 
@@ -133,6 +165,7 @@ export default {
     watch(
       [
         () => this.phoenixborn,
+        () => this.shouldShowLegacyDecks
       ],
       (curProps, prevProps) => {
         this.offset = 0
@@ -146,6 +179,7 @@ export default {
     clearFilters () {
       this.filterText = ''
       this.phoenixborn = null
+      this.shouldShowLegacyDecks = false
       this.offset = 0
     },
     fetchDecks ({endpoint = null, options = {}, failureCallback = null} = {}) {
@@ -162,6 +196,9 @@ export default {
         }
         if (this.phoenixborn) {
           query.phoenixborn = this.phoenixborn
+        }
+        if (this.shouldShowLegacyDecks) {
+          query.show_legacy = true
         }
         if (this.offset) {
           query.offset = this.offset
@@ -208,8 +245,11 @@ export default {
         limit: DECKS_PER_PAGE,
       }
       // Show legacy cards, if necessary
-      if (this.showLegacy) {
+      if (this.shouldShowLegacyDecks) {
         params['show_legacy'] = true
+      }
+      if (this.showForUser) {
+        params.player = this.showForUser
       }
       const filterText = trimmed(this.filterText)
       if (this.phoenixborn) params.phoenixborn = this.phoenixborn

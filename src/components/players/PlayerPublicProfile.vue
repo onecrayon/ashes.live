@@ -11,22 +11,24 @@
   </div>
   <div v-else>
     <h1 class="phg-illusion-power">{{ username }}<span class="text-gray">#{{ badge }}</span></h1>
-
-    <!-- TODO: move description into a sidebar and add deck-listing that only shows this user's decks -->
-
     <card-codes :content="description" needs-paragraphs></card-codes>
+    <deck-listing :showForUser="this.badge"></deck-listing>
   </div>
 </template>
 
 <script>
 import { request } from '/src/utils.js'
 import CardCodes from '../shared/CardCodes.vue'
+import DeckListing from '../decks/DeckListing.vue'
+import SideDrawer from '../shared/SideDrawer.vue'
 
 export default {
   name: 'PlayerPublicProfile',
   props: ['badge'],
   components: {
     CardCodes,
+    DeckListing,
+    SideDrawer
   },
   data: () => ({
     username: null,
