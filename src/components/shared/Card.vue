@@ -1,8 +1,10 @@
 <template>
   <div
     class="border border-gray bg-white"
-    :class="[$style.card]">
-    <div class="bg-gray-light text-gray text-center relative border-b border-gray-light">
+    :class="[$style.card]"
+    role="complementary"
+    :aria-label="card.name">
+    <div class="bg-gray-light text-gray text-center relative border-b border-gray-light" aria-hidden>
       <i class="text-2xl" :class="[typeIcon, $style.centerIcon]"></i>
       <img
         class="relative"

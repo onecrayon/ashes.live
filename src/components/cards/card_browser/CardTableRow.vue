@@ -37,7 +37,7 @@
 
 <script>
 import { typeToFontAwesome } from '/src/constants.js'
-import CardCosts from '../CardCosts.vue'
+import CardCosts from '../../shared/CardCosts.vue'
 
 export default {
   name: 'CardTableRow',

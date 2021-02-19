@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-nowrap">
+  <div class="flex flex-nowrap" role="search" aria-label="Search...">
     <input
       class="appearance-none border-2 bg-white border-gray-darker border-r rounded-l-md h-full px-2 flex-auto"
       type="text"
