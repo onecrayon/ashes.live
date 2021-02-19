@@ -32,7 +32,7 @@
 <script>
 import { debounce } from '/src/utils.js'
 import CardTableRow from './CardTableRow.vue'
-import Card from '../Card.vue'
+import Card from '../../shared/Card.vue'
 
 export default {
   name: 'CardTable',

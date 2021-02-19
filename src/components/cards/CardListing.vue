@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import CardBrowser from '../shared/card_browser/CardBrowser.vue'
+import CardBrowser from './card_browser/CardBrowser.vue'
 
 export default {
   name: 'CardListing',

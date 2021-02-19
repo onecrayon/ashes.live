@@ -1,5 +1,5 @@
 <template>
-  <nav>
+  <nav role="navigation" aria-label="Site navigation">
     <!-- Referencing the style directly through an injected $style element is necessary for modular styles to function; otherwise, the template style name doesn't get rewritten. Due to a wrinkle in Vite 2, we have to use snakeCase instead of hyphens or underscores for class names. -->
     <div class="bg-inexhaustible" :class="[useFullHeader ? $style.fullHeader : '']">
       <div :class="$style.banner">

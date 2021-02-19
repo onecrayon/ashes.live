@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap-none">
+  <div class="flex flex-wrap-none" role="group" aria-label="Filter by card type">
     <button
       v-for="(curType, index) of cardTypes" :key="curType[1]"
       class="btn py-1 px-2 font-normal text-sm"
@@ -13,6 +13,7 @@
       :title="curType[0]"
       @click="toggleType(curType[1])">
       <i :class="typeIcon(curType[0])"></i> <span class="hidden xl:inline">{{ curType[0].split(' ')[0] }}</span>
+      <span v-if="isTypeActive(curType[1])" class="alt-text"> (active)</span>
     </button>
   </div>
 </template>
