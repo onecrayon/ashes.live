@@ -2,11 +2,10 @@
   <ol v-if="costs && costs.length" :class="[isHorizontal ? $style.horizontal : '']">
     <li v-for="(cost, index) of costs" :class="$style.cost" :key="index">
       <span v-if="Array.isArray(cost)" :class="$style.parallelCosts">
-        <span
-          v-for="(splitCost, splitIndex) of cost"
-          :class="$style.cost"
-          :key="splitIndex"
-          v-html="parseCardText(splitCost)"></span>
+        <!-- If we ever have a parallel cost with more than 2 costs this is going to break -->
+        <span :class="$style.cost" v-html="parseCardText(cost[0])"></span>
+        <span class="alt-text"> or </span>
+        <span :class="$style.cost" v-html="parseCardText(cost[1])"></span>
       </span>
       <span v-else v-html="parseCardText(cost)"></span>
     </li>
@@ -53,7 +52,7 @@ export default {
 }
 
 .parallelCosts {
-  & .cost {
+  & .cost:first-of-type {
     display: block;
     padding: 0 0 8px;
     position: relative;
@@ -71,14 +70,6 @@ export default {
       right: 7px;
       bottom: 0px;
       margin-left: -3px;
-    }
-  }
-
-  & .cost:last-of-type {
-    padding: 0;
-
-    &::after {
-      display: none;
     }
   }
 }

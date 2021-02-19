@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap-none text-sm">
+  <div class="flex flex-wrap-none text-sm" role="group" aria-label="Display options">
     <button
       class="btn btn-first py-1 px-2"
       :class="{active: galleryStyle === 'list'}"
@@ -7,6 +7,7 @@
       :disabled="isDisabled"
       @click="galleryStyle = 'list'">
       <i class="fas fa-bars"></i>
+      <span class="alt-text">List view{{ galleryStyle === 'list' ? ' (active)' : '' }}</span>
     </button><button
       class="btn btn-last py-1 px-2"
       title="Binder view"
@@ -14,6 +15,7 @@
       :disabled="isDisabled"
       @click="galleryStyle = 'binder'">
       <i class="fas fa-th"></i>
+      <span class="alt-text">Binder view{{ galleryStyle === 'binder' ? ' (active)' : '' }}</span>
     </button>
   </div>
 </template>
