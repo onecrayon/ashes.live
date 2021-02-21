@@ -26,13 +26,27 @@
       :content="phoenixbornCard.text"
       is-card-effect></card-codes>
   </div>
+  <ul class="flex flex-wrap justify-between">
+    <li v-for="(die, index) of diceList" :key="index"
+        class="die flex-none w-8 h-8 text-xl text-center"
+        :class="[die ? `${die} cursor-pointer` : 'basic', 'phg-' + (die ? die + '-power' : 'basic-magic')]"
+        @click="reduceDieCount(die)">
+        <span class="alt-text">{{ die ? `Remove ${die.name} die` : '(empty)' }}</span>
+    </li>
+  </ul>
 </template>
 
 <script>
+import { capitalize } from '/src/utils.js'
+import useHandleResponseError from '/src/composites/useHandleResponseError.js'
 import CardCodes from '../shared/CardCodes.vue'
 
 export default {
   name: 'BuilderDeck',
+  setup () {
+    // Standard composite containing { toast, handleResponseError }
+    return useHandleResponseError()
+  },
   data: () => ({
     phoenixbornCard: null,
   }),
@@ -59,13 +73,35 @@ export default {
         this.$store.commit('options/setShowPhoenixbornDetails', value)
       },
     },
+    diceList () {
+      let diceArray = new Array(10)
+      let nextIndex = 0
+      for (const dieObject of this.$store.state.builder.deck.dice) {
+        const numDice = dieObject.count
+        const maxIndex = nextIndex + numDice
+        while (nextIndex < maxIndex && nextIndex < 10) {
+          diceArray[nextIndex] = dieObject.name
+          nextIndex++
+        }
+      }
+      while (nextIndex < 10) {
+        diceArray[nextIndex] = null
+        nextIndex++
+      }
+      return diceArray
+    },
   },
   methods: {
+    capitalize,
     async loadPhoenixbornCard () {
       if (this.phoenixborn) {
         this.phoenixbornCard = await this.$store.dispatch('cards/fetchCard', this.phoenixborn)
       }
-    }
-  }
+    },
+    reduceDieCount (dieName) {
+      if (!dieName) return
+      this.$store.dispatch('builder/reduceDieCount', dieName).catch(this.handleResponseError)
+    },
+  },
 }
 </script>

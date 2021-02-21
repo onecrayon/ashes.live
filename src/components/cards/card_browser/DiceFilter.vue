@@ -29,6 +29,7 @@
 
 <script>
 import { diceList } from '/src/constants.js'
+import { capitalize } from '/src/utils.js'
 
 export default {
   name: 'DiceFilter',
@@ -62,9 +63,7 @@ export default {
     },
   },
   methods: {
-    capitalize (value) {
-      return `${value.substr(0, 1).toUpperCase()}${value.substr(1)}`
-    },
+    capitalize,
     isDieActive (dieType) {
       return this.filterList.indexOf(dieType) >= 0
     },

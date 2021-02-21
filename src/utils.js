@@ -87,6 +87,16 @@ export function trimmed(stringOrFalsey) {
 }
 
 /**
+ * capitalize(value)
+ *
+ * Returns a copy of the given string with the first character capitalized.
+ */
+export function capitalize (value) {
+  if (!value) return value
+  return `${value.substr(0, 1).toUpperCase()}${value.substr(1)}`
+}
+
+/**
  * jwtPayload(token)
  *
  * Returns the parsed payload object from the given JWT payload (does not attempt to validate it!

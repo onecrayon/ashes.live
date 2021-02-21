@@ -44,6 +44,9 @@ const actions = {
     return new Promise(resolve => {
       commit('setDeckID', deck.id)
       commit('setPhoenixborn', deck.phoenixborn)
+      for (const dieObject of deck.dice) {
+        commit('setDieCount', dieObject)
+      }
       if (deck.cards) {
         for (const card of deck.cards) {
           commit('setCardCount', {
@@ -157,6 +160,17 @@ const actions = {
       dispatch('SAVE_DECK').then(resolve).catch(reject)
     })
   },
+  reduceDieCount ({ dispatch, state }, name) {
+    const dieObject = state.deck.dice.find(element => element.name === name)
+    if (!dieObject || dieObject.count === 0) return
+    return dispatch('setDieCount', { name, count: dieObject.count - 1 })
+  },
+  setDieCount ({ commit, dispatch }, { name, count }) {
+    return new Promise((resolve, reject) => {
+      commit('setDieCount', { name, count })
+      dispatch('SAVE_DECK').then(resolve).catch(reject)
+    })
+  },
 }
 
 // Mutations
@@ -247,6 +261,20 @@ const mutations = {
   },
   setTitle (state, title) {
     state.deck.title = title
+  },
+  setDieCount (state, { name, count }) {
+    const dieObjectIndex = state.deck.dice.findIndex(element => element.name === name)
+    // Remove the die from our array, if necessary
+    if (count === 0 && dieObjectIndex > -1) {
+      state.deck.dice.splice(dieObjectIndex, 1)
+      return
+    }
+    // Otherwise update it or add it
+    if (dieObjectIndex > -1) {
+      state.deck.dice[dieObjectIndex].count = count
+    } else {
+      state.deck.dice.push({ name, count })
+    }
   },
 }
 
