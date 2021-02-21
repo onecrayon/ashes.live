@@ -5,7 +5,7 @@
       :title="diceLogicTooltip"
       :disabled="isDisabled"
       @click="toggleFilterLogic">
-      {{ diceLogicText }}<span class="alt-text"> dice type{{ isDiceLogiAll ? 's' : '' }}</span>:
+      {{ diceLogicText }}<span class="alt-text"> dice type{{ isDiceLogicAll ? 's' : '' }}</span>:
     </button
     ><button class="phg-basic-magic btn btn-inner text-2xl px-1 sm:px-2"
       :class="{active: isDieActive('basic')}"
