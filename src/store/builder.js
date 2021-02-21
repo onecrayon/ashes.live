@@ -119,6 +119,19 @@ const actions = {
       })
     })
   },
+  deleteDeck ({ commit, state }, id) {
+    return new Promise((resolve, reject) => {
+      request(`/v2/decks/${id}`, {
+        method: 'delete',
+      }).then(() => {
+        // Clear out the deckbuilder if we were editing the deck that just got deleted
+        if (state.deck.id === id) {
+          commit('RESET_STATE')
+        }
+        resolve()
+      }).catch(reject)
+    })
+  },
   reset ({ commit, state }) {
     return new Promise((resolve, reject) => {
       if (!state.enabled) return resolve()

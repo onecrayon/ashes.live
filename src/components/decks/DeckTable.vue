@@ -25,7 +25,7 @@
     </div>
   </div>
   <div v-else-if="decks && decks.length">
-    <deck v-for="deck of decks" :key="deck.id" :deck="deck" :show-mine="showMine"></deck>
+    <deck v-for="deck of decks" :key="deck.id" :deck="deck" :show-mine="showMine" @deleted="$emit('refresh')"></deck>
     <div class="my-4 text-center">
       Page {{ currentPage }} of {{ totalPage }}
     </div>
@@ -64,7 +64,7 @@ export default {
       default: false,
     },
   },
-  emits: ['reset-filters', 'load-next', 'load-previous'],
+  emits: ['reset-filters', 'load-next', 'load-previous', 'refresh'],
   components: {
     Deck,
   },

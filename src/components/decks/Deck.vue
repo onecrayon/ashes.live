@@ -14,7 +14,7 @@
           <player-badge v-if="!showMine" :user="deck.user" />
           <span v-else>
             <button
-              class="btn px-2"
+              class="btn px-2 btn-first"
               :class="{'active': isCurrentlyEditing}"
               :disabled="isCurrentlyEditing"
               @click="editThisDeck()">
@@ -22,10 +22,16 @@
               <span v-if="isCurrentlyEditing">Editing</span>
               <span v-else>Edit</span>
             </button>
-            <!-- TODO: <button class="btn btn-last btn-red">
-              <i class="far fa-trash-alt"></i>
-              Delete
-            </button> -->
+            <button
+              class="btn btn-last transition-colors duration-300 ease-in-out"
+              :class="{'btn-red': deleting}"
+              @click="deleteThisDeck()">
+              <i class="far fa-trash-alt mr-1"></i>
+              <transition name="slide-vertical">
+                <span v-if="deleting">Confirm?</span>
+                <span v-else>Delete</span>
+              </transition>
+            </button>
           </span>
         </span>
         <span class="text-sm float-right text-gray-darker">
@@ -65,10 +71,15 @@ export default {
       default: false,
     },
   },
+  emits: ['deleted'],
   setup () {
     // Standard composite containing { toast, handleResponseError }
     return useHandleResponseError()
   },
+  data: () => ({
+    deleting: false,
+    deleteTimeout: null,
+  }),
   components: {
     DeckCardsPreview,
     DeckDice,
@@ -98,10 +109,30 @@ export default {
     isCurrentlyEditing () {
       return this.$store.state.builder.deck.id === this.deck.id
     },
+    deleteText () {
+      if (!deleting) return 'Delete'
+      return 'Confirm?'
+    },
   },
   methods: {
     editThisDeck () {
       this.$store.dispatch('builder/editDeck', this.deck.id).catch(this.handleResponseError)
+    },
+    deleteThisDeck () {
+      if (!this.deleting) {
+        this.deleting = true
+        this.deleteTimeout = setTimeout(() => {
+          this.deleting = false
+        }, 3000)
+      } else {
+        if (this.deleteTimeout) {
+          clearTimeout(this.deleteTimeout)
+        }
+        this.$store.dispatch('builder/deleteDeck', this.deck.id).then(() => {
+          this.toast.success(`Your deck "${this.title}" has been deleted!`)
+          this.$emit('deleted')
+        }).catch(this.handleResponseError)
+      }
     },
   },
 }

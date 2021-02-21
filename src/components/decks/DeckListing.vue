@@ -21,6 +21,7 @@
     @reset-filters="clearFilters"
     @load-previous="loadPrevious"
     @load-next="loadNext"
+    @refresh="filterList"
     :currentPage="currentPage"
     :totalPage="totalPage"
     :show-mine="showMine"
