@@ -10,7 +10,7 @@
       }"></i>
     </button>
   </div>
-  <!-- TODO: add a nice height transition here -->
+  <!-- TODO: add a nice height transition here when toggling open or closed -->
   <div v-if="showPhoenixbornDetails" class="mb-4 text-sm">
     <div v-if="phoenixbornCard" class="text-center -mb-2.5">
       <span
@@ -26,20 +26,26 @@
       :content="phoenixbornCard.text"
       is-card-effect></card-codes>
   </div>
-  <ul class="flex flex-wrap justify-between">
+  <ul class="grid gap-2 mb-4" :class="$style.autoFitDiceGrid">
     <li v-for="(die, index) of diceList" :key="index"
-        class="die flex-none w-8 h-8 text-xl text-center"
+        class="die w-8 h-8 text-xl text-center"
         :class="[die ? `${die} cursor-pointer` : 'basic', 'phg-' + (die ? die + '-power' : 'basic-magic')]"
         @click="reduceDieCount(die)">
         <span class="alt-text">{{ die ? `Remove ${die.name} die` : '(empty)' }}</span>
     </li>
   </ul>
+  <div class="grid gap-2" :class="$style.autoFitControlsGrid">
+    <die-counter v-for="dieName of allDiceTypes" :key="dieName" :name="dieName"></die-counter>
+  </div>
+  <!-- TODO: do I want to implement the "Clear dice" and "Set filters" buttons? Not sure anyone actually used them... -->
 </template>
 
 <script>
+import { diceList } from '/src/constants.js'
 import { capitalize } from '/src/utils.js'
 import useHandleResponseError from '/src/composites/useHandleResponseError.js'
 import CardCodes from '../shared/CardCodes.vue'
+import DieCounter from './DieCounter.vue'
 
 export default {
   name: 'BuilderDeck',
@@ -52,6 +58,7 @@ export default {
   }),
   components: {
     CardCodes,
+    DieCounter,
   },
   async mounted () {
     if (this.showPhoenixbornDetails) {
@@ -59,6 +66,9 @@ export default {
     }
   },
   computed: {
+    allDiceTypes () {
+      return diceList
+    },
     phoenixborn () {
       return this.$store.state.builder.deck.phoenixborn
     },
@@ -105,3 +115,13 @@ export default {
   },
 }
 </script>
+
+<style lang="postcss" module>
+.autoFitDiceGrid {
+  grid-template-columns: repeat( auto-fit, minmax(32px, 1fr) );
+}
+
+.autoFitControlsGrid {
+  grid-template-columns: repeat( auto-fit, minmax(107px, 1fr) );
+}
+</style>

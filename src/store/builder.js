@@ -35,7 +35,11 @@ const getBaseState = () => ({
 const state = getBaseState
 
 // Getters
-const getters = {}
+const getters = {
+  totalDice (state) {
+    return state.deck.dice.reduce((value, dieObject) => value += dieObject.count, 0)
+  },
+}
 
 // Actions
 const actions = {
@@ -43,6 +47,7 @@ const actions = {
     // This persists a deck locally that has been loaded from the API
     return new Promise(resolve => {
       commit('setDeckID', deck.id)
+      commit('setTitle', deck.title)
       commit('setPhoenixborn', deck.phoenixborn)
       for (const dieObject of deck.dice) {
         commit('setDieCount', dieObject)

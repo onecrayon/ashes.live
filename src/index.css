@@ -20,6 +20,21 @@
   --color-inexhaustible-dark: #8d7b53;
   --color-reaction: #ecf1f4;
   --color-reaction-dark: #a3c4d3;
+  /* Dice coloration */
+  --color-dice-ceremonial: #ee3342;
+  --color-dice-ceremonial-bg: #111821;
+  --color-dice-charm: #f7e442;
+  --color-dice-charm-bg: #f34f98;
+  --color-dice-illusion: #8bc7ea;
+  --color-dice-illusion-bg: #490d67;
+  --color-dice-natural: #cedb00;
+  --color-dice-natural-bg: #004a98;
+  --color-dice-divine: #b58a2b;
+  --color-dice-divine-bg: #f2f2f2;
+  --color-dice-sympathy: #e3c2af;
+  --color-dice-sympathy-bg: #119981;
+  --color-dice-time: #dfdfdf;
+  --color-dice-time-bg: #9a2e36;
 }
 
 @tailwind base;
@@ -166,50 +181,35 @@ hr {
 }
 
 .die.basic {
-  color: #bfbfbf;
-  background: #dcdcdc;
+  @apply text-gray border-gray bg-gray-light;
 }
 
 .die.ceremonial {
-  color: #ee3342;
-  background: #111821;
-  border-color: #ee3342;
+  @apply text-dice-ceremonial border-dice-ceremonial bg-dice-ceremonial-bg;
 }
 
 .die.charm {
-  color: #f7e442;
-  background: #f34f98;
-  border-color: #f7e442;
+  @apply text-dice-charm border-dice-charm bg-dice-charm-bg;
 }
 
 .die.illusion {
-  color: #8bc7ea;
-  background: #490d67;
-  border-color: #8bc7ea;
+  @apply text-dice-illusion border-dice-illusion bg-dice-illusion-bg;
 }
 
 .die.natural {
-  color: #cedb00;
-  background: #004a98;
-  border-color: #cedb00;
+  @apply text-dice-natural border-dice-natural bg-dice-natural-bg;
 }
 
 .die.divine {
-  color: #b58a2b;
-  background: #f2f2f2;
-  border-color: #b58a2b;
+  @apply text-dice-divine border-dice-divine bg-dice-divine-bg;
 }
 
 .die.sympathy {
-  color: #e3c2af;
-  background: #119981;
-  border-color: #e3c2af;
+  @apply text-dice-sympathy border-dice-sympathy bg-dice-sympathy-bg;
 }
 
 .die.time {
-  color: #dfdfdf;
-  background: #9a2e36;
-  border-color: #dfdfdf;
+  @apply text-dice-time border-dice-time bg-dice-time-bg;
 }
 
 /* Usage: <transition name="fade"> */
