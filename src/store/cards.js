@@ -34,7 +34,7 @@ const actions = {
         commit('addCard', card)
         resolve(card)
       }).catch(() => {
-        toast.error(`Unable to load data for ${card.name ? card.name : card.stub}!`)
+        toast.error(`Unable to load data for ${partialCard.name ? partialCard.name : partialCard.stub}!`)
         reject()
       })
     })
