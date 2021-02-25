@@ -37,12 +37,12 @@
         <ul v-if="!isAuthenticated" class="flex py-1">
           <li class="flex-initial px-2">
             <link-alike @click="isLogInModalOpen = true" use-underline>
-              <i class="fas fa-user-secret text-xl"></i> Log In
+              <i class="fas fa-user-secret text-xl"></i> Log in
             </link-alike>
           </li>
           <li class="flex-initial px-2">
             <router-link to="/players/new/" class="text-black">
-              <i class="fas fa-user-plus text-xl"></i> Sign Up
+              <i class="fas fa-user-plus text-xl"></i> Sign up
             </router-link>
           </li>
         </ul>
@@ -56,12 +56,12 @@
             </li>
             <li class="flex-none px-2">
               <router-link to="/decks/mine/" class="text-black">
-                <i class="fas fa-th-list text-xl"></i> My Decks
+                <i class="fas fa-th-list text-xl"></i> My decks
               </router-link>
             </li>
             <li class="flex-none px-2">
               <link-alike @click="logOut" use-underline>
-                <i class="fas fa-user-slash text-xl"></i> Log Out
+                <i class="fas fa-user-slash text-xl"></i> Log out
               </link-alike>
             </li>
           </ul>
