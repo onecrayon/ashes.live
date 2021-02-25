@@ -47,7 +47,7 @@
           {{ cardsCount }}/30
         </span>
       </div>
-      <deck-cards-preview :cards="deckData.cards" :conjurations="conjurations" />
+      <deck-cards-preview :cards="deckData.cards" :conjurations="deckData.conjurations" />
     </div>
   </div>
 </template>
@@ -91,10 +91,6 @@ export default {
       // edited, grab our data from the store instead of the listing info to ensure it's up-to-date
       if (this.showMine && this.isCurrentlyEditing) return this.$store.state.builder.deck
       return this.deck
-    },
-    conjurations () {
-      if (this.showMine && this.isCurrentlyEditing) return this.$store.state.builder.conjurations
-      return this.deck.conjurations
     },
     linkTarget () {
       return {

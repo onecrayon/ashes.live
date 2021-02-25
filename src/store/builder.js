@@ -94,6 +94,7 @@ const actions = {
     return new Promise(resolve => {
       commit('setDeckID', deck.id)
       commit('setTitle', deck.title)
+      commit('setDescription', deck.description)
       commit('setPhoenixborn', deck.phoenixborn)
       commit('setModified', deck.modified)
       for (const dieObject of deck.dice) {
@@ -111,6 +112,9 @@ const actions = {
         commit('setConjurations', deck.conjurations)
       }
       // TODO: persist everything else, once those data mutations are supported
+      // TODO: first_five
+      // TODO: effect_costs
+      // TODO: tutor_map
       resolve()
     })
   },
@@ -320,6 +324,9 @@ const mutations = {
   setTitle (state, title) {
     state.deck.title = title
   },
+  setDescription (state, description) {
+    state.deck.description = description
+  },
   setDieCount (state, { name, count }) {
     const dieObjectIndex = state.deck.dice.findIndex(element => element.name === name)
     // Remove the die from our array, if necessary
@@ -335,7 +342,7 @@ const mutations = {
     }
   },
   setConjurations (state, conjurations) {
-    state.conjurations = conjurations
+    state.deck.conjurations = conjurations
   },
 }
 
