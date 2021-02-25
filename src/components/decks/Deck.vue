@@ -5,13 +5,13 @@
     <div class="p-2 text-xs">
       <div class="m-0 font-bold text-xl flex flex-col sm:flex-row">
         <span class="flex-grow pt-0 sm:pt-2">
-          <router-link :to="linkTarget" class="text-black" :class="{'italic font-normal': !deck.title}">{{ title }}</router-link>
+          <router-link :to="linkTarget" class="text-black" :class="{'italic font-normal': !deckData.title}">{{ title }}</router-link>
         </span>
-        <deck-dice :dice="deck.dice" />
+        <deck-dice :dice="deckData.dice" />
       </div>
       <div class="flex flex-col sm:flex-row sm:items-end">
         <span class="flex-grow text-sm">
-          <player-badge v-if="!showMine" :user="deck.user" />
+          <player-badge v-if="!showMine || deckData.is_legacy" :user="deckData.user" />
           <span v-else>
             <button
               class="btn px-2 btn-first"
@@ -41,13 +41,13 @@
       <hr class="mb-1 mt-1" />
       <div class="mb-1">
         <span class="text-lg">
-          <card-link :card="deck.phoenixborn"></card-link>
+          <card-link :card="deckData.phoenixborn"></card-link>
         </span>
         <span class="text-sm float-right font-bold" :class="{'text-red': cardsCount != 30}">
           {{ cardsCount }}/30
         </span>
       </div>
-      <deck-cards-preview :cards="deck.cards" :conjurations="deck.conjurations" />
+      <deck-cards-preview :cards="deckData.cards" :conjurations="conjurations" />
     </div>
   </div>
 </template>
@@ -86,25 +86,35 @@ export default {
     PlayerBadge,
   },
   computed: {
+    deckData () {
+      // If we are looking at a private saved copy deck listing and this deck is being actively
+      // edited, grab our data from the store instead of the listing info to ensure it's up-to-date
+      if (this.showMine && this.isCurrentlyEditing) return this.$store.state.builder.deck
+      return this.deck
+    },
+    conjurations () {
+      if (this.showMine && this.isCurrentlyEditing) return this.$store.state.builder.conjurations
+      return this.deck.conjurations
+    },
     linkTarget () {
       return {
         name: 'DeckDetails',
-        params: { id: this.deck.id },
+        params: { id: this.deckData.id },
       }
     },
     lastUpdatedDateFormatted () {
-      return formatDistanceToNowStrict(parseISO(this.deck.modified))
+      return formatDistanceToNowStrict(parseISO(this.deckData.modified))
     },
     cardsCount () {
-      return this.deck.cards.reduce((prev, card) => {
+      return this.deckData.cards.reduce((prev, card) => {
         return prev + card.count
       }, 0)
     },
     phoenixbornImagePath () {
-      return getPhoenixbornImageUrl(this.deck.phoenixborn.stub, false, this.deck.is_legacy)
+      return getPhoenixbornImageUrl(this.deckData.phoenixborn.stub, false, this.deckData.is_legacy)
     },
     title () {
-      return this.deck.title || `Untitled ${this.deck.phoenixborn.name}`
+      return this.deckData.title || `Untitled ${this.deckData.phoenixborn.name}`
     },
     isCurrentlyEditing () {
       return this.$store.state.builder.deck.id === this.deck.id

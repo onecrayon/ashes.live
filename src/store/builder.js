@@ -7,6 +7,18 @@
  */
 import { request } from '/src/utils.js'
 
+// Utilities for working with card ordering in decks
+const cardTypeOrder = [
+  'Ready Spell', 'Ally', 'Alteration Spell', 'Action Spell', 'Reaction Spell'
+]
+
+function pluralCardType (cardType) {
+	if (cardType === 'Ally') {
+		return 'Allies'
+	}
+	return cardType + 's'
+}
+
 // Initial state
 const getBaseState = () => ({
   enabled: false,
@@ -20,6 +32,7 @@ const getBaseState = () => ({
     id: null,
     title: '',
     description: '',
+    modified: null,
     phoenixborn: null,
     dice: [],
     cards: [],
@@ -39,6 +52,39 @@ const getters = {
   totalDice (state) {
     return state.deck.dice.reduce((value, dieObject) => value += dieObject.count, 0)
   },
+  totalCards (state) {
+    return state.deck.cards.reduce((value, card) => value + card.count, 0)
+  },
+  deckSections (state) {
+    const sections = {}
+    for (const card of state.deck.cards) {
+      if (!sections[card.type]) {
+        sections[card.type] = []
+      }
+      sections[card.type].push(card)
+    }
+    const sectionTitles = Object.keys(sections)
+    sectionTitles.sort((a, b) => {
+      return cardTypeOrder.indexOf(a) < cardTypeOrder.indexOf(b) ? -1 : 1
+    })
+    const sortedSections = []
+    for (const section of sectionTitles) {
+      const contents = sections[section]
+      contents.sort((a, b) => {
+        if (a.name === b.name) {
+          return 0
+        }
+        return a.name < b.name ? -1 : 1
+      })
+      const totalCards = contents.reduce((total, card) => total + card.count, 0)
+      sortedSections.push({
+        'title': pluralCardType(section),
+        'count': totalCards,
+        'contents': contents
+      })
+    }
+    return sortedSections
+  },
 }
 
 // Actions
@@ -49,6 +95,7 @@ const actions = {
       commit('setDeckID', deck.id)
       commit('setTitle', deck.title)
       commit('setPhoenixborn', deck.phoenixborn)
+      commit('setModified', deck.modified)
       for (const dieObject of deck.dice) {
         commit('setDieCount', dieObject)
       }
@@ -59,6 +106,9 @@ const actions = {
             count: card.count,
           })
         }
+      }
+      if (deck.conjurations) {
+        commit('setConjurations', deck.conjurations)
       }
       // TODO: persist everything else, once those data mutations are supported
       resolve()
@@ -200,6 +250,9 @@ const mutations = {
   setDeckID (state, value) {
     state.deck.id = value
   },
+  setModified (state, value) {
+    state.deck.modified = value
+  },
   setPhoenixborn (state, card) {
     if (state.deck.phoenixborn && state.deck.phoenixborn.stub === card.stub) return
     // Remove any Phoenixborn unique cards from the deck that don't match this Phoenixborn
@@ -280,6 +333,9 @@ const mutations = {
     } else {
       state.deck.dice.push({ name, count })
     }
+  },
+  setConjurations (state, conjurations) {
+    state.conjurations = conjurations
   },
 }
 

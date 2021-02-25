@@ -1,6 +1,7 @@
 <template>
   <div class="flex mb-4">
     <h2 class="text-lg flex-grow m-0 font-bold">
+      <i :class="typeClass('Phoenixborn')"></i>
       {{ phoenixborn.name }}
     </h2>
     <button class="flex-none text-xl" title="Toggle Phoenixborn details" @click="showPhoenixbornDetails = !showPhoenixbornDetails">
@@ -38,14 +39,47 @@
     <die-counter v-for="dieName of allDiceTypes" :key="dieName" :name="dieName"></die-counter>
   </div>
   <!-- TODO: do I want to implement the "Clear dice" and "Set filters" buttons? Not sure anyone actually used them... -->
+  <hr class="mt-6 mb-4">
+
+  <h3>Cards <span class="text-gray">(<span :class="{'text-red': totalCards > 30}">{{ totalCards }}</span> / 30)</span></h3>
+
+  <div v-for="section of deckSections" :key="section.title">
+    <h4><i :class="typeClass(section.contents[0].type)"></i> {{ section.title }} <span class="text-gray">({{ section.count }})</span></h4>
+    <ul class="mb-4">
+      <li v-for="card of section.contents" :key="card.stub" class="mb-1">
+        <div class="flex">
+          <deck-qty-buttons class="flex-none mr-1" :card="card" standalone></deck-qty-buttons>
+          <div class="flex-grow pt-0.5">
+            <card-link :card="card"></card-link>
+            <span v-if="card.phoenixborn" class="text-gray" :title="card.phoenixborn">
+              ({{ card.phoenixborn.split(' ')[0] }})
+            </span>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div v-if="conjurations">
+    <hr class="mt-6 mb-4">
+    <h4><i :class="typeClass('Conjuration')"></i> Conjurations <span class="text-gray">({{ totalConjurations }})</span></h4>
+    <ul>
+      <li v-for="card of conjurations" :key="card.stub" class="mb-1">
+        {{ card.count }}&times; <card-link :card="card"></card-link>
+        <span v-if="card.phoenixborn" class="text-gray" :title="card.phoenixborn">
+          ({{ card.phoenixborn.split(' ')[0] }})
+        </span>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
-import { diceList } from '/src/constants.js'
+import { diceList, typeToFontAwesome } from '/src/constants.js'
 import { capitalize } from '/src/utils.js'
 import useHandleResponseError from '/src/composites/useHandleResponseError.js'
 import CardCodes from '../shared/CardCodes.vue'
 import DieCounter from './DieCounter.vue'
+import DeckQtyButtons from '../shared/DeckQtyButtons.vue'
 
 export default {
   name: 'BuilderDeck',
@@ -59,6 +93,7 @@ export default {
   components: {
     CardCodes,
     DieCounter,
+    DeckQtyButtons,
   },
   async mounted () {
     if (this.showPhoenixbornDetails) {
@@ -100,6 +135,21 @@ export default {
       }
       return diceArray
     },
+    totalCards () {
+      return this.$store.getters['builder/totalCards']
+    },
+    totalConjurations () {
+      return this.$store.getters['builder/totalConjurations']
+    },
+    deckSections () {
+      return this.$store.getters['builder/deckSections']
+    },
+    conjurations () {
+      return this.$store.state.builder.conjurations
+    },
+    totalConjurations () {
+      return this.$store.state.builder.conjurations.reduce((value, card) => value + card.count, 0)
+    },
   },
   methods: {
     capitalize,
@@ -111,6 +161,9 @@ export default {
     reduceDieCount (dieName) {
       if (!dieName) return
       this.$store.dispatch('builder/reduceDieCount', dieName).catch(this.handleResponseError)
+    },
+    typeClass (type) {
+      return typeToFontAwesome[type]
     },
   },
 }
