@@ -34,6 +34,7 @@
       :cards="cards"
       :have-next-cards="!!nextCardsURL"
       :gallery-style="galleryStyle"
+      :show-legacy="showLegacy"
       @reset-filters="clearFilters"
       @load-more="loadNext"></card-table>
   </div>

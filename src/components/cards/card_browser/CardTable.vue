@@ -10,8 +10,8 @@
     <div v-if="galleryStyle === 'list'"
       class="grid gap-0"
       :class="{
-        [$style.deckbuilderListColumns]: isDeckbuilderActive,
-        [$style.listColumns]: !isDeckbuilderActive,
+        [$style.deckbuilderListColumns]: isDeckbuilderActive && !showLegacy,
+        [$style.listColumns]: !isDeckbuilderActive || showLegacy,
       }">
       <card-table-row v-for="card of cards" :key="card.stub" :card="card"></card-table-row>
     </div>
@@ -46,6 +46,7 @@ export default {
     isDisabled: Boolean,
     cards: Array,
     haveNextCards: Boolean,
+    showLegacy: Boolean,
     galleryStyle: String,
   },
   emits: ['reset-filters', 'load-more'],

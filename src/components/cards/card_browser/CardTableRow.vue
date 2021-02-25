@@ -1,6 +1,6 @@
 <template>
   <!-- This isn't necessary from the standpoint of the quantity buttons component, but we need an empty div as a placeholder for the grid to work -->
-  <div v-if="isDeckbuilderActive" class="pr-1">
+  <div v-if="isDeckbuilderActive && !card.is_legacy" class="pr-1">
     <deck-qty-buttons :card="card" standalone></deck-qty-buttons>
   </div>
   <div class="w-8 text-center p-1 sm:border-b border-gray-light" :title="card.type">

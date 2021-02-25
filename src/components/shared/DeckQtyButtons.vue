@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isDeckbuilderActive && isNotConjuration">
+  <div v-if="isDeckbuilderActive && isNotConjuration && !card.is_legacy">
     <div v-if="isPhoenixborn"
       :class="{
         shadow: isPopup,
