@@ -1,35 +1,37 @@
 <template>
-  <router-link
-    class="font-bold text-black"
-    ref="link"
-    :to="cardTarget"
-    @mouseover="queueShowDetails"
-    @mouseleave="closeDetails"
-    @click="linkClick">
-    <slot>{{ card.name }}</slot>
-  </router-link>
-  <div ref="popup" class="absolute z-50" @mouseleave="closeDetails">
-    <div
-      v-if="card.is_legacy && areDetailsShowing"
-      class="border-8 border-gray-light bg-gray-light text-gray rounded-lg shadow relative"
-      ref="popup">
-      <i
-        class="fas fa-circle-notch fa-spin text-2xl"
-        :class="[$style.centerPosition]"></i>
-      <img
-        width="299"
-        height="418"
-        class="relative"
-        :src="legacyCardURL"
-        :alt="card.name">
+  <span>
+    <router-link
+      class="font-bold text-black"
+      ref="link"
+      :to="cardTarget"
+      @mouseover="queueShowDetails"
+      @mouseleave="closeDetails"
+      @click="linkClick">
+      <slot>{{ card.name }}</slot>
+    </router-link>
+    <div ref="popup" class="absolute z-50" @mouseleave="closeDetails">
+      <div
+        v-if="card.is_legacy && areDetailsShowing"
+        class="border-8 border-gray-light bg-gray-light text-gray rounded-lg shadow relative"
+        ref="popup">
+        <i
+          class="fas fa-circle-notch fa-spin text-2xl"
+          :class="[$style.centerPosition]"></i>
+        <img
+          width="299"
+          height="418"
+          class="relative"
+          :src="legacyCardURL"
+          :alt="card.name">
+      </div>
+      <card
+        v-else-if="areDetailsShowing"
+        ref="popup"
+        class="text-left text-black"
+        :card="details"
+        is-popup></card>
     </div>
-    <card
-      v-else-if="areDetailsShowing"
-      ref="popup"
-      class="text-left text-black"
-      :card="details"
-      is-popup></card>
-  </div>
+  </span>
 </template>
 
 <script>

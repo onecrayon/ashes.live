@@ -15,7 +15,10 @@
   </div>
   <div class="py-1 sm:border-b sm:border-r border-gray-light text-gray-light text-right">
     <div v-if="card.conjurations && card.conjurations.length" class="px-2 inline-block">
-      <card-link v-for="conjuration of card.conjurations" :key="conjuration.stub" :card="legacyConjuration(conjuration)">
+      <card-link
+        v-for="conjuration of card.conjurations" :key="conjuration.stub"
+        :card="legacyConjuration(conjuration)"
+        class="ml-1">
         <i class="fas fa-plus-square"></i>
       </card-link>
     </div>
