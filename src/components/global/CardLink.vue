@@ -83,7 +83,7 @@ export default {
     },
     queueShowDetails () {
       // Only queue up if we aren't already loading or viewing things
-      if (this.loadingDetails || this.areDetailsShowing) return
+      if (this.loadingDetails || this.areDetailsShowing || this.checkOpenTimeout) return
       this.checkOpenTimeout = setTimeout(this.showDetails, 200)
     },
     clearOpenTimeout () {
@@ -149,8 +149,8 @@ export default {
       })
     },
     closeDetails () {
-      if (!this.areDetailsShowing) return
       this.clearOpenTimeout()
+      if (!this.areDetailsShowing) return
       if (this.checkCloseTimeout) clearTimeout(this.checkCloseTimeout)
       // Delay our close check to allow them time to move into the hovering element
       this.checkCloseTimeout = setTimeout(() => {
