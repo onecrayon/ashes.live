@@ -12,7 +12,7 @@
       <h3 class="my-4">Play Online</h3>
 
       <ul class="list-disc pl-4">
-        <li><a href="https://ashteki.com">Ashteki</a> <span class="text-gray">(Play Ashes in your browser! Under active development, so there may be bugs and not all cards are available yet.)</span></li>
+        <li><a href="https://ashteki.com">Ashteki</a> <span class="text-gray">(Play Ashes in your browser! Under active development, so there may be bugs and not all cards are available yet)</span></li>
         <li><a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2386753960">Ashes Reborn for TableTop Simulator</a> <span class="text-gray">(requires TableTop Simulator on Steam)</span></li>
       </ul>
 
