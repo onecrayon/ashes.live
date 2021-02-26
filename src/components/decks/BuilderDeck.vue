@@ -41,7 +41,7 @@
   <!-- TODO: do I want to implement the "Clear dice" and "Set filters" buttons? Not sure anyone actually used them... -->
   <hr class="mt-6 mb-4">
 
-  <h3>Cards <span class="text-gray">(<span :class="{'text-red': totalCards > 30}">{{ totalCards }}</span> / 30)</span></h3>
+  <h3>Cards <span class="text-gray">(<span :class="{'text-red': totalCards > 30}">{{ totalCards }} / 30</span>)</span></h3>
 
   <div v-for="section of deckSections" :key="section.title">
     <h4><i :class="typeClass(section.contents[0].type)"></i> {{ section.title }} <span class="text-gray">({{ section.count }})</span></h4>
@@ -138,17 +138,14 @@ export default {
     totalCards () {
       return this.$store.getters['builder/totalCards']
     },
-    totalConjurations () {
-      return this.$store.getters['builder/totalConjurations']
-    },
     deckSections () {
       return this.$store.getters['builder/deckSections']
     },
     conjurations () {
-      return this.$store.state.builder.conjurations
+      return this.$store.state.builder.deck.conjurations
     },
     totalConjurations () {
-      return this.$store.state.builder.conjurations.reduce((value, card) => value + card.count, 0)
+      return this.$store.state.builder.deck.conjurations.reduce((value, card) => value + card.count, 0)
     },
   },
   methods: {
