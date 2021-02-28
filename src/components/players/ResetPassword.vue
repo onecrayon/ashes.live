@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import useHandleResponseError from '/src/composites/useHandleResponseError.js'
+import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import TextInput from '../shared/TextInput.vue'
 
 export default {

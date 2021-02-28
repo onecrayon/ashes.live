@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import useHandleResponseError from '/src/composites/useHandleResponseError.js'
+import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import BuilderDeck from './BuilderDeck.vue'
 import TextInput from '../shared/TextInput.vue'
 

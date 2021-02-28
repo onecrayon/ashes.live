@@ -10,6 +10,10 @@ import ValidityErrors from '../components/shared/ValidityErrors.vue'
 export default function () {
   const toast = useToast()
   const handleResponseError = function (error) {
+    if (typeof error === 'string') {
+      toast.error(error)
+      return
+    }
     if (!error || !error.response || !error.response.data || !error.response.data.detail) {
       toast.error('Unknown server error: please report this!')
       return

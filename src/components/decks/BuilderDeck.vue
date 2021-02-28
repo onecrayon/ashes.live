@@ -48,7 +48,7 @@
     <ul class="mb-4">
       <li v-for="card of section.contents" :key="card.stub" class="mb-1">
         <div class="flex">
-          <deck-qty-buttons class="flex-none mr-1" :card="card" standalone></deck-qty-buttons>
+          <deck-qty-buttons class="flex-none mr-1" :card="card" standalone zero-removes-card></deck-qty-buttons>
           <div class="flex-grow pt-0.5">
             <card-link :card="card"></card-link>
             <span v-if="card.phoenixborn" class="text-gray" :title="card.phoenixborn">
@@ -76,7 +76,7 @@
 <script>
 import { diceList, typeToFontAwesome } from '/src/constants.js'
 import { capitalize } from '/src/utils.js'
-import useHandleResponseError from '/src/composites/useHandleResponseError.js'
+import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import CardCodes from '../shared/CardCodes.vue'
 import DieCounter from './DieCounter.vue'
 import DeckQtyButtons from '../shared/DeckQtyButtons.vue'

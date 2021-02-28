@@ -77,10 +77,10 @@ const mutations = {
       state.stubMap[card.stub] = card
     }
   },
-  savePhoenixborns (phoenixborns) {
+  savePhoenixborns (state, phoenixborns) {
     state.phoenixborns = phoenixborns
   },
-  saveLegacyPhoenixborns (phoenixborns) {
+  saveLegacyPhoenixborns (state, phoenixborns) {
     state.legacyPhoenixborns = phoenixborns
   },
 }

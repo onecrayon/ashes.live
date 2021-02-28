@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import useHandleResponseError from '/src/composites/useHandleResponseError.js'
+import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 
 export default {
   name: 'DieCounter',

@@ -1,6 +1,8 @@
 <template>
   <modal :open="open" @update:open="!$event && closeModal()">
-    <log-in-form @escape="closeModal()" @auth:success="closeModal()" center-form ref="loginForm"></log-in-form>
+    <log-in-form @escape="closeModal()" @auth:success="closeModal(true)" center-form ref="loginForm">
+      <slot></slot>
+    </log-in-form>
   </modal>
 </template>
 
@@ -13,7 +15,7 @@ export default {
   props: {
     open: Boolean,
   },
-  emits: ['update:open'],
+  emits: ['update:open', 'login:success', 'login:canceled'],
   components: {
     LogInForm,
     Modal,
@@ -26,8 +28,10 @@ export default {
     },
   },
   methods: {
-    closeModal (value) {
-      this.$emit('update:open', value || false)
+    closeModal (succeeded) {
+      if (succeeded) this.$emit('login:success')
+      else this.$emit('login:canceled')
+      this.$emit('update:open', false)
       this.$nextTick(() => {
         this.email = ''
         this.password = ''

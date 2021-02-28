@@ -36,7 +36,8 @@
           [$style.standalone]: standalone,
         }"
         @click="setCardCount(card, count)">
-          {{ count }}
+          <i v-if="count === 0 && zeroRemovesCard" class="fas fa-times"></i>
+          <span v-else>{{ count }}</span>
         </button>
     </div>
   </div>
@@ -57,6 +58,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    zeroRemovesCard: {
+      type: Boolean,
+      default: false,
+    }
   },
   computed: {
     isPhoenixborn () {

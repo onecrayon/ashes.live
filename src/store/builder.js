@@ -89,6 +89,9 @@ const getters = {
 
 // Actions
 const actions = {
+  RESET ({ commit }) {
+    commit('RESET_STATE')
+  },
   PERSIST_DECK ({ commit }, deck) {
     // This persists a deck locally that has been loaded from the API
     return new Promise(resolve => {

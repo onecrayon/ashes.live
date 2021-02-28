@@ -14,5 +14,12 @@ export default createStore({
     options,
   },
   strict: debug,
-  plugins: debug ? [createLogger()] : []
+  plugins: debug ? [createLogger()] : [],
+  actions: {
+    RESET_PLAYER ({ dispatch }) {
+      // This ensures that all player-specific data is reset to defaults upon authentication expiry
+      dispatch('player/RESET')
+      dispatch('builder/RESET')
+    },
+  },
 })

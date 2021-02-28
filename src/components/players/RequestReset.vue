@@ -17,7 +17,7 @@
 
 <script>
 import { request } from '/src/utils.js'
-import useHandleResponseError from '/src/composites/useHandleResponseError.js'
+import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import TextInput from '../shared/TextInput.vue'
 
 export default {

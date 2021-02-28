@@ -36,7 +36,7 @@
       <transition name="slide-vertical">
         <ul v-if="!isAuthenticated" class="flex py-1">
           <li class="flex-initial px-2">
-            <link-alike @click="isLogInModalOpen = true" use-underline>
+            <link-alike @click="initiateLogin()" use-underline>
               <i class="fas fa-user-secret text-xl"></i> Log in
             </link-alike>
           </li>
@@ -78,7 +78,9 @@
         </div>
       </transition>
     </div>
-    <log-in-modal v-model:open="isLogInModalOpen"></log-in-modal>
+    <log-in-modal v-model:open="isLogInModalOpen" @login:success="finalizeLogin(true)" @login:canceled="finalizeLogin(false)">
+      <p v-if="onLoginSuccess">Your session has expired. Please login to continue.</p>
+    </log-in-modal>
   </nav>
   <div class="p-4 container mx-auto lg:pt-8 flex relative">
     <div :class="[$style.transitionWidth, isDeckbuilding ? 'w-2/3' : '']">
@@ -102,6 +104,7 @@ import { useToast } from 'vue-toastification'
 import LogInModal from './components/LogInModal.vue'
 import Builder from './components/decks/Builder.vue'
 import LinkAlike from './components/shared/LinkAlike.vue'
+import emitter from './events.js'
 
 // Set up sensible Axios defaults for query string array handling
 // (it uses bracketed property names, which the backend doesn't support)
@@ -125,10 +128,18 @@ export default {
   },
   data: () => ({
     isLogInModalOpen: false,
+    onLoginSuccess: null,
+    onLoginFailure: null,
   }),
   created () {
     // Set the page title when the app is loaded for the first time
     document.title = siteTitle(this.$route)
+  },
+  mounted () {
+    emitter.on('login:required', this.initiateLogin)
+  },
+  beforeUnmount () {
+    emitter.off('login:required', this.initiateLogin)
   },
   computed: {
     useFullHeader () {
@@ -163,6 +174,20 @@ export default {
     },
     exitDeckbuilder () {
       this.$store.dispatch('builder/reset')
+    },
+    initiateLogin ({onSuccess = null, onFailure = null} = {}) {
+      this.onLoginSuccess = onSuccess
+      this.onLoginFailure = onFailure
+      this.isLogInModalOpen = true
+    },
+    finalizeLogin(isSuccess) {
+      if (isSuccess && this.onLoginSuccess) {
+        this.onLoginSuccess()
+      } else if (!isSuccess && this.onLoginFailure) {
+        this.onLoginFailure()
+      }
+      this.onLoginSuccess = null
+      this.onLoginFailure = null
     },
     logOut () {
       this.$store.dispatch('player/logOut')

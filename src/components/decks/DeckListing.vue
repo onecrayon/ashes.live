@@ -30,7 +30,7 @@
 
 <script>
 import { watch } from 'vue'
-import { useToast } from 'vue-toastification'
+import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import DeckTable from './DeckTable.vue'
 import ClearableSearch from '../shared/ClearableSearch.vue'
 import { debounce, trimmed, request } from '/src/utils.js'
@@ -41,8 +41,8 @@ const DECKS_PER_PAGE = 30;
 export default {
   name: 'DeckListing',
   setup () {
-    // Expose toasts for use in other portions of this component
-    return { toast: useToast() }
+    // Standard composite containing { toast, handleResponseError }
+    return useHandleResponseError()
   },
   props: {
     showMine: {
@@ -181,19 +181,8 @@ export default {
 
         this.deckCount = response.data.count
         this.decks = response.data.results
-
-        // Add decks to the Vuex store so that we don't need to fetch individual cards via AJAX
-        // when viewing their details around the site (during this session, at least)
-        // this.$store.commit('decks/addDecks', response.data.results)
-      }).catch((error) => {
-        let errorMessage = 'Failed to fetch deck listing. Please report if this fails repeatedly!'
-        if (error.response.status === 422) {
-          // TODO: write a generic function to parse the validation response from FastAPI
-          errorMessage = 'Failed to fetch deck listing (validation failure)!'
-        } else if (error.data && error.data.detail) {
-          errorMessage = error.response.data.detail
-        }
-        this.toast.error(errorMessage)
+      }).catch(error => {
+        this.handleResponseError(error)
         // Reset the filters, if necessary
         if (failureCallback) failureCallback()
       }).finally(() => {

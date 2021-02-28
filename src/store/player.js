@@ -4,6 +4,8 @@
  * This store saves player authentication, account details, and account options that are persisted
  * to the API.
  */
+import axios from 'axios'
+import Nanobar from 'nanobar'
 import { request, localStoreFactory, jwtPayload } from '/src/utils.js'
 
 const { storeGet, storeSet } = localStoreFactory('player.auth')
@@ -46,6 +48,12 @@ const getters = {
 
 // Actions
 const actions = {
+  RESET ({ commit }) {
+    commit('setToken', null)
+    commit('setUsername', null)
+    commit('setBadge', null)
+    commit('setIsAdmin', false)
+  },
   LOG_IN ({ commit }, authResponseData) {
     const user = authResponseData.user
     commit('setToken', authResponseData.access_token)
@@ -61,25 +69,33 @@ const actions = {
     if (rememberMe) {
       formData.append('scope', 'token:longterm')
     }
-
+    // We use native Axios here to ensure that a login request triggered by expired credentials
+    // doesn't trigger a cascading never-ending loop of credential requests on username/password
+    // failure
     return new Promise((resolve, reject) => {
-      request('/v2/token', {
+      const nano = new Nanobar({ autoRun: true })
+      axios.request({
+        url: `${import.meta.env.VITE_API_URL}/v2/token`,
         method: 'post',
         data: formData,
       }).then(response => {
         dispatch('LOG_IN', response.data).then(resolve)
-      }).catch(reject)
+      }).catch(reject).finally(() => {
+        nano.go(100)
+      })
     })
   },
-  logOut ({ commit }) {
+  logOut ({ dispatch }) {
+    // Similar to logging in, we don't want to trigger a login request when they try to log out if
+    // their credentials have already expired, so we have to use native Axios
     return new Promise((resolve) => {
-      request('/v2/token', {
-        method: 'delete'
+      const nano = new Nanobar({ autoRun: true })
+      axios.request({
+        url: `${import.meta.env.VITE_API_URL}/v2/token`,
+        method: 'delete',
       }).finally(() => {
-        commit('setToken', null)
-        commit('setUsername', null)
-        commit('setBadge', null)
-        commit('setIsAdmin', false)
+        dispatch('RESET')
+        nano.go(100)
         resolve()
       })
     })
