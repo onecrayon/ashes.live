@@ -36,7 +36,7 @@
           [$style.standalone]: standalone,
         }"
         @click="setCardCount(card, count)">
-          <i v-if="count === 0 && zeroRemovesCard" class="fas fa-times"></i>
+          <i v-if="count === 0 && zeroRemovesCard" class="fas fa-times"><span class="alt-text">Remove</span></i>
           <span v-else>{{ count }}</span>
         </button>
     </div>
