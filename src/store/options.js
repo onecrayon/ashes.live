@@ -13,7 +13,6 @@ const state = () => ({
   // Accepts 'list' or 'binder'
   galleryStyle: storeGet('galleryStyle') || 'list',
   colorizeIcons: storeGet('colorizeIcons') || false,
-  showDetailsAndDice: storeGet('showDetailsAndDice') || true,
 })
 
 // Getters
@@ -34,10 +33,6 @@ const mutations = {
   setColorizeIcons (state, colorizeIcons) {
     state.colorizeIcons = colorizeIcons
     storeSet('colorizeIcons', colorizeIcons)
-  },
-  setShowPhoenixbornDetails (state, value) {
-    state.showDetailsAndDice = value
-    storeSet('showDetailsAndDice', value)
   },
 }
 

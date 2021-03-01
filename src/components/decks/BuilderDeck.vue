@@ -1,19 +1,9 @@
 <template>
-  <div class="flex mb-4">
-    <h2 class="text-lg flex-grow m-0 font-bold">
-      <i :class="typeClass('Phoenixborn')"></i>
-      {{ phoenixborn.name }}
-    </h2>
-    <button class="flex-none text-xl" title="Toggle full details" @click="showDetailsAndDice = !showDetailsAndDice">
-      <i class="far" :class="{
-        'fa-caret-square-down': !showDetailsAndDice,
-        'fa-caret-square-up': showDetailsAndDice
-      }"></i>
-      <span class="alt-text">Toggle full details</span>
-    </button>
-  </div>
-  <!-- TODO: add a nice height transition here when toggling open or closed -->
-  <div v-if="showDetailsAndDice" class="mb-4 text-sm">
+  <h2 class="text-lg mb-4 font-bold">
+    <i :class="typeClass('Phoenixborn')"></i>
+    {{ phoenixborn.name }}
+  </h2>
+  <div class="mb-4 text-sm">
     <div v-if="phoenixbornCard" class="text-center -mb-2.5">
       <span
         class="inline-block border border-red-light px-1 bg-white">Battlefield <strong>{{ phoenixbornCard.battlefield }}</strong></span>
@@ -36,7 +26,7 @@
         <span class="alt-text">{{ die ? `Remove ${die.name} die` : '(empty)' }}</span>
     </li>
   </ul>
-  <div v-if="showDetailsAndDice" class="grid gap-2" :class="$style.autoFitControlsGrid">
+  <div class="grid gap-2" :class="$style.autoFitControlsGrid">
     <die-counter v-for="dieName of allDiceTypes" :key="dieName" :name="dieName"></die-counter>
   </div>
   <!-- TODO: do I want to implement the "Clear dice" and "Set filters" buttons? Not sure anyone actually used them... -->
@@ -97,9 +87,7 @@ export default {
     DeckQtyButtons,
   },
   async mounted () {
-    if (this.showDetailsAndDice) {
-      await this.loadPhoenixbornCard()
-    }
+    await this.loadPhoenixbornCard()
   },
   computed: {
     allDiceTypes () {
@@ -107,17 +95,6 @@ export default {
     },
     phoenixborn () {
       return this.$store.state.builder.deck.phoenixborn
-    },
-    showDetailsAndDice: {
-      get () {
-        return this.$store.state.options.showDetailsAndDice
-      },
-      async set (value) {
-        if (!this.phoenixbornCard && value) {
-          await this.loadPhoenixbornCard()
-        }
-        this.$store.commit('options/setShowPhoenixbornDetails', value)
-      },
     },
     diceList () {
       let diceArray = new Array(10)
