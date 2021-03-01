@@ -19,45 +19,43 @@
         }"></i>
       </button>
     </div>
-    <div class="relative">
-      <transition name="fade-swap">
-        <div v-if="noPhoenixborn" class="pt-4 text-center">
-          <p class="text-lg">
-            <router-link :to="{
-              name: 'Cards',
-              query: { types: ['phoenixborn'] },
-            }">Choose your Phoenixborn</router-link> to get started!
+    <div v-if="noPhoenixborn" class="pt-4 text-center">
+      <p class="text-lg">
+        <router-link :to="{
+          name: 'Cards',
+          query: { types: ['phoenixborn'] },
+        }">Choose your Phoenixborn</router-link> to get started!
+      </p>
+      <p class="text-gray">(Don't worry, you can always change your mind.)</p>
+    </div>
+    <div v-else>
+      <div v-if="!editingDescription">
+        <div class="mb-2 flex">
+          <p class="m-0 text-sm pt-2.5 text-gray" :class="$style.truncatedFlex">
+            <span v-if="description">{{ description }}</span>
+            <em v-else>No description yet...</em>
           </p>
-          <p class="text-gray">(Don't worry, you can always change your mind.)</p>
+          <button class="text-3xl text-blue pl-2" title="Edit description..." @click="openDescriptionEditor">
+            <i class="far fa-pen-square"></i>
+            <span class="alt-text">Edit description...</span>
+          </button>
         </div>
-        <div v-else-if="!editingDescription">
-          <div class="mb-2 flex">
-            <p class="m-0 text-sm pt-2.5 text-gray" :class="$style.truncatedFlex">
-              <span v-if="description">{{ description }}</span>
-              <em v-else>No description yet...</em>
-            </p>
-            <button class="text-3xl text-blue pl-2" title="Edit description..." @click="openDescriptionEditor">
-              <i class="far fa-pen-square"></i>
-              <span class="alt-text">Edit description...</span>
-            </button>
-          </div>
-          <builder-deck></builder-deck>
+      </div>
+      <div v-else class="flex">
+        <text-editor
+          class="flex-grow"
+          v-model="description"
+          placeholder="Deck description..."
+          @blur="saveDeck"
+          ref="description"></text-editor>
+        <div class="pl-2.5">
+          <button class="text-3xl text-blue" title="Done editing description" @click="closeDescriptionEditor">
+            <i class="far fa-check-square"></i>
+            <span class="alt-text">Done editing description</span>
+          </button>
         </div>
-        <div v-else class="flex">
-          <text-editor
-            class="flex-grow"
-            v-model="description"
-            placeholder="Deck description..."
-            @blur="saveDeck"
-            ref="description"></text-editor>
-          <div class="pl-2.5">
-            <button class="text-3xl text-blue" title="Done editing description" @click="closeDescriptionEditor">
-              <i class="far fa-check-square"></i>
-              <span class="alt-text">Done editing description</span>
-            </button>
-          </div>
-        </div>
-      </transition>
+      </div>
+      <builder-deck></builder-deck>
     </div>
   </section>
 </template>
