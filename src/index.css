@@ -225,6 +225,17 @@ hr {
   opacity: 0;
 }
 
+/* Usage: <transition name="fade-swap"> */
+.fade-swap-enter-active, .fade-swap-leave-active {
+  position: absolute;
+  width: 100%;
+  transition: opacity .25s ease-out;
+}
+
+.fade-swap-enter-from, .fade-swap-leave-to {
+  opacity: 0;
+}
+
 /* Usage: <transition name="slide-vertical"> */
 .slide-vertical-enter-active {
   transition: transform .25s ease-out .15s, opacity .25s ease-out .15s;
