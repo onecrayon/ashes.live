@@ -88,6 +88,16 @@ const router = createRouter({
       },
     },
     {
+      path: '/decks/mine/:id/',
+      name: 'PrivateDeckDetails',
+      component: DeckDetails,
+      props: true,
+      meta: {
+        showMine: true,
+        needsAuth: true,
+      },
+    },
+    {
       path: '/decks/:id/',
       name: 'DeckDetails',
       component: DeckDetails,

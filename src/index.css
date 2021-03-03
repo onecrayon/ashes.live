@@ -105,14 +105,26 @@ hr {
 
 .btn-blue {
   @apply border-blue text-blue bg-blue-light;
+
+  &.active {
+    @apply bg-blue text-blue-light;
+  }
 }
 
 .btn-green {
   @apply border-green text-green bg-green-lightest;
+
+  &.active {
+    @apply bg-green text-green-lightest;
+  }
 }
 
 .btn-red {
   @apply border-red text-red bg-red-lightest;
+
+  &.active {
+    @apply bg-red text-red-lightest;
+  }
 }
 
 .nanobar .bar {

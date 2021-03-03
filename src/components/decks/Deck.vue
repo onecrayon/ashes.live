@@ -13,25 +13,7 @@
         <span class="flex-grow text-sm">
           <player-badge v-if="!showMine || deckData.is_legacy" :user="deckData.user" />
           <span v-else>
-            <button
-              class="btn px-2 btn-first"
-              :class="{'active': isCurrentlyEditing}"
-              :disabled="isCurrentlyEditing"
-              @click="editThisDeck()">
-              <i class="fas fa-edit mr-1"></i>
-              <span v-if="isCurrentlyEditing">Editing</span>
-              <span v-else>Edit</span>
-            </button>
-            <button
-              class="btn btn-last transition-colors duration-300 ease-in-out"
-              :class="{'btn-red': deleting}"
-              @click="deleteThisDeck()">
-              <i class="far fa-trash-alt mr-1"></i>
-              <transition name="slide-vertical">
-                <span v-if="deleting">Confirm?</span>
-                <span v-else>Delete</span>
-              </transition>
-            </button>
+            <deck-edit-buttons :id="deck.id" :title="title" @deleted="$emit('refresh')"></deck-edit-buttons>
           </span>
         </span>
         <span class="text-sm float-right text-gray-darker">
@@ -55,9 +37,9 @@
 <script>
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import { getPhoenixbornImageUrl } from '/src/utils.js'
-import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
+import DeckEditButtons from '../shared/DeckEditButtons.vue'
 import PlayerBadge from '../shared/PlayerBadge.vue'
 
 export default {
@@ -71,21 +53,17 @@ export default {
       default: false,
     },
   },
-  emits: ['deleted'],
-  setup () {
-    // Standard composite containing { toast, handleResponseError }
-    return useHandleResponseError()
-  },
-  data: () => ({
-    deleting: false,
-    deleteTimeout: null,
-  }),
+  emits: ['refresh'],
   components: {
     DeckCardsPreview,
+    DeckEditButtons,
     DeckDice,
     PlayerBadge,
   },
   computed: {
+    isCurrentlyEditing () {
+      return this.$store.state.builder.deck.id === this.deck.id
+    },
     deckData () {
       // If we are looking at a private saved copy deck listing and this deck is being actively
       // edited, grab our data from the store instead of the listing info to ensure it's up-to-date
@@ -93,8 +71,9 @@ export default {
       return this.deck
     },
     linkTarget () {
+      const viewName = this.showMine ? 'PrivateDeckDetails' : 'DeckDetails'
       return {
-        name: 'DeckDetails',
+        name: viewName,
         params: { id: this.deckData.id },
       }
     },
@@ -112,34 +91,14 @@ export default {
     title () {
       return this.deckData.title || `Untitled ${this.deckData.phoenixborn.name}`
     },
-    isCurrentlyEditing () {
-      return this.$store.state.builder.deck.id === this.deck.id
-    },
-    deleteText () {
-      if (!deleting) return 'Delete'
-      return 'Confirm?'
-    },
   },
-  methods: {
-    editThisDeck () {
-      this.$store.dispatch('builder/editDeck', this.deck.id).catch(this.handleResponseError)
-    },
-    deleteThisDeck () {
-      if (!this.deleting) {
-        this.deleting = true
-        this.deleteTimeout = setTimeout(() => {
-          this.deleting = false
-        }, 3000)
-      } else {
-        if (this.deleteTimeout) {
-          clearTimeout(this.deleteTimeout)
-        }
-        this.$store.dispatch('builder/deleteDeck', this.deck.id).then(() => {
-          this.toast.success(`Your deck "${this.title}" has been deleted!`)
-          this.$emit('deleted')
-        }).catch(this.handleResponseError)
+  watch: {
+    isCurrentlyEditing (value, oldValue) {
+      if (oldValue && !value) {
+        // We're exiting an editing session for this deck, so refresh the listing
+        this.$emit('refresh')
       }
     },
-  },
+  }
 }
 </script>

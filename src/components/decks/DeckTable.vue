@@ -25,7 +25,7 @@
     </div>
   </div>
   <div v-else-if="decks && decks.length">
-    <deck v-for="deck of decks" :key="deck.id" :deck="deck" :show-mine="showMine" @deleted="$emit('refresh')"></deck>
+    <deck v-for="deck of decks" :key="deck.id" :deck="deck" :show-mine="showMine" @refresh="$emit('refresh')"></deck>
     <div class="my-4 text-center">
       Page {{ currentPage }} of {{ totalPage }}
     </div>
@@ -37,7 +37,7 @@
         Next
       </button>
     </div>
-</div>
+  </div>
   <div v-else class="text-center text-gray text-2xl py-8 px-4">
     <i class="fas fa-circle-notch fa-spin"></i> Loading...
   </div>

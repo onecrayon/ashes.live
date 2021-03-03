@@ -10,17 +10,40 @@
     <h1 class="phg-main-action text-gray"><i class="fas fa-circle-notch fa-spin"></i> Loading...</h1>
   </div>
   <div v-else>
-    <h1 class="phg-main-action" :class="{'italic font-normal': !deck.title}">{{ title }}</h1>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <h1 class="phg-main-action mb-6" :class="{'italic font-normal': !deck.title}">{{ title }}</h1>
+    <p v-if="showMine" class="text-l border-2 border-orange rounded bg-inexhaustible px-4 py-2 mb-8">
+      <i class="far fa-eye-slash"></i> You are viewing your most recent private copy of this deck.
+      <router-link v-if="hasPublishedSnapshot" :to="{name: 'DeckDetails', params: {id: deck.id}}">View public URL.</router-link>
+    </p>
+    <div class="lg:flex">
+      <div class="mb-4 lg:pl-8 lg:w-1/3 lg:order-2">
+        <div class="grid gap-x-2 mb-4" :class="$style.metaGrid">
+          <span class="text-gray-darker">Author:</span>
+          <player-badge :user="user" />
+
+          <span class="text-gray-darker">Updated:</span>
+          <span>{{ lastUpdatedDateFormatted }} ago</span>
+
+          <span class="text-gray-darker">Requires:</span>
+          <span>{{ formatReleases }}</span>
+        </div>
+
+        <!-- TODO: implement generic controls like Clone, Subscribe, etc. -->
+        <div v-if="showMine">
+          <deck-edit-buttons :id="deck.id" :title="title" @deleted="$router.push('/decks/mine/')" standalone-buttons></deck-edit-buttons>
+        </div>
+      </div>
       <div
-        class="mb-4 col-span-2 flex flex-row"
-        :class="$style.deckContainer">
-        <img :src="phoenixbornImagePath" />
-        <div class="flex-grow text-xs">
-          <div class="text-3xl">
+        class="lg:w-2/3 lg:order-1 flex">
+        <div
+          class="flex-none bg-no-repeat sm:pl-40"
+          aria-hidden="true"
+          :style="`background-image: url(${phoenixbornImagePath})`"></div>
+        <div class="flex-grow pb-4">
+          <h2 class="text-3xl">
             <card-link :card="deck.phoenixborn"></card-link>
-          </div>
-          <ul class="mb-2 mt-2 text-base">
+          </h2>
+          <ul class="mb-2 mt-2 text-xs">
             <strong
             v-if="deck.phoenixborn.battlefield !== undefined"
             class="inline-block border border-red-light px-1">Battlefield {{ deck.phoenixborn.battlefield }}</strong>
@@ -31,37 +54,19 @@
               v-if="deck.phoenixborn.spellboard !== undefined"
               class="inline-block border border-blue-dark px-1">Spellboard {{ deck.phoenixborn.spellboard }}</strong>
           </ul>
-          <div class="mb-2 mt-2 font-bold text-xl flex flex-col sm:flex-row">
-            <deck-dice :dice="deck.dice" />
-          </div>
+          <deck-dice class="my-2" :dice="deck.dice" />
           <hr class="mb-4 mt-4" />
-          <div class="mb-1">
-            <span class="text-lg font-bold">Cards</span>
-            <span class="text-sm float-right font-bold" :class="[ cardsCount != 30 ? $style.deckNotFull : 'text-gray-darker']">
+          <h3 class="text-lg flex mb-1">
+            <span class="flex-grow">Cards</span>
+            <span class="flex-none text-sm font-bold" :class="[ cardsCount != 30 ? 'text-red' : 'text-gray-darker']">
               {{ cardsCount }}/30
             </span>
-          </div>
+          </h3>
           <deck-cards-preview :cards="deck.cards" :conjurations="deck.conjurations" :columnLayout="true"/>
         </div>
       </div>
-      <div>
-        <div>
-          <span class="text-gray-darker w-20 inline-block">Author:</span>
-          <span>
-            <player-badge :user="deck.user" />
-          </span>
-        </div>
-        <div>
-          <span class="text-gray-darker w-20 inline-block">Updated:</span>
-          <span>{{ lastUpdatedDateFormatted }} ago</span>
-        </div>
-        <div>
-          <span class="text-gray-darker w-20 inline-block">Requires:</span>
-          <span>{{ formatReleases }}</span>
-        </div>
-      </div>
     </div>
-    <hr />
+    <hr class="mb-4">
     <h2>Description</h2>
 
     <card-codes :content="deck.description" :is-legacy="deck.is_legacy" needs-paragraphs></card-codes>
@@ -71,38 +76,59 @@
 <script>
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import { request, getPhoenixbornImageUrl } from '/src/utils.js'
+import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
+import DeckEditButtons from '../shared/DeckEditButtons.vue'
 import CardCodes from '../shared/CardCodes.vue'
 import PlayerBadge from '../shared/PlayerBadge.vue'
 
 export default {
   name: 'DeckDetails',
   props: ['id'],
+  setup () {
+    // Standard composite containing { toast, handleResponseError }
+    return useHandleResponseError()
+  },
   components: {
     CardCodes,
     DeckCardsPreview,
     DeckDice,
+    DeckEditButtons,
     PlayerBadge,
   },
   data () {
     return {
-      deck: null,
+      _deck: null,
       releases: null,
+      hasPublishedSnapshot: false,
       error: false,
     }
   },
   beforeMount () {
-    request(`/v2/decks/${this.id}`).then(response => {
-      this.deck = response.data.deck
-      this.releases = response.data.releases
-      // And set the site title
-      document.title = `${this.deck.title} - Ashes.live`
-    }).catch(error => {
-      this.error = true
+    this.loadDeck()
+    // Watch the edited deck ID since we need to reload if we exit editing on this page
+    this.unwatchBuilderId = this.$store.watch(state => state.builder.deck.id, (value, oldValue) => {
+      if (oldValue === this._deck.id && value !== oldValue) {
+        this.$nextTick(this.loadDeck)
+      }
     })
   },
+  beforeUnmount () {
+    this.unwatchBuilderId()
+  },
   computed: {
+    showMine () {
+      return this.$route.meta.showMine
+    },
+    deck () {
+      if (this._deck && this.$store.state.builder.deck.id === this._deck.id) return this.$store.state.builder.deck
+      return this._deck
+    },
+    user () {
+      // This has to be to the saved version of the deck, because we don't persist it for the builder
+      return this._deck.user
+    },
     phoenixbornImagePath () {
       return getPhoenixbornImageUrl(this.deck.phoenixborn.stub, true, this.deck.is_legacy)
     },
@@ -122,15 +148,29 @@ export default {
       return this.deck.title || `Untitled ${this.deck.phoenixborn.name}`
     },
   },
+  methods: {
+    loadDeck () {
+      const options = {}
+      if (this.showMine) {
+        options.params = { show_saved: true }
+      }
+      request(`/v2/decks/${this.id}`, options).then(response => {
+        this._deck = response.data.deck
+        this.releases = response.data.releases
+        this.hasPublishedSnapshot = !!response.data.has_published_snapshot
+        // And set the site title
+        document.title = `${this.title} - Ashes.live`
+      }).catch(error => {
+        this.handleResponseError(error)
+        this.error = true
+      })
+    },
+  },
 }
 </script>
+
 <style lang="postcss" module>
-.deckContainer {
-  background-repeat: no-repeat;
+.metaGrid {
+  grid-template-columns: auto 1fr;
 }
-
-.deckNotFull {
-  color: var(--color-red);
-}
-
 </style>
