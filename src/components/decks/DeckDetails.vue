@@ -12,7 +12,7 @@
   <div v-else>
     <h1 class="phg-main-action mb-6" :class="{'italic font-normal': !deck.title}">{{ title }}</h1>
     <p v-if="showMine" class="text-l border-2 border-orange rounded bg-inexhaustible px-4 py-2 mb-8">
-      <i class="far fa-eye-slash"></i> You are viewing your most recent private copy of this deck.
+      <i class="far fa-eye-slash"></i> You are viewing your most recent private save for this deck.
       <router-link v-if="hasPublishedSnapshot" :to="{name: 'DeckDetails', params: {id: deck.id}}">View public URL.</router-link>
     </p>
     <div class="lg:flex">
@@ -29,7 +29,7 @@
         </div>
 
         <!-- TODO: implement generic controls like Clone, Subscribe, etc. -->
-        <div v-if="showMine">
+        <div v-if="showMine && !deck.is_legacy">
           <deck-edit-buttons :id="deck.id" :title="title" @deleted="$router.push('/decks/mine/')" standalone-buttons></deck-edit-buttons>
         </div>
       </div>
