@@ -22,12 +22,14 @@
       </button>
     </div>
     <div v-else
+      class="flex flex-nowrap"
       :class="{
         shadow: isPopup,
         'inline-block': !standalone,
       }">
       <button
         v-for="count of Array(4).keys()" :key="count"
+        class="flex-none"
         :class="{
           [$style.btn]: true,
           [$style.btnActive]: deckCount === count,
