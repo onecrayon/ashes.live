@@ -123,7 +123,7 @@ export default {
   methods: {
     saveDeck () {
       if (this.noPhoenixborn || this.isSaving) return
-      this.$store.dispatch('builder/SAVE_DECK').catch(this.handleResponseError)
+      this.$store.dispatch('builder/SAVE_DECK', true)
     },
     openDescriptionEditor () {
       this.editingDescription = true

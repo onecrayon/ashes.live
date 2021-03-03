@@ -50,7 +50,7 @@
       </li>
     </ul>
   </div>
-  <div v-if="conjurations">
+  <div v-if="conjurations && conjurations.length">
     <hr class="mt-6 mb-4">
     <h4><i :class="typeClass('Conjuration')"></i> Conjurations <span class="text-gray">({{ totalConjurations }})</span></h4>
     <ul>
@@ -135,7 +135,7 @@ export default {
     },
     reduceDieCount (dieName) {
       if (!dieName) return
-      this.$store.dispatch('builder/reduceDieCount', dieName).catch(this.handleResponseError)
+      this.$store.dispatch('builder/reduceDieCount', dieName)
     },
     typeClass (type) {
       return typeToFontAwesome[type]

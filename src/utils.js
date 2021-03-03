@@ -105,7 +105,7 @@ export function debounce(callback, wait) {
   debounced.cancel = () => {
     clearTimeout(timeout)
   }
-    return debounced
+  return debounced
 }
 
 /**

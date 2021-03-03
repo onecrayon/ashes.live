@@ -5,7 +5,8 @@
  * session. Note that all writes to the deck must be performed via actions, because the deck is
  * auto-saved.
  */
-import { request } from '/src/utils.js'
+import { debounce, request } from '/src/utils.js'
+import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 
 // Utilities for working with card ordering in decks
 const cardTypeOrder = [
@@ -13,16 +14,25 @@ const cardTypeOrder = [
 ]
 
 function pluralCardType (cardType) {
-	if (cardType === 'Ally') {
-		return 'Allies'
-	}
-	return cardType + 's'
+  if (cardType === 'Ally') {
+    return 'Allies'
+  }
+  return cardType + 's'
 }
+
+// Debounced request so that we can ensure our save actions are spaced out
+// Using callbacks is necessary because debounce doesn't return a promise
+function requestWithCallbacks (url, options, { then: thenCallback, catch: catchCallback, finally: finallyCallback }) {
+  request(url, options).then(thenCallback).catch(catchCallback).finally(finallyCallback)
+}
+const debouncedRequestWithCallbacks = debounce(requestWithCallbacks, 250)
+// And grab our standard error handling so that save actions can throw their own errors
+const { handleResponseError, toast } = useHandleResponseError()
 
 // Initial state
 const getBaseState = () => ({
   enabled: false,
-  // This is used internally to track whether we have local changes that have failed to save
+  // This is used internally to track whether we have local changes that are pending save
   isDirty: false,
   // This is used to disable stuff that modifies the deck while it's actively being saved (so that
   // we don't lose edits)
@@ -114,21 +124,25 @@ const actions = {
       if (deck.conjurations) {
         commit('setConjurations', deck.conjurations)
       }
-      // TODO: persist everything else, once those data mutations are supported
       // TODO: first_five
       // TODO: effect_costs
       // TODO: tutor_map
       resolve()
     })
   },
-  SAVE_DECK ({ commit, dispatch, state }) {
+  SAVE_DECK ({ commit, dispatch, state }, forceSave = false) {
+    // Saves the deck to the API. Note that the promise does not return direct results from the API!
+    // This method debounces the save (unless forceSave is true) so it resolves its promise prior
+    // to the save request completing.
     return new Promise((resolve, reject) => {
       // A Phoenixborn is required to save a deck at all, so check for that first
       if (!state.deck.phoenixborn) {
-        return reject('You must add a Phoenixborn before you can save your deck!')
+        toast.error('You must add a Phoenixborn before you can save your deck!')
+        return reject()
       }
       if (state.isSaving) {
-        return reject('Please wait to save again until the deck is done saving.')
+        toast.error('Please wait to save again until the deck is done saving.')
+        return reject()
       }
       // Construct our data object
       const data = {
@@ -145,25 +159,38 @@ const actions = {
         data.id = state.deck.id
       }
 
-      // Kick off our save request
-      commit('setIsSaving', true)
-      request('/v2/decks', {
-        method: 'put',
-        data: data,
-      }).then(response => {
-        // Persist our response data, just in case there was drift
-        dispatch('PERSIST_DECK', response.data).then(() => {
-          // And note that we're not dirty anymore
-          commit('setIsDirty', false)
-          resolve()
-        })
-      }).catch(error => {
-        // Ensure that our dirty flag is toggled
+      // Clear any debounced requests or set dirty state if debouncing
+      const requestMethod = forceSave ? requestWithCallbacks : debouncedRequestWithCallbacks
+      if (forceSave) {
+        debouncedRequestWithCallbacks.cancel()
+      } else {
         commit('setIsDirty', true)
-        reject(error)
-      }).finally(() => {
-        commit('setIsSaving', false)
-      })
+      }
+      requestMethod(
+        '/v2/decks',
+        {
+          method: 'put',
+          data: data,
+        },
+        {
+          then: response => {
+            // Persist our response data, just in case there was drift
+            dispatch('PERSIST_DECK', response.data).then(() => {
+              // And note that we're not dirty anymore
+              commit('setIsDirty', false)
+            })
+          },
+          catch: error => {
+            // Ensure that our dirty flag is toggled
+            commit('setIsDirty', true)
+            handleResponseError(error)
+          },
+          finally: () => {
+            commit('setIsSaving', false)
+          },
+        }
+      )
+      resolve()
     })
   },
   editDeck ({ commit, dispatch, state }, id) {
