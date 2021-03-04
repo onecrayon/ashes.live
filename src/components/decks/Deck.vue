@@ -29,7 +29,7 @@
           {{ cardsCount }} / 30
         </span>
       </div>
-      <deck-cards-preview :cards="deckData.cards" :conjurations="deckData.conjurations" />
+      <deck-cards-preview :deck="deckData" />
     </div>
   </div>
 </template>

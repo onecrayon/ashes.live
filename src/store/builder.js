@@ -6,19 +6,8 @@
  * auto-saved.
  */
 import { debounce, request } from '/src/utils.js'
+import { deckToSections } from '/src/utils/decks.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
-
-// Utilities for working with card ordering in decks
-const cardTypeOrder = [
-  'Ready Spell', 'Ally', 'Alteration Spell', 'Action Spell', 'Reaction Spell'
-]
-
-function pluralCardType (cardType) {
-  if (cardType === 'Ally') {
-    return 'Allies'
-  }
-  return cardType + 's'
-}
 
 // Debounced request so that we can ensure our save actions are spaced out
 // Using callbacks is necessary because debounce doesn't return a promise
@@ -66,34 +55,7 @@ const getters = {
     return state.deck.cards.reduce((value, card) => value + card.count, 0)
   },
   deckSections (state) {
-    const sections = {}
-    for (const card of state.deck.cards) {
-      if (!sections[card.type]) {
-        sections[card.type] = []
-      }
-      sections[card.type].push(card)
-    }
-    const sectionTitles = Object.keys(sections)
-    sectionTitles.sort((a, b) => {
-      return cardTypeOrder.indexOf(a) < cardTypeOrder.indexOf(b) ? -1 : 1
-    })
-    const sortedSections = []
-    for (const section of sectionTitles) {
-      const contents = sections[section]
-      contents.sort((a, b) => {
-        if (a.name === b.name) {
-          return 0
-        }
-        return a.name < b.name ? -1 : 1
-      })
-      const totalCards = contents.reduce((total, card) => total + card.count, 0)
-      sortedSections.push({
-        'title': pluralCardType(section),
-        'count': totalCards,
-        'contents': contents
-      })
-    }
-    return sortedSections
+    return deckToSections(state.deck)
   },
 }
 

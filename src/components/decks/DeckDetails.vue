@@ -28,7 +28,15 @@
           <span>{{ formatReleases }}</span>
         </div>
 
+        <button class="btn py-1 w-full mb-8" @click="showTextExport = true">
+          <i class="fas fa-share-square"></i>
+          Export...
+        </button>
+        <deck-export-modal :open="showTextExport" @update:open="showTextExport = $event" :deck="deck"></deck-export-modal>
+
         <!-- TODO: implement generic controls like Clone, Subscribe, etc. -->
+
+        <!-- Owner's controls -->
         <div v-if="showMine && !deck.is_legacy">
           <deck-edit-buttons :id="deck.id" :title="title" @deleted="$router.push('/decks/mine/')" standalone-buttons></deck-edit-buttons>
         </div>
@@ -37,6 +45,7 @@
         class="lg:w-2/3 lg:order-1 flex">
         <div
           class="flex-none bg-no-repeat sm:pl-40"
+          :class="$style.minHeight400"
           aria-hidden="true"
           :style="`background-image: url(${phoenixbornImagePath})`"></div>
         <div class="flex-grow pb-4">
@@ -62,14 +71,16 @@
               {{ cardsCount }}/30
             </span>
           </h3>
-          <deck-cards-preview :cards="deck.cards" :conjurations="deck.conjurations" :columnLayout="true"/>
+          <deck-cards-preview :deck="deck" :columnLayout="true"/>
         </div>
       </div>
     </div>
     <hr class="mb-4">
-    <h2>Description</h2>
+    <div v-if="deck.description">
+      <h2>Description</h2>
 
-    <card-codes :content="deck.description" :is-legacy="deck.is_legacy" needs-paragraphs></card-codes>
+      <card-codes :content="deck.description" :is-legacy="deck.is_legacy" needs-paragraphs></card-codes>
+    </div>
   </div>
 </template>
 
@@ -79,6 +90,7 @@ import { request, getPhoenixbornImageUrl } from '/src/utils.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
+import DeckExportModal from './DeckExportModal.vue'
 import DeckEditButtons from '../shared/DeckEditButtons.vue'
 import CardCodes from '../shared/CardCodes.vue'
 import PlayerBadge from '../shared/PlayerBadge.vue'
@@ -95,6 +107,7 @@ export default {
     DeckCardsPreview,
     DeckDice,
     DeckEditButtons,
+    DeckExportModal,
     PlayerBadge,
   },
   data () {
@@ -103,6 +116,7 @@ export default {
       releases: null,
       hasPublishedSnapshot: false,
       error: false,
+      showTextExport: false,
     }
   },
   beforeMount () {
@@ -172,5 +186,9 @@ export default {
 <style lang="postcss" module>
 .metaGrid {
   grid-template-columns: auto 1fr;
+}
+
+.minHeight400 {
+  min-height: 400px;
 }
 </style>
