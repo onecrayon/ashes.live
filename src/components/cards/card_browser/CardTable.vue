@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { debounce } from '/src/utils.js'
+import { debounce } from '/src/utils/index.js'
 import CardTableRow from './CardTableRow.vue'
 import Card from '../../shared/Card.vue'
 

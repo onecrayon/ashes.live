@@ -86,7 +86,7 @@
 
 <script>
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
-import { request, getPhoenixbornImageUrl } from '/src/utils.js'
+import { request, getPhoenixbornImageUrl } from '/src/utils/index.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'

@@ -81,7 +81,7 @@
 
 <script>
 import { typeToFontAwesome } from '/src/constants.js'
-import { debounce } from '/src/utils.js'
+import { debounce } from '/src/utils/index.js'
 import CardCodes from './CardCodes.vue'
 import CardCosts from './CardCosts.vue'
 import DeckQtyButtons from './DeckQtyButtons.vue'

@@ -36,7 +36,7 @@
 
 <script>
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
-import { getPhoenixbornImageUrl } from '/src/utils.js'
+import { getPhoenixbornImageUrl } from '/src/utils/index.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
 import DeckEditButtons from '../shared/DeckEditButtons.vue'

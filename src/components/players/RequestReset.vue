@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { request } from '/src/utils.js'
+import { request } from '/src/utils/index.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import TextInput from '../shared/TextInput.vue'
 

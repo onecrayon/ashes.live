@@ -1,9 +1,8 @@
 import axios from 'axios'
 import Nanobar from 'nanobar'
-import { diceList } from './constants.js'
-import emitter from './events.js'
-import router from './router.js'
-import store from './store/index.js'
+import emitter from '../events.js'
+import router from '../router.js'
+import store from '../store/index.js'
 
 const ASHES_CDN_BASE_URL = import.meta.env.VITE_CDN_URL
 

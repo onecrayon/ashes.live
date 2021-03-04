@@ -5,7 +5,7 @@
  * session. Note that all writes to the deck must be performed via actions, because the deck is
  * auto-saved.
  */
-import { debounce, request } from '/src/utils.js'
+import { debounce, request } from '/src/utils/index.js'
 import { deckToSections } from '/src/utils/decks.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 

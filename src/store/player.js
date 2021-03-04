@@ -6,7 +6,7 @@
  */
 import axios from 'axios'
 import Nanobar from 'nanobar'
-import { request } from '/src/utils.js'
+import { request } from '/src/utils/index.js'
 import { localStoreFactory } from '/src/utils/store.js'
 
 /**

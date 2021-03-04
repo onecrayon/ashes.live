@@ -8,7 +8,7 @@
  */
 
 import { useToast } from 'vue-toastification'
-import { request } from '/src/utils.js'
+import { request } from '/src/utils/index.js'
 
 const toast = useToast()
 

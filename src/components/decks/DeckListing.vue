@@ -33,7 +33,7 @@ import { watch } from 'vue'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import DeckTable from './DeckTable.vue'
 import ClearableSearch from '../shared/ClearableSearch.vue'
-import { debounce, request } from '/src/utils.js'
+import { debounce, request } from '/src/utils/index.js'
 import { trimmed } from '/src/utils/text.js'
 import PhoenixbornPicker from '../shared/PhoenixbornPicker.vue'
 
