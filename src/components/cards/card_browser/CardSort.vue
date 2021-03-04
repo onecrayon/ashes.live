@@ -5,8 +5,8 @@
       :disabled="isDisabled"
       @click="toggleOrder">
       Sort<span class="alt-text"> {{ order === 'asc' ? 'ascending' : 'descending' }} by:</span>
-      <i v-if="order === 'asc'" class="fas fa-angle-up"></i>
-      <i v-else class="fas fa-angle-down"></i>
+      <i v-if="order === 'asc'" class="fas fa-angle-up ml-1"></i>
+      <i v-else class="fas fa-angle-down ml-1"></i>
     </button
     ><button
       class="btn btn-inner py-1 px-2 font-normal"
