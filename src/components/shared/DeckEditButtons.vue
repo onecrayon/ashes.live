@@ -6,7 +6,7 @@
       'btn-first': !standaloneButtons,
       'py-1 w-full mb-2': standaloneButtons,
     }"
-    :disabled="isCurrentlyEditing"
+    :disabled="isCurrentlyEditing || isTalkingToServer"
     @click="editThisDeck()">
     <i class="fas fa-edit mr-1"></i>
     <span v-if="isCurrentlyEditing">Editing</span>
@@ -19,7 +19,8 @@
       'btn-last': !standaloneButtons,
       'py-1 w-full mb-4': standaloneButtons,
     }"
-    @click="deleteThisDeck()">
+    @click="deleteThisDeck()"
+    :disabled="isTalkingToServer">
     <i class="far fa-trash-alt mr-1"></i>
     <transition name="slide-vertical">
       <span v-if="deleting">Confirm?</span>
@@ -55,6 +56,7 @@ export default {
   data: () => ({
     deleting: false,
     deleteTimeout: null,
+    isTalkingToServer: false,
   }),
   computed: {
     isCurrentlyEditing () {
@@ -63,7 +65,10 @@ export default {
   },
   methods: {
     editThisDeck () {
-      this.$store.dispatch('builder/editDeck', this.id).catch(this.handleResponseError)
+      this.isTalkingToServer = true
+      this.$store.dispatch('builder/editDeck', this.id).catch(this.handleResponseError).finally(() => {
+        this.isTalkingToServer = false
+      })
     },
     deleteThisDeck () {
       if (!this.deleting) {
@@ -75,10 +80,13 @@ export default {
         if (this.deleteTimeout) {
           clearTimeout(this.deleteTimeout)
         }
+        this.isTalkingToServer = true
         this.$store.dispatch('builder/deleteDeck', this.id).then(() => {
           this.toast.success(`Your deck "${this.title}" has been deleted!`)
           this.$emit('deleted')
-        }).catch(this.handleResponseError)
+        }).catch(this.handleResponseError).finally(() => {
+          this.isTalkingToServer = false
+        })
       }
     },
   },
