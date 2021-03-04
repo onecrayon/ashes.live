@@ -4,7 +4,7 @@
  * This store handles local device user preferences and options and persists them either through
  * local storage or the API.
  */
-import { localStoreFactory } from '/src/utils.js'
+import { localStoreFactory } from '/src/utils/store.js'
 
 const { storeGet, storeSet } = localStoreFactory('deckbuilder.options')
 
