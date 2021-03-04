@@ -32,7 +32,7 @@
           <i class="fas fa-share-square"></i>
           Export...
         </button>
-        <deck-export-modal :open="showTextExport" @update:open="showTextExport = $event" :deck="deck"></deck-export-modal>
+        <deck-export-modal v-model:open="showTextExport" :deck="deck"></deck-export-modal>
 
         <!-- TODO: implement generic controls like Clone, Subscribe, etc. -->
 

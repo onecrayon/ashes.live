@@ -1,7 +1,29 @@
 <template>
   <section class="pb-4">
-    <h1 class="phg-ceremonial-class">Build your deck</h1>
-
+    <div class="flex mb-4">
+      <h1 class="phg-ceremonial-class m-0 flex-grow">Build your deck</h1>
+      <button
+        class="text-3xl pl-2 leading-none"
+        :class="{'text-blue': showActions}"
+        title="Actions..."
+        @click="showActions = !showActions"
+        :disabled="noPhoenixborn">
+        <i class="fas fa-ellipsis-h"></i><span class="alt-text">Actions... <span v-if="showActions">(open)</span></span>
+      </button>
+    </div>
+    <!-- TODO: Animate vertical height animation when I have one coded; maybe use https://github.com/maoberlehner/transition-to-height-auto-with-vue -->
+    <!-- Once I have an animation; test closing the actions after clicking one -->
+  <div v-if="showActions" class="mb-4 text-right text-sm">
+    <button class="btn btn-first" @click="previewDeck">
+      <i class="fas fa-eye"></i>
+      Preview
+    </button>
+    <button class="btn btn-last" @click="exportDeck">
+      <i class="fas fa-share-square"></i>
+      Export...
+    </button>
+  </div>
+  <deck-export-modal v-model:open="showExportModal" :deck="$store.state.builder.deck"></deck-export-modal>
     <div class="flex mb-2">
       <text-input
         class="flex-grow"
@@ -63,6 +85,7 @@
 <script>
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import BuilderDeck from './BuilderDeck.vue'
+import DeckExportModal from './DeckExportModal.vue'
 import TextEditor from '../shared/TextEditor.vue'
 import TextInput from '../shared/TextInput.vue'
 
@@ -74,11 +97,14 @@ export default {
   },
   components: {
     BuilderDeck,
+    DeckExportModal,
     TextEditor,
     TextInput,
   },
   data: () => ({
     editingDescription: false,
+    showActions: false,
+    showExportModal: false,
   }),
   computed: {
     deck () {
@@ -134,6 +160,15 @@ export default {
     closeDescriptionEditor () {
       this.editingDescription = false
       this.saveDeck()
+    },
+    previewDeck () {
+      this.$router.push({
+        name: 'PrivateDeckDetails',
+        params: { id: this.deck.id }
+      })
+    },
+    exportDeck () {
+      this.showExportModal = true
     },
   },
 }

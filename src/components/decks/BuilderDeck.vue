@@ -1,5 +1,5 @@
 <template>
-  <h2 class="text-lg mb-4 font-bold">
+  <h2 class="text-lg mb-2 font-bold">
     <i :class="typeClass('Phoenixborn')"></i>
     {{ phoenixborn.name }}
   </h2>
