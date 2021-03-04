@@ -43,7 +43,7 @@
       </div>
       <div v-else class="flex">
         <text-editor
-          class="flex-grow"
+          class="flex-grow mb-4"
           v-model="description"
           placeholder="Deck description..."
           @blur="saveDeck"
