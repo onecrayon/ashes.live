@@ -66,7 +66,7 @@
 
 <script>
 import { diceList, typeToFontAwesome } from '/src/constants.js'
-import { capitalize } from '/src/utils.js'
+import { capitalize } from '/src/utils/text.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import CardCodes from '../shared/CardCodes.vue'
 import DieCounter from './DieCounter.vue'

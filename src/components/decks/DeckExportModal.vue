@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { capitalize } from '/src/utils.js'
+import { capitalize } from '/src/utils/text.js'
 import { deckToSections } from '/src/utils/decks.js'
 import Modal from '../shared/Modal.vue'
 import Toggle from '../shared/Toggle.vue'

@@ -29,7 +29,7 @@
 
 <script>
 import { diceList } from '/src/constants.js'
-import { capitalize } from '/src/utils.js'
+import { capitalize } from '/src/utils/text.js'
 
 export default {
   name: 'DiceFilter',

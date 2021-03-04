@@ -43,7 +43,8 @@
 <script>
 import { watch } from 'vue'
 import { useToast } from 'vue-toastification'
-import { debounce, areSetsEqual, trimmed, request } from '/src/utils.js'
+import { debounce, areSetsEqual, request } from '/src/utils.js'
+import { trimmed } from '/src/utils/text.js'
 import DiceFilter from './DiceFilter.vue'
 import TypeFilter from './TypeFilter.vue'
 import ClearableSearch from '../../shared/ClearableSearch.vue'
