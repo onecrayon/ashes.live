@@ -38,16 +38,35 @@ export default {
     },
   },
   emits: ['update:open'],
-  data: () => ({
-    showCardCounts: true,
-    sortByType: true,
-    showAttribution: true,
-  }),
   components: {
     Modal,
     Toggle,
   },
   computed: {
+    showCardCounts: {
+      get () {
+        return this.$store.state.options.exportShowCardCounts
+      },
+      set (value) {
+        this.$store.commit('options/setExportShowCardCounts', value)
+      },
+    },
+    sortByType: {
+      get () {
+        return this.$store.state.options.exportSortByType
+      },
+      set (value) {
+        this.$store.commit('options/setExportSortByType', value)
+      },
+    },
+    showAttribution: {
+      get () {
+        return this.$store.state.options.exportShowAttribution
+      },
+      set (value) {
+        this.$store.commit('options/setExportShowAttribution', value)
+      },
+    },
     deckText () {
       const text = [
         this.deck.title || `Untitled ${this.deck.phoenixborn.name}`,
