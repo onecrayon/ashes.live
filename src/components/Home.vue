@@ -29,7 +29,7 @@
       <ul class="list-disc pl-4">
         <li><a :href="getCDNURL('/files/ashes-reborn-rules.pdf')">Ashes Reborn Rules</a> <span class="text-gray">(PDF)</span></li>
         <li>Dice reference cards:
-          <div class="text-2xl">
+          <div class="text-2xl mt-1">
             <a class="die ceremonial phg-ceremonial-power py-1 px-2" :href="getCDNURL('/images/cards/ceremonial-magic.jpg')" target="_blank"><span class="alt-text">Ceremonial Magic</span></a>
             <a class="die charm phg-charm-power py-1 px-2" :href="getCDNURL('/images/cards/charm-magic.jpg')" target="_blank"><span class="alt-text">Charm Magic</span></a>
             <a class="die illusion phg-illusion-power py-1 px-2" :href="getCDNURL('/images/cards/illusion-magic.jpg')" target="_blank"><span class="alt-text">Illusion Magic</span></a>
@@ -68,7 +68,7 @@
             <i class="far fa-check-square"></i>
           </span>
           <span>
-            Deck builder and public decks
+            Private deck building
           </span>
         </li>
         <li class="flex flex-nowrap">
@@ -76,7 +76,7 @@
             <i class="far fa-square"></i>
           </span>
           <span class="text-gray-dark">
-            Ashteki and TTS integration
+            Publishing decks; Ashteki and TTS integration
           </span>
         </li>
         <li class="flex flex-nowrap">
