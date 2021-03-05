@@ -11,19 +11,20 @@
         <i class="fas fa-ellipsis-h"></i><span class="alt-text">Actions... <span v-if="showActions">(open)</span></span>
       </button>
     </div>
-    <!-- TODO: Animate vertical height animation when I have one coded; maybe use https://github.com/maoberlehner/transition-to-height-auto-with-vue -->
     <!-- Once I have an animation; test closing the actions after clicking one -->
-  <div v-if="showActions" class="mb-4 text-right text-sm">
-    <button class="btn btn-first" @click="previewDeck">
-      <i class="fas fa-eye"></i>
-      Preview
-    </button>
-    <button class="btn btn-last" @click="exportDeck">
-      <i class="fas fa-share-square"></i>
-      Export...
-    </button>
-  </div>
-  <deck-export-modal v-model:open="showExportModal" :deck="$store.state.builder.deck"></deck-export-modal>
+    <transition-height>
+      <div v-if="showActions" class="text-right text-sm">
+        <button class="btn btn-first" @click="previewDeck">
+          <i class="fas fa-eye"></i>
+          Preview
+        </button>
+        <button class="btn btn-last mb-4" @click="exportDeck">
+          <i class="fas fa-share-square"></i>
+          Export...
+        </button>
+      </div>
+    </transition-height>
+    <deck-export-modal v-model:open="showExportModal" :deck="$store.state.builder.deck"></deck-export-modal>
     <div class="flex mb-2">
       <text-input
         class="flex-grow"
@@ -88,6 +89,7 @@ import BuilderDeck from './BuilderDeck.vue'
 import DeckExportModal from './DeckExportModal.vue'
 import TextEditor from '../shared/TextEditor.vue'
 import TextInput from '../shared/TextInput.vue'
+import TransitionHeight from '../shared/TransitionHeight.vue'
 
 export default {
   name: 'Builder',
@@ -100,6 +102,7 @@ export default {
     DeckExportModal,
     TextEditor,
     TextInput,
+    TransitionHeight,
   },
   data: () => ({
     editingDescription: false,
@@ -166,9 +169,11 @@ export default {
         name: 'PrivateDeckDetails',
         params: { id: this.deck.id }
       })
+      this.showActions = false
     },
     exportDeck () {
       this.showExportModal = true
+      this.showActions = false
     },
   },
 }

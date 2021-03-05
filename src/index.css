@@ -285,5 +285,19 @@ hr {
   transform: translateX(100%);
 }
 
+/* Usage: <transition-height> (these are specific to that component's transition logic) */
+.height-auto-enter-active, .height-auto-leave-active {
+  transition: height .25s ease-in-out;
+  overflow: hidden;
+  /* Try to force hardware rendering for animated element */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.height-auto-enter-from, .height-auto-leave-to {
+  height: 0;
+}
+
 @tailwind components;
 @tailwind utilities;
