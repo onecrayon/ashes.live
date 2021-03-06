@@ -83,12 +83,12 @@
     </log-in-modal>
   </nav>
   <div class="p-4 container mx-auto lg:pt-8 flex relative">
-    <div :class="[$style.transitionWidth, isDeckbuilding ? 'w-2/3' : '']">
+    <div :class="[$style.transitionWidth, isDeckbuilding ? 'xl:w-2/3' : '']">
       <!-- Keying to the route path is necessary, because legacy routes tend to share the same components, and without keying against the path they won't receive standard router lifecycle calls -->
       <router-view :key="$route.path"></router-view>
     </div>
     <transition name="right-sidebar">
-      <builder v-if="isDeckbuilding" class="pl-8 w-1/3"></builder>
+      <builder v-if="isDeckbuilding" class="fixed top-0 right-0 bottom-0 bg-white shadow-md p-8 xl:static xl:inset-auto xl:p-0 xl:pl-8 xl:w-1/3 xl:shadow-none" :class="$style.screenWidth"></builder>
     </transition>
   </div>
   <footer class="container mx-auto p-4 pt-10 text-center text-xs">
@@ -229,6 +229,16 @@ export default {
   width: 266px;
   padding-top: 30px;
   overflow: hidden;
+}
+
+.screenWidth {
+  width: 100vw;
+}
+
+@media (min-width: 768px) {
+  .screenWidth {
+    width: 640px;
+  }
 }
 
 @media (min-width: 1024px) {
