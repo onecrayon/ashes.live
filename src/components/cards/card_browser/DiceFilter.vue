@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap-none" role="group" aria-label="Filter by dice type">
+  <div class="flex flex-nowrap" role="group" aria-label="Filter by dice type">
     <button class="btn btn-first px-1 text-l w-16 sm:px-2"
       :class="{active: isDiceLogicAll}"
       :title="diceLogicTooltip"

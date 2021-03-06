@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap-none text-sm" role="group" aria-label="Sorting logic">
+  <div class="flex flex-nowrap text-sm" role="group" aria-label="Sorting logic">
     <button class="btn btn-first py-1 px-2 font-normal"
       :title="sortingLogicTooltip"
       :disabled="isDisabled"

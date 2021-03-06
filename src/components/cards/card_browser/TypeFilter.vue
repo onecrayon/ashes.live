@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap-none" role="group" aria-label="Filter by card type">
+  <div class="flex flex-nowrap" role="group" aria-label="Filter by card type">
     <button
       v-for="(curType, index) of cardTypes" :key="curType[1]"
       class="btn py-1 px-2 font-normal text-sm"

@@ -1,5 +1,5 @@
 <template>
-  <div class="md:flex md:flex-no-wrap mb-4">
+  <div class="md:flex md:flex-nowrap mb-4">
     <clearable-search
       class="flex-auto h-10 mb-4 md:pr-4 md:mb-0"
       placeholder="Filter by title..."

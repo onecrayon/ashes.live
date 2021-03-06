@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="md:flex md:flex-nowrap mb-4">
+    <div class="md:flex md:flex-nowrap">
       <dice-filter
-        class="flex-none mb-4 h-10 md:pr-4 md:mb-0"
+        class="flex-none mb-4 h-10 md:pr-4"
         v-model:filter-logic="diceFilterLogic"
         v-model:filter-list="diceFilterList"
         :is-disabled="isDisabled"></dice-filter>
       <clearable-search
-        class="flex-auto h-10"
+        class="flex-1 h-10 mb-4"
         placeholder="Filter by name or text..."
         v-model:search="filterText"
         :is-disabled="isDisabled"></clearable-search>
