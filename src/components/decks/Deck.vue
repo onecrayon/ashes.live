@@ -3,8 +3,8 @@
     class="border border-gray bg-white mt-4 mb-4 pl-12 bg-no-repeat"
     :style="`background-image: url(${phoenixbornImagePath})`">
     <div class="p-2 text-xs">
-      <div class="m-0 font-bold text-xl flex flex-col sm:flex-row">
-        <span class="flex-grow pt-0 sm:pt-2">
+      <div class="m-0 sm:mb-1 font-bold text-xl flex flex-col sm:flex-row">
+        <span class="flex-grow pt-0 sm:pt-2 mb-2 sm:mb-0">
           <router-link :to="linkTarget" class="text-black" :class="{'italic font-normal': !deckData.title}">{{ title }}</router-link>
         </span>
         <deck-dice :dice="deckData.dice" />
@@ -20,7 +20,7 @@
           Last updated: {{ lastUpdatedDateFormatted }} ago
         </span>
       </div>
-      <hr class="mb-1 mt-1" />
+      <hr class="mb-1 mt-2" />
       <div class="mb-1">
         <span class="text-lg">
           <card-link :card="deckData.phoenixborn"></card-link>

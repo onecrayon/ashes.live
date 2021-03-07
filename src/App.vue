@@ -88,7 +88,7 @@
       <router-view :key="$route.path"></router-view>
     </div>
     <transition name="right-sidebar">
-      <builder v-if="isDeckbuilding" class="fixed top-0 right-0 bottom-0 bg-white shadow-md p-8 xl:static xl:inset-auto xl:p-0 xl:pl-8 xl:w-1/3 xl:shadow-none" :class="$style.screenWidth"></builder>
+      <builder v-if="isDeckbuilding" :class="$style.screenWidth"></builder>
     </transition>
   </div>
   <footer class="container mx-auto p-4 pt-10 text-center text-xs">

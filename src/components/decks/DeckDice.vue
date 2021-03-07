@@ -1,5 +1,5 @@
 <template>
-  <ul class="flex m-0">
+  <ul class="flex m-0 mb-2 sm:mb-0">
     <li v-for="(die, index) of diceList" :key="index"
         class="w-6 h-6 text-sm sm:w-8 sm:h-8 sm:text-xl die"
         :class="[die ? die : 'basic', 'phg-' + (die ? die + '-power' : 'basic-magic')]"

@@ -1,6 +1,9 @@
 <template>
   <section
-    class="pb-4 transition-transform duration-300 ease-in-out"
+    class="
+      transition-transform duration-300 ease-in-out
+      fixed top-0 right-0 bottom-0 bg-white shadow-md p-8
+      xl:static xl:inset-auto xl:p-0 xl:pb-4 xl:pl-8 xl:w-1/3 xl:shadow-none"
     :class="{
       'overflow-y-auto': paneOpen,
       'transform translate-x-full shadow-none overflow-visible xl:transform-none': !paneOpen,
@@ -12,7 +15,8 @@
           'absolute top-32 md:top-24 -left-10 shadow-md': !paneOpen,
         }"
         @click="paneOpen = !paneOpen"
-        title="Toggle pane">
+        title="Toggle pane"
+        ref="toggleButton">
         <i class="fas" :class="{'fa-chevron-double-right': paneOpen, 'fa-chevron-double-left': !paneOpen}"></i>
         <span class="alt-text">Toggle pane</span>
       </button>
@@ -90,7 +94,7 @@
           </button>
         </div>
       </div>
-      <builder-deck></builder-deck>
+      <builder-deck class="pb-16 xl:pb-0"></builder-deck>
     </div>
   </section>
 </template>
@@ -200,6 +204,18 @@ export default {
       this.showActions = false
     },
   },
+  watch: {
+    paneOpen (value) {
+      // We need to disable scrolling on the body when on mobile
+      // Always restore scrolling when turning it off, just to be safe
+      if (!value) {
+        document.body.style.overflow = 'auto'
+      } else if (this.$refs.toggleButton.style.display !== 'none') {
+        // The toggle button is only shown at screen sizes where the pan actually toggles
+        document.body.style.overflow = 'hidden'
+      }
+    },
+  }
 }
 </script>
 
