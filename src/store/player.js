@@ -104,7 +104,7 @@ const actions = {
       })
     })
   },
-  logOut ({ dispatch }) {
+  logOut ({ state, dispatch }) {
     // Similar to logging in, we don't want to trigger a login request when they try to log out if
     // their credentials have already expired, so we have to use native Axios
     return new Promise((resolve) => {
@@ -112,6 +112,11 @@ const actions = {
       axios.request({
         url: `${import.meta.env.VITE_API_URL}/v2/token`,
         method: 'delete',
+        headers: {
+          Authorization: `Bearer ${state.token}`
+        },
+      }).catch(() => {
+        // No-op because we don't actually care if it fails
       }).finally(() => {
         dispatch('RESET')
         nano.go(100)
