@@ -1,6 +1,21 @@
 <template>
-  <section class="pb-4">
+  <section
+    class="pb-4 transition-transform duration-300 ease-in-out"
+    :class="{
+      'overflow-y-auto': paneOpen,
+      'transform translate-x-full shadow-none overflow-visible xl:transform-none': !paneOpen,
+    }">
     <div class="flex mb-4">
+      <button
+        class="xl:hidden text-xl py-2 w-10 bg-white"
+        :class="{
+          'absolute top-32 md:top-24 -left-10 shadow-md': !paneOpen,
+        }"
+        @click="paneOpen = !paneOpen"
+        title="Toggle pane">
+        <i class="fas" :class="{'fa-chevron-double-right': paneOpen, 'fa-chevron-double-left': !paneOpen}"></i>
+        <span class="alt-text">Toggle pane</span>
+      </button>
       <h1 class="phg-ceremonial-class m-0 flex-grow">Build your deck</h1>
       <button
         class="text-3xl pl-2 leading-none"
@@ -44,10 +59,7 @@
     </div>
     <div v-if="noPhoenixborn" class="pt-4 text-center">
       <p class="text-lg">
-        <router-link :to="{
-          name: 'Cards',
-          query: { types: ['phoenixborn'] },
-        }">Choose your Phoenixborn</router-link> to get started!
+        <link-alike @click="choosePhoenixborn" use-underline use-color>Choose your Phoenixborn</link-alike> to get started!
       </p>
       <p class="text-gray">(Don't worry, you can always change your mind.)</p>
     </div>
@@ -87,6 +99,7 @@
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import BuilderDeck from './BuilderDeck.vue'
 import DeckExportModal from './DeckExportModal.vue'
+import LinkAlike from '../shared/LinkAlike.vue'
 import TextEditor from '../shared/TextEditor.vue'
 import TextInput from '../shared/TextInput.vue'
 import TransitionHeight from '../shared/TransitionHeight.vue'
@@ -100,6 +113,7 @@ export default {
   components: {
     BuilderDeck,
     DeckExportModal,
+    LinkAlike,
     TextEditor,
     TextInput,
     TransitionHeight,
@@ -108,6 +122,8 @@ export default {
     editingDescription: false,
     showActions: false,
     showExportModal: false,
+    // Tracks whether the deckbuilder pane is open on small screens
+    paneOpen: true,
   }),
   computed: {
     deck () {
@@ -150,6 +166,13 @@ export default {
     }
   },
   methods: {
+    choosePhoenixborn () {
+      this.$router.push({
+        name: 'Cards',
+        query: { types: ['phoenixborn'] },
+      })
+      this.paneOpen = false
+    },
     saveDeck () {
       if (this.noPhoenixborn || this.isSaving) return
       this.$store.dispatch('builder/SAVE_DECK', true)
@@ -170,6 +193,7 @@ export default {
         params: { id: this.deck.id }
       })
       this.showActions = false
+      this.paneOpen = false
     },
     exportDeck () {
       this.showExportModal = true
