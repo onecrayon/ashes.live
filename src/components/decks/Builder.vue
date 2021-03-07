@@ -122,6 +122,9 @@ export default {
     TextInput,
     TransitionHeight,
   },
+  mounted () {
+    this.toggleBodyScroll(true)
+  },
   data: () => ({
     editingDescription: false,
     showActions: false,
@@ -203,17 +206,20 @@ export default {
       this.showExportModal = true
       this.showActions = false
     },
-  },
-  watch: {
-    paneOpen (value) {
+    toggleBodyScroll (paneOpen) {
       // We need to disable scrolling on the body when on mobile
       // Always restore scrolling when turning it off, just to be safe
-      if (!value) {
+      if (!paneOpen) {
         document.body.style.overflow = 'auto'
       } else if (this.$refs.toggleButton.style.display !== 'none') {
         // The toggle button is only shown at screen sizes where the pan actually toggles
         document.body.style.overflow = 'hidden'
       }
+    },
+  },
+  watch: {
+    paneOpen (value) {
+      this.toggleBodyScroll(value)
     },
   }
 }
