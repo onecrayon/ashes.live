@@ -45,11 +45,7 @@ export function request(endpoint, options = {}, isRetry = false) {
   return new Promise((resolve, reject) => {
     const nano = new Nanobar({ autoRun: true })
     axios.request(options).then(resolve).catch((error) => {
-      // Don't allow a retry to retry itself!
-      if (isRetry) {
-        return reject(error)
-      }
-      if (error.response && error.response.status === 401) {
+      if (!isRetry && error.response && error.response.status === 401) {
         // If the player is currently authenticated, then that means that their credentials expired.
         // In that case, we'll retry the request
         if (store.getters['player/isAuthenticated']) {
@@ -74,6 +70,7 @@ export function request(endpoint, options = {}, isRetry = false) {
         }
         return
       }
+      reject(error)
     }).finally(() => {
       nano.go(100)
     })
