@@ -173,7 +173,7 @@ export default {
         this.releases = response.data.releases
         this.hasPublishedSnapshot = !!response.data.has_published_snapshot
         // And set the site title
-        document.title = `${this.title} - Ashes.live`
+        document.title = `${this._deck.title || 'Untitled ' + this._deck.phoenixborn.name} - Ashes.live`
       }).catch(error => {
         this.handleResponseError(error)
         this.error = true
