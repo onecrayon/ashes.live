@@ -13,7 +13,7 @@
       :title="curType[0]"
       @click="toggleType(curType[1])">
       <i :class="typeIcon(curType[0])"></i> <span class="hidden xl:inline">{{ curType[0].split(' ')[0] }}</span>
-      <span v-if="isTypeActive(curType[1])" class="alt-text"> (active)</span>
+      <span v-if="isTypeActive(curType[1])" class="alt-text absolute"> (active)</span>
     </button>
   </div>
 </template>
