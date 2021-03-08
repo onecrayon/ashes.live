@@ -1,6 +1,6 @@
 <script>
 import { compile } from 'vue'
-import { parseFormattedText, parseEffectText } from '/src/utils.js'
+import { parseFormattedText, parseEffectText } from '/src/utils/text.js'
 
 export default {
   name: 'CardCodes',

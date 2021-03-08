@@ -36,41 +36,60 @@
       <transition name="slide-vertical">
         <ul v-if="!isAuthenticated" class="flex py-1">
           <li class="flex-initial px-2">
-            <link-alike @click="isLogInModalOpen = true" use-underline>
-              <i class="fas fa-user-secret text-xl"></i> Log In
+            <link-alike @click="initiateLogin()" use-underline>
+              <i class="fas fa-user-secret text-xl"></i> Log in
             </link-alike>
           </li>
           <li class="flex-initial px-2">
             <router-link to="/players/new/" class="text-black">
-              <i class="fas fa-user-plus text-xl"></i> Sign Up
+              <i class="fas fa-user-plus text-xl"></i> Sign up
             </router-link>
           </li>
         </ul>
-        <ul v-else class="flex py-1">
-          <li class="flex-initial px-2">
-            <router-link to="/players/me/" class="text-black">
-              <i class="fas fa-user text-xl"></i>
-              {{ myUsername }}<span class="text-gray">#{{ myBadge }}</span>
-            </router-link>
-          </li>
-          <li class="flex-initial px-2">
-            <router-link to="/decks/mine/" class="text-black">
-              <i class="fas fa-th-list text-xl"></i> My Decks
-            </router-link>
-          </li>
-          <li class="flex-initial px-2">
-            <link-alike @click="logOut" use-underline>
-              <i class="fas fa-user-slash text-xl"></i> Log Out
-            </link-alike>
-          </li>
-        </ul>
+        <div v-else class="flex py-1">
+          <ul class="flex flex-wrap flex-grow">
+            <li class="flex-none px-2">
+              <router-link to="/players/me/" class="text-black">
+                <i class="fas fa-user text-xl"></i>
+                {{ myUsername }}<span class="text-gray">#{{ myBadge }}</span>
+              </router-link>
+            </li>
+            <li class="flex-none px-2">
+              <router-link to="/decks/mine/" class="text-black">
+                <i class="fas fa-th-list text-xl"></i> My decks
+              </router-link>
+            </li>
+            <li class="flex-none px-2">
+              <link-alike @click="logOut" use-underline>
+                <i class="fas fa-user-slash text-xl"></i> Log out
+              </link-alike>
+            </li>
+          </ul>
+          <div class="flex-none relative">
+            <transition name="slide-vertical">
+              <link-alike v-if="isDeckbuilding" use-underline @click="exitDeckbuilder" class="right-0 whitespace-nowrap">
+                <i class="fas fa-times text-xl"></i> Exit builder
+              </link-alike>
+              <link-alike v-else use-underline @click="newDeck" class="right-0 whitespace-nowrap">
+                <i class="fas fa-plus text-xl"></i> New deck
+              </link-alike>
+            </transition>
+          </div>
+        </div>
       </transition>
     </div>
-    <log-in-modal v-model:open="isLogInModalOpen"></log-in-modal>
+    <log-in-modal v-model:open="isLogInModalOpen" @login:success="finalizeLogin(true)" @login:canceled="finalizeLogin(false)">
+      <p v-if="onLoginSuccess">Your session has expired. Please login to continue.</p>
+    </log-in-modal>
   </nav>
-  <div class="p-4 container mx-auto lg:pt-8">
-    <!-- Keying to the route path is necessary, because legacy routes tend to share the same components, and without keying against the path they won't receive standard router lifecycle calls -->
-    <router-view :key="$route.path"></router-view>
+  <div class="p-4 container mx-auto lg:pt-8 flex relative">
+    <div :class="[$style.transitionWidth, isDeckbuilding ? 'xl:w-2/3' : '']">
+      <!-- Keying to the route path is necessary, because legacy routes tend to share the same components, and without keying against the path they won't receive standard router lifecycle calls -->
+      <router-view :key="$route.path"></router-view>
+    </div>
+    <transition name="right-sidebar">
+      <builder v-if="isDeckbuilding" :class="$style.screenWidth"></builder>
+    </transition>
   </div>
   <footer class="container mx-auto p-4 pt-10 text-center text-xs">
     <p>All images, graphics, textual and game contents &copy; 2015-{{ thisYear }} Plaid Hat Games. All rights reserved.</p>
@@ -83,7 +102,9 @@ import axios from 'axios'
 import qs from 'qs'
 import { useToast } from 'vue-toastification'
 import LogInModal from './components/LogInModal.vue'
+import Builder from './components/decks/Builder.vue'
 import LinkAlike from './components/shared/LinkAlike.vue'
+import emitter from './events.js'
 
 // Set up sensible Axios defaults for query string array handling
 // (it uses bracketed property names, which the backend doesn't support)
@@ -101,15 +122,24 @@ export default {
     return { toast: useToast() }
   },
   components: {
+    Builder,
     LinkAlike,
     LogInModal,
   },
   data: () => ({
     isLogInModalOpen: false,
+    onLoginSuccess: null,
+    onLoginFailure: null,
   }),
   created () {
     // Set the page title when the app is loaded for the first time
     document.title = siteTitle(this.$route)
+  },
+  mounted () {
+    emitter.on('login:required', this.initiateLogin)
+  },
+  beforeUnmount () {
+    emitter.off('login:required', this.initiateLogin)
   },
   computed: {
     useFullHeader () {
@@ -127,6 +157,9 @@ export default {
     myBadge () {
       return this.$store.state.player.badge
     },
+    isDeckbuilding () {
+      return this.$store.state.builder.enabled
+    }
   },
   watch: {
     $route(to, from) {
@@ -136,6 +169,26 @@ export default {
     },
   },
   methods: {
+    newDeck () {
+      this.$store.commit('builder/enable')
+    },
+    exitDeckbuilder () {
+      this.$store.dispatch('builder/reset')
+    },
+    initiateLogin ({onSuccess = null, onFailure = null} = {}) {
+      this.onLoginSuccess = onSuccess
+      this.onLoginFailure = onFailure
+      this.isLogInModalOpen = true
+    },
+    finalizeLogin(isSuccess) {
+      if (isSuccess && this.onLoginSuccess) {
+        this.onLoginSuccess()
+      } else if (!isSuccess && this.onLoginFailure) {
+        this.onLoginFailure()
+      }
+      this.onLoginSuccess = null
+      this.onLoginFailure = null
+    },
     logOut () {
       this.$store.dispatch('player/logOut')
       this.toast.info('You have logged out!')
@@ -178,6 +231,16 @@ export default {
   overflow: hidden;
 }
 
+.screenWidth {
+  width: 100vw;
+}
+
+@media (min-width: 768px) {
+  .screenWidth {
+    width: 640px;
+  }
+}
+
 @media (min-width: 1024px) {
   .fullHeader .homeLink {
     background-image: url('./assets/ashes-live.png');
@@ -193,5 +256,10 @@ export default {
   .headerCols {
     grid-template-columns: minmax(0, 1fr) 366px minmax(0, 1fr);
   }
+}
+
+.transitionWidth {
+  @apply w-full;
+  transition: width .25s ease-in-out .15s;
 }
 </style>

@@ -3,8 +3,11 @@
     <i :class="[typeIcon]"></i>
     <strong class="text-base font-normal pl-1">{{typeLabel}}</strong> <span class="text-gray-darker">({{ count }})</span>
     <ul class="mt-1">
-      <li v-for="(card, index) of cards" :key="index">
-        <span>{{ card.count }}x <card-link :card="card"></card-link></span>
+      <li v-for="(card, index) of cards" :key="index" class="flex">
+        <span class="flex-none">{{ card.count }}&times;&nbsp;</span>
+        <span class="flex-grow">
+          <card-link :card="card"></card-link><span v-if="card.phoenixborn" class="text-gray"> ({{ card.phoenixborn.split(/,?[ ]/)[0] }})</span>
+        </span>
       </li>
     </ul>
   </div>

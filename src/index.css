@@ -10,6 +10,7 @@
   --color-blue-light: #d4e2f3;
   --color-red: #b00000;
   --color-red-light: #b25864;
+  --color-red-lightest: #FFD0D0;
   --color-orange: #b05000;
   --color-green: #006600;
   --color-green-light: #5e8664;
@@ -19,6 +20,21 @@
   --color-inexhaustible-dark: #8d7b53;
   --color-reaction: #ecf1f4;
   --color-reaction-dark: #a3c4d3;
+  /* Dice coloration */
+  --color-dice-ceremonial: #ee3342;
+  --color-dice-ceremonial-bg: #111821;
+  --color-dice-charm: #f7e442;
+  --color-dice-charm-bg: #f34f98;
+  --color-dice-illusion: #8bc7ea;
+  --color-dice-illusion-bg: #490d67;
+  --color-dice-natural: #cedb00;
+  --color-dice-natural-bg: #004a98;
+  --color-dice-divine: #b58a2b;
+  --color-dice-divine-bg: #f2f2f2;
+  --color-dice-sympathy: #e3c2af;
+  --color-dice-sympathy-bg: #119981;
+  --color-dice-time: #dfdfdf;
+  --color-dice-time-bg: #9a2e36;
 }
 
 @tailwind base;
@@ -47,6 +63,10 @@ h3 {
   @apply text-lg font-bold mb-4;
 }
 
+h4 {
+  @apply mb-2;
+}
+
 p {
   @apply my-4;
 }
@@ -64,10 +84,10 @@ hr {
 }
 
 .btn {
-  @apply appearance-none border-2 border-gray-darker bg-gray-light rounded-md px-2 text-gray-darker font-bold text-center;
+  @apply appearance-none border-2 border-black bg-gray-light rounded-md px-2 text-black font-bold text-center;
 
   &.active {
-    @apply bg-gray-darker text-gray-light;
+    @apply bg-black text-white;
   }
 }
 
@@ -85,10 +105,26 @@ hr {
 
 .btn-blue {
   @apply border-blue text-blue bg-blue-light;
+
+  &.active {
+    @apply bg-blue text-blue-light;
+  }
 }
 
 .btn-green {
   @apply border-green text-green bg-green-lightest;
+
+  &.active {
+    @apply bg-green text-green-lightest;
+  }
+}
+
+.btn-red {
+  @apply border-red text-red bg-red-lightest;
+
+  &.active {
+    @apply bg-red text-red-lightest;
+  }
 }
 
 .nanobar .bar {
@@ -160,46 +196,36 @@ hr {
   }
 }
 
+.die.basic {
+  @apply text-gray border-gray bg-gray-light;
+}
+
 .die.ceremonial {
-  color: #ee3342;
-  background: #111821;
-  border-color: #ee3342;
+  @apply text-dice-ceremonial border-dice-ceremonial bg-dice-ceremonial-bg;
 }
 
 .die.charm {
-  color: #f7e442;
-  background: #f34f98;
-  border-color: #f7e442;
+  @apply text-dice-charm border-dice-charm bg-dice-charm-bg;
 }
 
 .die.illusion {
-  color: #8bc7ea;
-  background: #490d67;
-  border-color: #8bc7ea;
+  @apply text-dice-illusion border-dice-illusion bg-dice-illusion-bg;
 }
 
 .die.natural {
-  color: #cedb00;
-  background: #004a98;
-  border-color: #cedb00;
+  @apply text-dice-natural border-dice-natural bg-dice-natural-bg;
 }
 
 .die.divine {
-  color: #b58a2b;
-  background: #f2f2f2;
-  border-color: #b58a2b;
+  @apply text-dice-divine border-dice-divine bg-dice-divine-bg;
 }
 
 .die.sympathy {
-  color: #e3c2af;
-  background: #119981;
-  border-color: #e3c2af;
+  @apply text-dice-sympathy border-dice-sympathy bg-dice-sympathy-bg;
 }
 
 .die.time {
-  color: #dfdfdf;
-  background: #9a2e36;
-  border-color: #dfdfdf;
+  @apply text-dice-time border-dice-time bg-dice-time-bg;
 }
 
 /* Usage: <transition name="fade"> */
@@ -208,6 +234,17 @@ hr {
 }
 
 .fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+/* Usage: <transition name="fade-swap"> */
+.fade-swap-enter-active, .fade-swap-leave-active {
+  position: absolute;
+  width: 100%;
+  transition: opacity .25s ease-out;
+}
+
+.fade-swap-enter-from, .fade-swap-leave-to {
   opacity: 0;
 }
 
@@ -229,6 +266,37 @@ hr {
 .slide-vertical-leave-to {
   opacity: 0;
   transform: translateY(35%);
+}
+
+/* Usage: <transition name="right-sidebar"> */
+.right-sidebar-enter-active, .right-sidebar-leave-active {
+  position: absolute;
+  right: 6px;
+  transition: transform .25s ease-in-out .15s, opacity .25s ease-in-out .15s;
+}
+
+.right-sidebar-enter-from {
+  opacity: 0;
+  transform: translateX(150%);
+}
+
+.right-sidebar-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+/* Usage: <transition-height> (these are specific to that component's transition logic) */
+.height-auto-enter-active, .height-auto-leave-active {
+  transition: height .25s ease-in-out;
+  overflow: hidden;
+  /* Try to force hardware rendering for animated element */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.height-auto-enter-from, .height-auto-leave-to {
+  height: 0;
 }
 
 @tailwind components;

@@ -2,12 +2,14 @@
   <div>
     <div v-if="label" class="font-bold text-sm text-gray-darker pl-2">{{ label }}</div>
     <textarea
-      class="appearance-none border-2 bg-white border-gray-darker rounded-md px-2 py-1 w-full h-60"
-      ref="textarea"
+      class="appearance-none border-2 bg-white border-black rounded-md px-2 py-1 w-full h-60"
+      ref="textArea"
       :value="modelValue"
       :placeholder="placeholder"
       :disabled="disabled"
-      @input="$emit('update:modelValue', $event.target.value)"></textarea>
+      @input="$emit('update:modelValue', $event.target.value)"
+      @focus="$emit('focus', $event)"
+      @blur="$emit('blur', $event)"></textarea>
   </div>
 </template>
 
@@ -29,6 +31,11 @@ export default {
       default: false,
     },
   },
-  emits: ['update:modelValue'],
+  emits: ['focus', 'blur', 'update:modelValue'],
+  methods: {
+    focus () {
+      this.$refs.textArea.focus()
+    },
+  },
 }
 </script>

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { parseFormattedText } from '/src/utils.js'
+import { parseFormattedText } from '/src/utils/text.js'
 
 export default {
   name: 'CardCosts',

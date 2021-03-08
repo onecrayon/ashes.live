@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-no-wrap">
+  <div class="flex flex-nowrap">
     <select
       id="phoenixborn"
       name="Phoenixborn"

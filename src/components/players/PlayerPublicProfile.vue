@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { request } from '/src/utils.js'
+import { request } from '/src/utils/index.js'
 import CardCodes from '../shared/CardCodes.vue'
 
 export default {

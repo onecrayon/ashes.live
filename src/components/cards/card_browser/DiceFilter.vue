@@ -1,11 +1,11 @@
 <template>
-  <div class="flex flex-wrap-none" role="group" aria-label="Filter by dice type">
+  <div class="flex flex-nowrap" role="group" aria-label="Filter by dice type">
     <button class="btn btn-first px-1 text-l w-16 sm:px-2"
       :class="{active: isDiceLogicAll}"
       :title="diceLogicTooltip"
       :disabled="isDisabled"
       @click="toggleFilterLogic">
-      {{ diceLogicText }}<span class="alt-text"> dice type{{ isDiceLogiAll ? 's' : '' }}</span>:
+      {{ diceLogicText }}<span class="alt-text"> dice type{{ isDiceLogicAll ? 's' : '' }}</span>:
     </button
     ><button class="phg-basic-magic btn btn-inner text-2xl px-1 sm:px-2"
       :class="{active: isDieActive('basic')}"
@@ -29,6 +29,7 @@
 
 <script>
 import { diceList } from '/src/constants.js'
+import { capitalize } from '/src/utils/text.js'
 
 export default {
   name: 'DiceFilter',
@@ -62,9 +63,7 @@ export default {
     },
   },
   methods: {
-    capitalize (value) {
-      return `${value.substr(0, 1).toUpperCase()}${value.substr(1)}`
-    },
+    capitalize,
     isDieActive (dieType) {
       return this.filterList.indexOf(dieType) >= 0
     },

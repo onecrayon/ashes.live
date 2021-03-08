@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import { request } from '/src/utils.js'
-import useHandleResponseError from '/src/composites/useHandleResponseError.js'
+import { request } from '/src/utils/index.js'
+import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import TextInput from '../shared/TextInput.vue'
 
 export default {
@@ -52,6 +52,7 @@ export default {
         data: { email: this.email },
       }).then(() => {
         this.toast.success('Your password request has been sent! Please check your email.')
+        this.$router.push('/')
       }).catch(error => {
         if (error.response && error.response.status === 404) {
           this.toast.warning('This email has not been registered yet! Please sign up to continue.')

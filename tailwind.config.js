@@ -21,6 +21,7 @@ module.exports = {
       red: {
         DEFAULT: 'var(--color-red)',
         light: 'var(--color-red-light)',
+        lightest: 'var(--color-red-lightest)',
       },
       orange: 'var(--color-orange)',
       green: {
@@ -36,6 +37,22 @@ module.exports = {
       reaction: {
         DEFAULT: 'var(--color-reaction)',
         dark: 'var(--color-reaction-dark)',
+      },
+      dice: {
+        ceremonial: 'var(--color-dice-ceremonial)',
+        'ceremonial-bg': 'var(--color-dice-ceremonial-bg)',
+        charm: 'var(--color-dice-charm)',
+        'charm-bg': 'var(--color-dice-charm-bg)',
+        illusion: 'var(--color-dice-illusion)',
+        'illusion-bg': 'var(--color-dice-illusion-bg)',
+        natural: 'var(--color-dice-natural)',
+        'natural-bg': 'var(--color-dice-natural-bg)',
+        divine: 'var(--color-dice-divine)',
+        'divine-bg': 'var(--color-dice-divine-bg)',
+        sympathy: 'var(--color-dice-sympathy)',
+        'sympathy-bg': 'var(--color-dice-sympathy-bg)',
+        time: 'var(--color-dice-time)',
+        'time-bg': 'var(--color-dice-time-bg)',
       },
     },
   },

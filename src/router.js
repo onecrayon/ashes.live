@@ -14,6 +14,7 @@ import PlayerRegistration from './components/players/PlayerRegistration.vue'
 import NewPlayer from './components/players/NewPlayer.vue'
 import RequestReset from './components/players/RequestReset.vue'
 import ResetPassword from './components/players/ResetPassword.vue'
+import ProjectPhoenix from './components/ProjectPhoenix.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -88,6 +89,16 @@ const router = createRouter({
       },
     },
     {
+      path: '/decks/mine/:id/',
+      name: 'PrivateDeckDetails',
+      component: DeckDetails,
+      props: true,
+      meta: {
+        showMine: true,
+        needsAuth: true,
+      },
+    },
+    {
       path: '/decks/:id/',
       name: 'DeckDetails',
       component: DeckDetails,
@@ -99,6 +110,13 @@ const router = createRouter({
       component: LogIn,
       meta: {
         title: 'Log In',
+      },
+    },
+    {
+      path: '/phoenix/',
+      component: ProjectPhoenix,
+      meta: {
+        title: 'Project Phoenix',
       },
     },
     {

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap-none text-sm" role="group" aria-label="Display options">
+  <div class="flex flex-nowrap text-sm" role="group" aria-label="Display options">
     <button
       class="btn btn-first py-1 px-2"
       :class="{active: galleryStyle === 'list'}"

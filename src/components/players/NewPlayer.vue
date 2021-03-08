@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import useHandleResponseError from '/src/composites/useHandleResponseError.js'
+import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import TextInput from '../shared/TextInput.vue'
 
 export default {
@@ -44,6 +44,7 @@ export default {
     submitInvite () {
       this.$store.dispatch('player/invite', { email: this.email }).then(() => {
         this.toast.success('Your account invitation has been sent! Please follow the instructions in your email to finalize your account.')
+        this.$router.push('/')
       }).catch(this.handleResponseError)
     },
   },

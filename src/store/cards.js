@@ -8,7 +8,7 @@
  */
 
 import { useToast } from 'vue-toastification'
-import { request } from '/src/utils.js'
+import { request } from '/src/utils/index.js'
 
 const toast = useToast()
 
@@ -34,7 +34,7 @@ const actions = {
         commit('addCard', card)
         resolve(card)
       }).catch(() => {
-        toast.error(`Unable to load data for ${card.name ? card.name : card.stub}!`)
+        toast.error(`Unable to load data for ${partialCard.name ? partialCard.name : partialCard.stub}!`)
         reject()
       })
     })
@@ -77,10 +77,10 @@ const mutations = {
       state.stubMap[card.stub] = card
     }
   },
-  savePhoenixborns (phoenixborns) {
+  savePhoenixborns (state, phoenixborns) {
     state.phoenixborns = phoenixborns
   },
-  saveLegacyPhoenixborns (phoenixborns) {
+  saveLegacyPhoenixborns (state, phoenixborns) {
     state.legacyPhoenixborns = phoenixborns
   },
 }

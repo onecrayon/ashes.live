@@ -1,5 +1,5 @@
 <template>
-  <span class="cursor-pointer" :class="{'hover:underline': useUnderline, 'text-blue': useColor}">
+  <span class="cursor-pointer" :class="{'hover:underline': useUnderline, 'text-blue': useColor}" role="link">
     <slot></slot>
   </span>
 </template>
