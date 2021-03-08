@@ -209,9 +209,11 @@ export default {
     toggleBodyScroll (paneOpen) {
       // We need to disable scrolling on the body when on mobile
       // Always restore scrolling when turning it off, just to be safe
+      const styles = window.getComputedStyle(this.$refs.toggleButton)
+      if (styles.display === 'none') return
       if (!paneOpen) {
         document.body.style.overflow = 'auto'
-      } else if (this.$refs.toggleButton.style.display !== 'none') {
+      } else {
         // The toggle button is only shown at screen sizes where the pan actually toggles
         document.body.style.overflow = 'hidden'
       }
