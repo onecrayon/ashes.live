@@ -21,7 +21,7 @@
         </span>
       </button>
     </div>
-    <div v-else
+    <div v-else-if="!deckPhoenixborn || !card.phoenixborn || deckPhoenixborn.name === card.phoenixborn"
       class="flex flex-nowrap"
       :class="{
         shadow: isPopup,

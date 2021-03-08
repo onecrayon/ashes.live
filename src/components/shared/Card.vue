@@ -4,7 +4,7 @@
     <div
       class="border border-gray bg-white"
       :class="{
-        [$style.offsetTop]: isDeckbuilderActive && !isNotConjuration,
+        [$style.offsetTop]: isDeckbuilderActive && (!isNotConjuration || (card.phoenixborn && deckPhoenixborn && card.phoenixborn !== deckPhoenixborn.name)),
         shadow: isPopup,
       }">
       <div class="bg-gray-light text-gray text-center relative border-b border-gray-light">
@@ -155,6 +155,9 @@ export default {
         name: routeName,
         params: { stub: this.card.stub },
       }
+    },
+    deckPhoenixborn () {
+      return this.$store.state.builder.deck.phoenixborn
     },
   },
   methods: {
