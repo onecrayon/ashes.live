@@ -3,7 +3,7 @@
     <div v-if="label" class="font-bold text-sm text-gray-darker pl-2">{{ label }}</div>
     <input
       class="appearance-none border-2 bg-white rounded-md px-2 py-1 w-full"
-      :class="isInvalid ? 'border-red' : 'border-gray-darker'"
+      :class="isInvalid ? 'border-red' : 'border-black'"
       :type="type"
       :placeholder="placeholder"
       :disabled="disabled"

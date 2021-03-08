@@ -84,10 +84,10 @@ hr {
 }
 
 .btn {
-  @apply appearance-none border-2 border-gray-darker bg-gray-light rounded-md px-2 text-gray-darker font-bold text-center;
+  @apply appearance-none border-2 border-black bg-gray-light rounded-md px-2 text-black font-bold text-center;
 
   &.active {
-    @apply bg-gray-darker text-gray-light;
+    @apply bg-black text-white;
   }
 }
 

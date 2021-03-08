@@ -2,7 +2,7 @@
   <div>
     <div v-if="label" class="font-bold text-sm text-gray-darker pl-2">{{ label }}</div>
     <textarea
-      class="appearance-none border-2 bg-white border-gray-darker rounded-md px-2 py-1 w-full h-60"
+      class="appearance-none border-2 bg-white border-black rounded-md px-2 py-1 w-full h-60"
       ref="textArea"
       :value="modelValue"
       :placeholder="placeholder"

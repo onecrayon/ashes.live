@@ -98,7 +98,7 @@ export default {
 
 <style lang="postcss" module>
 .btn {
-  @apply appearance-none inline-block border-gray-darker bg-gray-light leading-none px-2 py-1 text-gray-darker font-bold text-center border-t-2 border-l-2;
+  @apply appearance-none inline-block border-black bg-gray-light leading-none px-2 py-1 text-black font-bold text-center border-t-2 border-l-2;
   min-width: 32px;
 
   &.standalone {
@@ -123,6 +123,6 @@ export default {
 }
 
 .btnActive {
-  @apply bg-gray-darker text-gray-light;
+  @apply bg-black text-white;
 }
 </style>
