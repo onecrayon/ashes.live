@@ -12,7 +12,8 @@
       </span>
       <button v-else
         :class="[$style.btn, $style.btnFirst, $style.btnLast, standalone ? `${$style.standalone} w-full` : '']"
-        @click="usePhoenixborn">
+        @click="usePhoenixborn"
+        :disabled="isSaving">
         <span v-if="!deckPhoenixborn">
           <i class="fas fa-plus"></i> Use
         </span>
@@ -37,7 +38,8 @@
           [$style.btnLast]: count === 3,
           [$style.standalone]: standalone,
         }"
-        @click="setCardCount(card, count)">
+        @click="setCardCount(card, count)"
+        :disabled="isSaving">
           <i v-if="count === 0 && zeroRemovesCard" class="fas fa-times"><span class="alt-text">Remove</span></i>
           <span v-else>{{ count }}</span>
         </button>
@@ -81,12 +83,16 @@ export default {
     deckCount () {
       return this.$store.state.builder.countMap[this.card.stub] || 0
     },
+    isSaving () {
+      return this.$store.state.builder.isSaving
+    },
   },
   methods: {
     usePhoenixborn () {
       this.$store.dispatch('builder/setPhoenixborn', this.card)
     },
     setCardCount (card, count) {
+      if (this.deckCount === count) return
       this.$store.dispatch('builder/setCardCount', {
         card,
         count,
