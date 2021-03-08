@@ -257,7 +257,7 @@ const mutations = {
     const numCards = state.deck.cards.length
     for (let i = 0; i < numCards; i++) {
       const curCard = state.deck.cards[i]
-      if (curCard.phoenixborn !== card.name) {
+      if (curCard.phoenixborn && curCard.phoenixborn !== card.name) {
         badStubs.push(curCard.stub)
         badIndices.push(i)
       }
