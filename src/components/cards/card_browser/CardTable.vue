@@ -7,7 +7,12 @@
     </p>
   </div>
   <div v-else-if="cards && cards.length">
-    <div v-if="galleryStyle === 'list'" class="grid gap-0" :class="[$style.listColumns]">
+    <div v-if="galleryStyle === 'list'"
+      class="grid gap-0"
+      :class="{
+        [$style.deckbuilderListColumns]: isDeckbuilderActive && !showLegacy,
+        [$style.listColumns]: !isDeckbuilderActive || showLegacy,
+      }">
       <card-table-row v-for="card of cards" :key="card.stub" :card="card"></card-table-row>
     </div>
     <div v-else class="grid gap-4 grid-flow-row auto-cols-auto" :class="[$style.cardColumns]">
@@ -30,7 +35,7 @@
 </template>
 
 <script>
-import { debounce } from '/src/utils.js'
+import { debounce } from '/src/utils/index.js'
 import CardTableRow from './CardTableRow.vue'
 import Card from '../../shared/Card.vue'
 
@@ -41,6 +46,7 @@ export default {
     isDisabled: Boolean,
     cards: Array,
     haveNextCards: Boolean,
+    showLegacy: Boolean,
     galleryStyle: String,
   },
   emits: ['reset-filters', 'load-more'],
@@ -54,6 +60,11 @@ export default {
   },
   beforeUnmount () {
     window.removeEventListener('scroll', this.debouncedScrollListener)
+  },
+  computed: {
+    isDeckbuilderActive () {
+      return this.$store.state.builder.enabled
+    },
   },
   methods: {
     scrollLoadCheck () {
@@ -72,6 +83,10 @@ export default {
 <style lang="postcss" module>
 .listColumns {
   grid-template-columns: auto 1fr auto max-content;
+}
+
+.deckbuilderListColumns {
+  grid-template-columns: auto auto 1fr auto max-content;
 }
 
 .cardColumns {

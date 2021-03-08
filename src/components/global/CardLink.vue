@@ -1,39 +1,41 @@
 <template>
-  <router-link
-    class="font-bold text-black"
-    ref="link"
-    :to="cardTarget"
-    @mouseover="showDetails"
-    @mouseleave="closeDetails"
-    @click="linkClick">
-    <slot>{{ card.name }}</slot>
-  </router-link>
-  <div ref="popup" class="absolute z-50" @mouseleave="closeDetails">
-    <div
-      v-if="card.is_legacy && areDetailsShowing"
-      class="border-8 border-gray-light bg-gray-light text-gray rounded-lg shadow relative"
-      ref="popup">
-      <i
-        class="fas fa-circle-notch fa-spin text-2xl"
-        :class="[$style.centerPosition]"></i>
-      <img
-        width="299"
-        height="418"
-        class="relative"
-        :src="legacyCardURL"
-        :alt="card.name">
+  <span>
+    <router-link
+      class="font-bold text-black"
+      ref="link"
+      :to="cardTarget"
+      @mouseover="queueShowDetails"
+      @mouseleave="closeDetails"
+      @click="linkClick">
+      <slot>{{ card.name }}</slot>
+    </router-link>
+    <div ref="popup" class="absolute z-50" @mouseleave="closeDetails">
+      <div
+        v-if="card.is_legacy && areDetailsShowing"
+        class="border-8 border-gray-light bg-gray-light text-gray rounded-lg shadow relative"
+        ref="popup">
+        <i
+          class="fas fa-circle-notch fa-spin text-2xl"
+          :class="[$style.centerPosition]"></i>
+        <img
+          width="299"
+          height="418"
+          class="relative"
+          :src="legacyCardURL"
+          :alt="card.name">
+      </div>
+      <card
+        v-else-if="areDetailsShowing"
+        ref="popup"
+        class="text-left text-black"
+        :card="details"
+        is-popup></card>
     </div>
-    <card
-      v-else-if="areDetailsShowing"
-      ref="popup"
-      class="shadow text-left text-black"
-      :card="details"></card>
-  </div>
+  </span>
 </template>
 
 <script>
 import { createPopper } from '@popperjs/core'
-import { request } from '/src/utils.js'
 import Card from '../shared/Card.vue'
 
 export default {
@@ -48,6 +50,8 @@ export default {
       areDetailsShowing: false,
       loadingDetails: false,
       details: null,
+      checkOpenTimeout: null,
+      checkCloseTimeout: null,
     }
   },
   beforeUnmount () {
@@ -79,17 +83,33 @@ export default {
       this.showDetails()
       document.addEventListener('click', this.closeOnClick, true)
     },
+    queueShowDetails () {
+      // Only queue up if we aren't already loading or viewing things
+      if (this.loadingDetails || this.areDetailsShowing || this.checkOpenTimeout) return
+      this.checkOpenTimeout = setTimeout(this.showDetails, 200)
+    },
+    clearOpenTimeout () {
+      if (this.checkOpenTimeout) {
+        clearTimeout(this.checkOpenTimeout)
+        this.checkOpenTimeout = null
+      }
+    },
     async showDetails () {
+      this.clearOpenTimeout()
       if (this.loadingDetails) return
       this.loadingDetails = true
       // If we have more than three keys, that means we have a full details object so we can just render it
       // (Looking for only two keys could fail for legacy cards)
-      if (this.card.is_legacy || Object.keys(this.card).length > 3) {
+      if (this.card.is_legacy || this.card.text) {
         this.details = this.card
       } else if (!this.details) {
         // Otherwise, we need to fetch the card details
-        // TODO: figure out how to handle errors
-        this.details = await this.$store.dispatch('cards/fetchCard', this.card)
+        try {
+          this.details = await this.$store.dispatch('cards/fetchCard', this.card)
+        } catch {
+          this.loadingDetails = false
+          return
+        }
       }
       this.loadingDetails = false
       this.popper = createPopper(this.$refs.link.$el, this.$refs.popup, {
@@ -130,7 +150,9 @@ export default {
         this.popper.forceUpdate()
       })
     },
-    closeDetails (event) {
+    closeDetails () {
+      this.clearOpenTimeout()
+      if (!this.areDetailsShowing) return
       if (this.checkCloseTimeout) clearTimeout(this.checkCloseTimeout)
       // Delay our close check to allow them time to move into the hovering element
       this.checkCloseTimeout = setTimeout(() => {

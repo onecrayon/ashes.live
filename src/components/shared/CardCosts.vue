@@ -3,17 +3,17 @@
     <li v-for="(cost, index) of costs" :class="$style.cost" :key="index">
       <span v-if="Array.isArray(cost)" :class="$style.parallelCosts">
         <!-- If we ever have a parallel cost with more than 2 costs this is going to break -->
-        <span :class="$style.cost" v-html="parseCardText(cost[0])"></span>
+        <span :class="$style.cost" v-html="parseFormattedText(cost[0])"></span>
         <span class="alt-text"> or </span>
-        <span :class="$style.cost" v-html="parseCardText(cost[1])"></span>
+        <span :class="$style.cost" v-html="parseFormattedText(cost[1])"></span>
       </span>
-      <span v-else v-html="parseCardText(cost)"></span>
+      <span v-else v-html="parseFormattedText(cost)"></span>
     </li>
   </ol>
 </template>
 
 <script>
-import { parseCardText } from '/src/utils.js'
+import { parseFormattedText } from '/src/utils/text.js'
 
 export default {
   name: 'CardCosts',
@@ -27,7 +27,7 @@ export default {
     }
   },
   methods: {
-    parseCardText,
+    parseFormattedText,
   },
 }
 </script>

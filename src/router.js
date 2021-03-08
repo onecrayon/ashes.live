@@ -1,11 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from './store/index.js'
 import Home from './components/Home.vue'
+import LogIn from './components/LogIn.vue'
 import NotFound from './components/NotFound.vue'
 import CardListing from './components/cards/CardListing.vue'
 import CardDetails from './components/cards/CardDetails.vue'
-import DeckListing from './components/decks/DeckListing.vue'
+import PublicDecks from './components/decks/PublicDecks.vue'
+import DeckDetails from './components/decks/DeckDetails.vue'
+import PlayerAccount from './components/players/PlayerAccount.vue'
+import PlayerDecks from './components/decks/PlayerDecks.vue'
+import PlayerPublicProfile from './components/players/PlayerPublicProfile.vue'
+import PlayerRegistration from './components/players/PlayerRegistration.vue'
+import NewPlayer from './components/players/NewPlayer.vue'
+import RequestReset from './components/players/RequestReset.vue'
+import ResetPassword from './components/players/ResetPassword.vue'
+import ProjectPhoenix from './components/ProjectPhoenix.vue'
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
@@ -46,8 +57,108 @@ export default createRouter({
     {
       path: '/decks/',
       name: 'Decks',
-      component: DeckListing,
+      component: PublicDecks,
       meta: { title: 'Decks' },
+    },
+    {
+      path: '/decks/legacy/',
+      name: 'LegacyDecks',
+      component: PublicDecks,
+      meta: {
+        title: 'Browse Legacy Decks',
+        showLegacy: true,
+      },
+    },
+    {
+      path: '/decks/mine/',
+      name: 'PlayerDecks',
+      component: PlayerDecks,
+      meta: {
+        title: 'My Decks',
+        needsAuth: true,
+      },
+    },
+    {
+      path: '/decks/mine/legacy/',
+      name: 'PlayerLegacyDecks',
+      component: PlayerDecks,
+      meta: {
+        title: 'My Legacy Decks',
+        showLegacy: true,
+        needsAuth: true,
+      },
+    },
+    {
+      path: '/decks/mine/:id/',
+      name: 'PrivateDeckDetails',
+      component: DeckDetails,
+      props: true,
+      meta: {
+        showMine: true,
+        needsAuth: true,
+      },
+    },
+    {
+      path: '/decks/:id/',
+      name: 'DeckDetails',
+      component: DeckDetails,
+      props: true,
+    },
+    {
+      path: '/log-in/',
+      name: 'LogIn',
+      component: LogIn,
+      meta: {
+        title: 'Log In',
+      },
+    },
+    {
+      path: '/phoenix/',
+      component: ProjectPhoenix,
+      meta: {
+        title: 'Project Phoenix',
+      },
+    },
+    {
+      path: '/players/me/',
+      name: 'PlayerAccount',
+      component: PlayerAccount,
+      meta: {
+        title: 'My Account',
+        needsAuth: true,
+      },
+    },
+    {
+      path: '/players/new/',
+      name: 'NewPlayer',
+      component: NewPlayer,
+      meta: { title: 'Sign Up' },
+    },
+    {
+      path: '/players/new/:token/',
+      name: 'PlayerRegistration',
+      component: PlayerRegistration,
+      props: true,
+      meta: { title: 'Finalize Your Account' },
+    },
+    {
+      path: '/players/reset/',
+      name: 'RequestReset',
+      component: RequestReset,
+      meta: { title: 'Forgotten Password' },
+    },
+    {
+      path: '/players/reset/:token/',
+      name: 'ResetPassword',
+      component: ResetPassword,
+      props: true,
+      meta: { title: 'Reset Password' },
+    },
+    {
+      path: '/players/:badge/',
+      name: 'PlayerPublicProfile',
+      component: PlayerPublicProfile,
+      props: true,
     },
     {
       path: '/:pathMatch(.*)*',
@@ -72,3 +183,19 @@ export default createRouter({
     }
   },
 })
+
+router.beforeEach((to, from) => {
+  if (to.meta.needsAuth && !store.getters['player/isAuthenticated']) {
+    return {name: 'LogIn'}
+  } else if (store.getters['player/isAuthenticated']) {
+    if (to.name == 'LogIn') {
+      // Send 'em back where they came from if they try to hit the login while logged in
+      return from.redirectedFrom ? from.redirectedFrom : '/'
+    } else if (to.name == 'RequestReset' || to.name == 'ResetPassword') {
+      // Redirect to account settings if they try to visit the reset pages while logged in
+      return {name: 'PlayerAccount'}
+    }
+  }
+})
+
+export default router

@@ -1,12 +1,12 @@
 <template>
-  <div class="flex flex-wrap-none text-sm" role="group" aria-label="Sorting logic">
+  <div class="flex flex-nowrap text-sm" role="group" aria-label="Sorting logic">
     <button class="btn btn-first py-1 px-2 font-normal"
       :title="sortingLogicTooltip"
       :disabled="isDisabled"
       @click="toggleOrder">
       Sort<span class="alt-text"> {{ order === 'asc' ? 'ascending' : 'descending' }} by:</span>
-      <i v-if="order === 'asc'" class="fas fa-angle-up"></i>
-      <i v-else class="fas fa-angle-down"></i>
+      <i v-if="order === 'asc'" class="fas fa-angle-up ml-1"></i>
+      <i v-else class="fas fa-angle-down ml-1"></i>
     </button
     ><button
       class="btn btn-inner py-1 px-2 font-normal"

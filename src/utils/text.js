@@ -1,66 +1,4 @@
-import axios from 'axios'
-import Nanobar from 'nanobar'
-import { diceList } from './constants.js'
-
-/**
- * request(options)
- *
- * A light wrapper around Axios.request() that ensures each request is accompanied by
- * a progress bar.
- *
- * See https://github.com/axios/axios#request-config for options
- *
- * TODO: add support for generic error handling
- */
-export function request(endpoint, options = {}) {
-  // No need to prefix the endpoint if we have a full URL
-  if (endpoint.startsWith('http')) {
-    options.url = endpoint
-  } else {
-    if (endpoint.startsWith('/')) endpoint = endpoint.substr(1)
-    options.url = `${import.meta.env.VITE_API_URL}/${endpoint}`
-  }
-  const nano = new Nanobar({ autoRun: true })
-  return axios.request(options).finally(() => {
-    nano.go(100)
-  })
-}
-
-/**
- * debounce(callback, wait)
- *
- * Debounces the given callback such that it will only be called a single time after `wait`
- * seconds have elapsed (calling it repeatedly will continue offsetting when it will trigger).
- *
- * The returned function has an additional `cancel()` method that will prevent the
- * the debounced method from triggering. For instance:
- *
- *     const debounced = debounce(myFunction, 1000)
- *     debounced()
- *     debounced.cancel()
- *     // myFunction will never be called
- */
-export function debounce(callback, wait) {
-  let timeout
-  const debounced = (...args) => {
-    const context = this
-    clearTimeout(timeout)
-    timeout = setTimeout(() => callback.apply(context, args), wait)
-  }
-  debounced.cancel = () => {
-    clearTimeout(timeout)
-  }
-    return debounced
-}
-
-/**
- * areSetsEqual(setA, setB)
- *
- * Javascript doesn't have any way to compare set equality, because...Javascript.
- */
-export function areSetsEqual(setA, setB) {
-  return setA.size === setB.size && [...setA].every(value => setB.has(value))
-}
+import { diceList } from '../constants.js'
 
 /**
  * trimmed(stringOrFalsey)
@@ -74,31 +12,13 @@ export function trimmed(stringOrFalsey) {
 }
 
 /**
- * localStoreFactory(rootKey)
+ * capitalize(value)
  *
- * Factory funcion for generating local store access functions keyed off rootKey (that is, the
- * local store will include a single rootKey that contains a JSON object with whatever is set
- * via the factory-derived methods).
+ * Returns a copy of the given string with the first character capitalized.
  */
-export function localStoreFactory(rootKey) {
-  function storeGetAll () {
-    const stored = window.localStorage.getItem(rootKey)
-    return stored ? JSON.parse(stored) : {}
-  }
-  function storeGet (key) {
-    const stored = storeGetAll()
-    return stored[key]
-  }
-  function storeSet (key, value) {
-    const stored = storeGetAll()
-    stored[key] = value
-    window.localStorage.setItem(rootKey, JSON.stringify(stored))
-  }
-  return {
-    storeGetAll,
-    storeGet,
-    storeSet,
-  }
+export function capitalize (value) {
+  if (!value) return value
+  return `${value.substr(0, 1).toUpperCase()}${value.substr(1)}`
 }
 
 /**
@@ -106,7 +26,7 @@ export function localStoreFactory(rootKey) {
  *
  * @param {string} text
  */
-export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
+export function parseFormattedText (text, ensureParagraphs=false, isLegacy=false) {
   // First make sure that we don't have any HTML in our string; no XSS, thanks
   const unescapedHTML = /[&<"']/g
   const escapeMap = {
@@ -246,7 +166,7 @@ export function parseCardText (text, ensureParagraphs=false, isLegacy=false) {
  * @param {str} text Card effect text to parse
  */
 export function parseEffectText (text, isLegacy=false) {
-  text = parseCardText(text, true, isLegacy)
+  text = parseFormattedText(text, true, isLegacy)
   // Convert lists to inexhaustible and blue blocks
   text = text.replace('<ul>', '<div class="inexhaustible-effects">')
     .replace('<ol>', '<div class="reaction-effects">')

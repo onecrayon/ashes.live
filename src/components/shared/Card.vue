@@ -1,74 +1,78 @@
 <template>
-  <div
-    class="border border-gray bg-white"
-    :class="[$style.card]"
-    role="complementary"
-    :aria-label="card.name">
-    <div class="bg-gray-light text-gray text-center relative border-b border-gray-light" aria-hidden>
-      <i class="text-2xl" :class="[typeIcon, $style.centerIcon]"></i>
-      <img
-        class="relative"
-        width="300"
-        height="75"
-        alt=" "
-        :src="cardImageURL">
-    </div>
-    <div class="flow-root">
-      <card-costs class="p-2 float-right text-right" :costs="card.cost"></card-costs>
-      <div class="px-2 py-px text-xs">
-        <p class="m-0 font-bold text-lg">
-          <router-link :to="linkTarget" class="text-black">{{ card.name }}</router-link>
-          <span v-if="card.phoenixborn" class="text-gray font-normal" :title="card.phoenixborn">
-            ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
-          </span>
-        </p>
-        <p class="m-0 text-xs">
-          {{ card.type }}
-          <span v-if="card.placement">
-            <span class="divider"><span class="alt-text">-</span></span>
-            {{ card.placement }}
-          </span>
-        </p>
-        <div v-if="isPhoenixborn" class="text-center my-2">
-          <strong
-            v-if="card.battlefield !== undefined"
-            class="inline-block border border-red-light px-1">Battlefield {{ card.battlefield }}</strong>
-          <strong
-            v-if="card.life !== undefined"
-            class="inline-block border border-green-light px-1 mx-1">Life {{ card.life }}</strong>
-          <strong
-            v-if="card.spellboard !== undefined"
-            class="inline-block border border-blue-dark px-1">Spellboard {{ card.spellboard }}</strong>
-        </div>
-        <div v-if="card.text">
-          <hr v-if="!isPhoenixborn" class="my-2 border-gray-light">
-          <div class="leading-snug" :class="$style.effectText">
-            <card-codes
-              :content="card.text"
-              :is-legacy="card.is_legacy"
-              is-card-effect></card-codes>
+  <div :class="[$style.card]" role="complementary" :aria-label="card.name">
+    <deck-qty-buttons class="text-xl" :card="card" :is-popup="isPopup"></deck-qty-buttons>
+    <div
+      class="border border-gray bg-white"
+      :class="{
+        [$style.offsetTop]: isDeckbuilderActive && (!isNotConjuration || (card.phoenixborn && deckPhoenixborn && card.phoenixborn !== deckPhoenixborn.name)),
+        shadow: isPopup,
+      }">
+      <div class="bg-gray-light text-gray text-center relative border-b border-gray-light">
+        <i class="text-2xl" :class="[typeIcon, $style.centerIcon]"></i>
+        <img
+          class="relative"
+          width="300"
+          height="75"
+          alt=" "
+          :src="cardImageURL">
+      </div>
+      <div class="flow-root">
+        <card-costs class="p-2 float-right text-right" :costs="card.cost"></card-costs>
+        <div class="px-2 py-px text-xs">
+          <p class="m-0 font-bold text-lg">
+            <router-link :to="linkTarget" class="text-black">{{ card.name }}</router-link>
+            <span v-if="card.phoenixborn" class="text-gray font-normal" :title="card.phoenixborn">
+              ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
+            </span>
+          </p>
+          <p class="m-0 text-xs">
+            {{ card.type }}
+            <span v-if="card.placement">
+              <span class="divider"><span class="alt-text">-</span></span>
+              {{ card.placement }}
+            </span>
+          </p>
+          <div v-if="isPhoenixborn" class="text-center my-2">
+            <span
+              v-if="card.battlefield !== undefined"
+              class="inline-block border border-red-light px-1">Battlefield <strong>{{ card.battlefield }}</strong></span>
+            <span
+              v-if="card.life !== undefined"
+              class="inline-block border border-green-light px-1 mx-1">Life <strong>{{ card.life }}</strong></span>
+            <span
+              v-if="card.spellboard !== undefined"
+              class="inline-block border border-blue-dark px-1">Spellboard <strong>{{ card.spellboard }}</strong></span>
           </div>
-        </div>
-        <div v-if="hasStats && !isPhoenixborn" class="text-center my-2 clear-fix">
-          <!-- Placeholders ensure that our stats are always in about the same locations -->
-          <span
-            v-if="card.copies !== undefined"
-            class="border border-gray-dark float-left px-1">{{ card.copies }}</span>
+          <div v-if="card.text">
+            <hr v-if="!isPhoenixborn" class="my-2 border-gray-light">
+            <div class="leading-snug" :class="$style.effectText">
+              <card-codes
+                :content="card.text"
+                :is-legacy="card.is_legacy"
+                is-card-effect></card-codes>
+            </div>
+          </div>
+          <div v-if="hasStats && !isPhoenixborn" class="text-center my-2 clear-fix">
+            <!-- Placeholders ensure that our stats are always in about the same locations -->
+            <span
+              v-if="card.copies !== undefined"
+              class="border border-gray-dark float-left px-1">{{ card.copies }}</span>
 
-          <strong
-            v-if="card.attack !== undefined"
-            class="inline-block border border-red-light px-1">Attack {{ card.attack }}</strong>
-          <span v-else class="inline-block invisible">Attack --</span>
+            <span
+              v-if="card.attack !== undefined"
+              class="inline-block border border-red-light px-1">Attack <strong>{{ card.attack }}</strong></span>
+            <span v-else class="inline-block invisible">Attack --</span>
 
-          <strong
-            v-if="card.life !== undefined"
-            class="inline-block border border-green-light px-1 mx-1">Life {{ card.life }}</strong>
-          <span v-else class="inline-block invisible mx-1">Life --</span>
+            <span
+              v-if="card.life !== undefined"
+              class="inline-block border border-green-light px-1 mx-1">Life <strong>{{ card.life }}</strong></span>
+            <span v-else class="inline-block invisible mx-1">Life --</span>
 
-          <strong
-            v-if="card.recover !== undefined"
-            class="inline-block border border-blue-dark px-1">Recover {{ card.recover }}</strong>
-          <span v-else class="inline-block invisible">Recover --</span>
+            <span
+              v-if="card.recover !== undefined"
+              class="inline-block border border-blue-dark px-1">Recover <strong>{{ card.recover }}</strong></span>
+            <span v-else class="inline-block invisible">Recover --</span>
+          </div>
         </div>
       </div>
     </div>
@@ -77,9 +81,13 @@
 
 <script>
 import { typeToFontAwesome } from '/src/constants.js'
-import { debounce } from '/src/utils.js'
+import { debounce } from '/src/utils/index.js'
 import CardCodes from './CardCodes.vue'
 import CardCosts from './CardCosts.vue'
+import DeckQtyButtons from './DeckQtyButtons.vue'
+
+// The number of pixels offscreen within which the image should be loaded
+const LOAD_IMAGE_IF_WITHIN_PIXELS = 500
 
 export default {
   name: 'Card',
@@ -87,10 +95,15 @@ export default {
     card: {
       required: true,
     },
+    isPopup: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
     CardCodes,
     CardCosts,
+    DeckQtyButtons,
   },
   data () {
     return {
@@ -105,6 +118,11 @@ export default {
   beforeUnmount () {
     window.removeEventListener('scroll', this.debouncedScrollListener)
   },
+  watch: {
+    card () {
+      this.scrollCheck()
+    }
+  },
   computed: {
     cardImageURL () {
       return this.showImage ? `${import.meta.env.VITE_CDN_URL}/images/slices/${this.card.stub}.jpg` : ''
@@ -115,6 +133,12 @@ export default {
     },
     isPhoenixborn () {
       return this.card.type === 'Phoenixborn'
+    },
+    isDeckbuilderActive () {
+      return this.$store.state.builder.enabled
+    },
+    isNotConjuration () {
+      return this.card.type !== 'Conjuration' && this.card.type !== 'Conjured Alteration Spell'
     },
     hasStats () {
       // This covers Phoenixborn, too, because they always have a life value
@@ -132,12 +156,15 @@ export default {
         params: { stub: this.card.stub },
       }
     },
+    deckPhoenixborn () {
+      return this.$store.state.builder.deck.phoenixborn
+    },
   },
   methods: {
     scrollCheck () {
-      // Check if our scrolling element is visible or within 100 pixels of being visible
+      // Check if our scrolling element is visible or within our desired overlap
       const elementBounding = this.$el.getBoundingClientRect()
-      if (elementBounding.top <= window.innerHeight + 100 && elementBounding.bottom >= -100) {
+      if (elementBounding.top <= window.innerHeight + LOAD_IMAGE_IF_WITHIN_PIXELS && elementBounding.bottom >= -LOAD_IMAGE_IF_WITHIN_PIXELS) {
         this.showImage = true
       } else {
         this.showImage = false
@@ -164,5 +191,9 @@ export default {
   & p {
     @apply my-2;
   }
+}
+
+.offsetTop {
+  margin-top: 30px;
 }
 </style>

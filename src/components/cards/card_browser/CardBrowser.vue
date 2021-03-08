@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="md:flex md:flex-nowrap mb-4">
+    <div class="md:flex md:flex-nowrap">
       <dice-filter
-        class="flex-none mb-4 h-10 md:pr-4 md:mb-0"
+        class="flex-none mb-4 h-10 md:pr-4"
         v-model:filter-logic="diceFilterLogic"
         v-model:filter-list="diceFilterList"
         :is-disabled="isDisabled"></dice-filter>
       <clearable-search
-        class="flex-auto h-10"
+        class="flex-1 h-10 mb-4"
         placeholder="Filter by name or text..."
         v-model:search="filterText"
         :is-disabled="isDisabled"></clearable-search>
@@ -34,6 +34,7 @@
       :cards="cards"
       :have-next-cards="!!nextCardsURL"
       :gallery-style="galleryStyle"
+      :show-legacy="showLegacy"
       @reset-filters="clearFilters"
       @load-more="loadNext"></card-table>
   </div>
@@ -42,7 +43,8 @@
 <script>
 import { watch } from 'vue'
 import { useToast } from 'vue-toastification'
-import { debounce, areSetsEqual, trimmed, request } from '/src/utils.js'
+import { debounce, areSetsEqual, request } from '/src/utils/index.js'
+import { trimmed } from '/src/utils/text.js'
 import DiceFilter from './DiceFilter.vue'
 import TypeFilter from './TypeFilter.vue'
 import ClearableSearch from '../../shared/ClearableSearch.vue'
@@ -63,8 +65,7 @@ export default {
   },
   setup () {
     // Expose toasts for use in other portions of this component
-    const toast = useToast()
-    return { toast }
+    return { toast: useToast() }
   },
   data: () => {
     return {

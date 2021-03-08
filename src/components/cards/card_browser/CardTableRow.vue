@@ -1,4 +1,8 @@
 <template>
+  <!-- This isn't necessary from the standpoint of the quantity buttons component, but we need an empty div as a placeholder for the grid to work -->
+  <div v-if="isDeckbuilderActive && !card.is_legacy" class="pr-1">
+    <deck-qty-buttons :card="card" standalone></deck-qty-buttons>
+  </div>
   <div class="w-8 text-center p-1 sm:border-b border-gray-light" :title="card.type">
     <i :class="[typeIcon(card)]"></i>
   </div>
@@ -11,7 +15,10 @@
   </div>
   <div class="py-1 sm:border-b sm:border-r border-gray-light text-gray-light text-right">
     <div v-if="card.conjurations && card.conjurations.length" class="px-2 inline-block">
-      <card-link v-for="conjuration of card.conjurations" :key="conjuration.stub" :card="legacyConjuration(conjuration)">
+      <card-link
+        v-for="conjuration of card.conjurations" :key="conjuration.stub"
+        :card="legacyConjuration(conjuration)"
+        class="ml-1">
         <i class="fas fa-plus-square"></i>
       </card-link>
     </div>
@@ -30,7 +37,13 @@
       <span v-else>&ndash;</span>
     </div>
   </div>
-  <div class="col-start-1 col-span-4 sm:col-start-4 sm:col-span-1 pr-2 pl-8 sm:pl-2 -mt-2 sm:mt-0 border-b border-gray-light sm:text-right" :class="{'py-1': card.cost && card.cost.length}">
+  <div
+    class="pr-2 pl-8 sm:pl-2 -mt-2 sm:mt-0 border-b border-gray-light sm:text-right"
+    :class="{
+      'py-1': card.cost && card.cost.length,
+      'col-start-1 col-span-4 sm:col-start-4 sm:col-span-1': !isDeckbuilderActive,
+      'col-start-2 col-span-4 sm:col-start-5 sm:col-span-1': isDeckbuilderActive,
+    }">
     <card-costs :costs="card.cost" is-horizontal class="ml-1 sm:ml-0"></card-costs>
   </div>
 </template>
@@ -38,6 +51,7 @@
 <script>
 import { typeToFontAwesome } from '/src/constants.js'
 import CardCosts from '../../shared/CardCosts.vue'
+import DeckQtyButtons from '../../shared/DeckQtyButtons.vue'
 
 export default {
   name: 'CardTableRow',
@@ -48,6 +62,12 @@ export default {
   },
   components: {
     CardCosts,
+    DeckQtyButtons,
+  },
+  computed: {
+    isDeckbuilderActive () {
+      return this.$store.state.builder.enabled
+    },
   },
   methods: {
     typeIcon (card) {

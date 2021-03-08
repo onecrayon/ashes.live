@@ -16,6 +16,7 @@
 
     <div class="md:flex md:flex-nowrap">
       <div class="md:flex-none md:mr-8 mb-8">
+        <deck-qty-buttons :card="details" class="mb-4" standalone></deck-qty-buttons>
         <img
           class="bg-gray-light"
           :class="[!showLegacy ? 'rounded-lg shadow-lg' : '']"
@@ -92,9 +93,10 @@
 </template>
 
 <script>
-import { request } from '/src/utils.js'
+import { request } from '/src/utils/index.js'
 import CardCodes from '../shared/CardCodes.vue'
 import CardCosts from '../shared/CardCosts.vue'
+import DeckQtyButtons from '../shared/DeckQtyButtons.vue'
 
 export default {
   name: 'CardDetails',
@@ -102,13 +104,12 @@ export default {
   components: {
     CardCodes,
     CardCosts,
+    DeckQtyButtons,
   },
-  data () {
-    return {
-      details: null,
-      error: false,
-    }
-  },
+  data: () => ({
+    details: null,
+    error: false,
+  }),
   beforeMount () {
     request(`/v2/cards/${this.stub}${this.showLegacy ? '?show_legacy=true' : ''}`).then(response => {
       this.details = response.data
