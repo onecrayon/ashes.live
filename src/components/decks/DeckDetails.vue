@@ -25,7 +25,17 @@
           <span>{{ lastUpdatedDateFormatted }} ago</span>
 
           <span class="text-gray-darker">Requires:</span>
-          <span>{{ formatReleases }}</span>
+          <span>
+            <span v-for="(release, index) of releases" :key="release.stub">
+              <span v-if="index != 0">, </span>
+              <router-link v-if="release.preconstructed_deck_id" :to="{name: 'DeckDetails', params: {id: release.preconstructed_deck_id}}">
+                {{ release.name }}
+              </router-link>
+              <span v-else>
+                {{ release.name }}
+              </span>
+            </span>
+          </span>
         </div>
 
         <button class="btn py-1 w-full mb-8" @click="showTextExport = true">
