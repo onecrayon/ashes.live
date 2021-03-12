@@ -83,10 +83,23 @@ export default {
       this.showDetails()
       // iOS doesn't propogate click events for arbitrary elements to the document, so we have to also
       // watch for touchstart
-      ['click', 'touchstart'].forEach(action => document.addEventListener(action, this.closeOnClick, true))
+      ['click', 'touchstart'].forEach(action => document.addEventListener(action, this.closeOnClick))
+    },
+    closeOnClick (event) {
+      // TEMP: debugging code
+      console.log(event)
+      // If the click was outside our open element, then close the popper
+      if (!this.$refs.link.$el.contains(event.target) && !this.$refs.popup.contains(event.target)) {
+        event.stopPropagation()
+        event.preventDefault()
+        this.areDetailsShowing = false
+        this.popper.destroy()
+        this.cleanupEventListeners()
+      }
+      // Otherwise, just leave things well enough alone
     },
     cleanupEventListeners () {
-      ['click', 'touchstart'].forEach(action => document.removeEventListener(action, this.closeOnClick, true))
+      ['click', 'touchstart'].forEach(action => document.removeEventListener(action, this.closeOnClick))
     },
     queueShowDetails () {
       // Only queue up if we aren't already loading or viewing things
@@ -166,17 +179,6 @@ export default {
         this.areDetailsShowing = false
         this.popper.destroy()
       }, 100)
-    },
-    closeOnClick (event) {
-      // If the click was outside our open element, then close the popper
-      if (!this.$refs.link.$el.contains(event.target) && !this.$refs.popup.contains(event.target)) {
-        event.stopPropagation()
-        event.preventDefault()
-        this.areDetailsShowing = false
-        this.popper.destroy()
-        this.cleanupEventListeners()
-      }
-      // Otherwise, just leave things well enough alone
     },
   },
 }
