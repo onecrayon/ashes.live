@@ -7,7 +7,7 @@
         [$style.offsetTop]: isDeckbuilderActive && (!isNotConjuration || (card.phoenixborn && deckPhoenixborn && card.phoenixborn !== deckPhoenixborn.name)),
         shadow: isPopup,
       }">
-      <div class="bg-gray-light text-gray text-center relative border-b border-gray-light">
+      <div class="bg-gray-light text-gray text-center relative border-b border-gray-light" :class="$style.imageHeight" aria-hidden="true">
         <i class="text-2xl" :class="[typeIcon, $style.centerIcon]"></i>
         <img
           class="relative"
@@ -177,6 +177,10 @@ export default {
 <style lang="postcss" module>
 .card {
   width: 300px;
+}
+
+.imageHeight {
+  height: 75px;
 }
 
 .centerIcon {
