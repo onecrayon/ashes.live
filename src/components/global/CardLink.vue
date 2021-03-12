@@ -83,13 +83,15 @@ export default {
       // Looks like someone's impatient...
       if (this.loadingDetails) return
       this.showDetails()
-      // iOS doesn't propogate click events for arbitrary elements to the document, so we have to also
-      // watch for touchstart
-      ['click', 'touchstart'].forEach(action => document.documentElement.addEventListener(action, this.closeOnClick))
+      // TODO: figure out how the frick to get iOS to actually capture this event
+      // * Bubble instead of capture: doesn't work
+      // * documentElement: doesn't work
+      // * touchstart: doesn't work (and throws exception on macOS)
+      // * `cursor: pointer` on documentElement: doesn't work
+      // * Haven't tried sticking an empty listener on a non-body ancestor yet: https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html
+      document.addEventListener('click', this.closeOnClick, true)
     },
     closeOnClick (event) {
-      // TEMP: debugging code
-      console.log('closing on click...', event)
       // If the click was outside our open element, then close the popper
       if (!this.$refs.link.$el.contains(event.target) && !this.$refs.popup.contains(event.target)) {
         event.stopPropagation()
@@ -101,7 +103,7 @@ export default {
       // Otherwise, just leave things well enough alone
     },
     cleanupEventListeners () {
-      ['click', 'touchstart'].forEach(action => document.documentElement.removeEventListener(action, this.closeOnClick))
+      document.removeEventListener('click', this.closeOnClick, true)
     },
     queueShowDetails () {
       // Only queue up if we aren't already loading or viewing things
