@@ -85,11 +85,11 @@ export default {
       this.showDetails()
       // iOS doesn't propogate click events for arbitrary elements to the document, so we have to also
       // watch for touchstart
-      ['click', 'touchstart'].forEach(action => document.addEventListener(action, this.closeOnClick))
+      ['click', 'touchstart'].forEach(action => document.documentElement.addEventListener(action, this.closeOnClick, true))
     },
     closeOnClick (event) {
       // TEMP: debugging code
-      console.log(event)
+      console.log('closing on click...', event)
       // If the click was outside our open element, then close the popper
       if (!this.$refs.link.$el.contains(event.target) && !this.$refs.popup.contains(event.target)) {
         event.stopPropagation()
@@ -101,7 +101,7 @@ export default {
       // Otherwise, just leave things well enough alone
     },
     cleanupEventListeners () {
-      ['click', 'touchstart'].forEach(action => document.removeEventListener(action, this.closeOnClick))
+      ['click', 'touchstart'].forEach(action => document.documentElement.removeEventListener(action, this.closeOnClick, true))
     },
     queueShowDetails () {
       // Only queue up if we aren't already loading or viewing things
