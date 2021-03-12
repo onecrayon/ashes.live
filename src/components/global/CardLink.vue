@@ -56,6 +56,8 @@ export default {
   },
   beforeUnmount () {
     // Ensure that we don't have any lingering listeners
+    this.clearOpenTimeout()
+    this.clearCloseTimeout()
     this.cleanupEventListeners()
   },
   computed: {
@@ -78,10 +80,18 @@ export default {
         // If we already have the details showing, then do the default behavior
         return this.$router.push(this.cardTarget)
       }
-      // Looks like someone's impatient...
-      if (this.loadingDetails) return
       this.showDetails()
-      document.addEventListener('click', this.closeOnClick, true)
+    },
+    closeOnClick (event) {
+      // If the click was outside our open element, then close the popper
+      if (!this.$refs.link.$el.contains(event.target) && !this.$refs.popup.contains(event.target)) {
+        event.stopPropagation()
+        event.preventDefault()
+        this.areDetailsShowing = false
+        this.popper.destroy()
+        this.cleanupEventListeners()
+      }
+      // Otherwise, just leave things well enough alone
     },
     queueShowDetails () {
       // Only queue up if we aren't already loading or viewing things
@@ -92,6 +102,12 @@ export default {
       if (this.checkOpenTimeout) {
         clearTimeout(this.checkOpenTimeout)
         this.checkOpenTimeout = null
+      }
+    },
+    clearCloseTimeout () {
+      if (this.checkCloseTimeout) {
+        clearTimeout(this.checkCloseTimeout)
+        this.checkCloseTimeout = null
       }
     },
     async showDetails () {
@@ -144,37 +160,28 @@ export default {
         ],
       })
       this.areDetailsShowing = true
+      document.addEventListener('click', this.closeOnClick, true)
       // If we don't run an update on the next tick, the popper treats its size as 0 width/height
       // No idea why; even setting an explicit size in the styling doesn't help
       this.$nextTick(() => {
         this.popper.forceUpdate()
       })
     },
+    cleanupEventListeners () {
+      document.removeEventListener('click', this.closeOnClick, true)
+    },
     closeDetails () {
       this.clearOpenTimeout()
       if (!this.areDetailsShowing) return
-      if (this.checkCloseTimeout) clearTimeout(this.checkCloseTimeout)
+      this.clearCloseTimeout()
       // Delay our close check to allow them time to move into the hovering element
       this.checkCloseTimeout = setTimeout(() => {
         // Don't close if we're still over either the link or the popup
         if (this.$refs.link.$el.matches(':hover') || this.$refs.popup.matches(':hover')) return
         this.areDetailsShowing = false
         this.popper.destroy()
-      }, 100)
-    },
-    closeOnClick (event) {
-      // If the click was outside our open element, then close the popper
-      if (!this.$refs.link.$el.contains(event.target) && !this.$refs.popup.contains(event.target)) {
-        event.stopPropagation()
-        event.preventDefault()
-        this.areDetailsShowing = false
-        this.popper.destroy()
         this.cleanupEventListeners()
-      }
-      // Otherwise, just leave things well enough alone
-    },
-    cleanupEventListeners () {
-      document.removeEventListener('click', this.closeOnClick, true)
+      }, 100)
     },
   },
 }
