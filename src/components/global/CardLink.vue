@@ -81,7 +81,20 @@ export default {
       // Looks like someone's impatient...
       if (this.loadingDetails) return
       this.showDetails()
+      // On iOS Safari, click events do not bubble outside of very specific circumstances. One of
+      // the triggers is if the document has `cursor: pointer` set which...makes no sense. But
+      // it's also the easiest to ensure occurs
+      if ('ontouchstart' in document.documentElement) {
+        document.documentElement.style.cursor = 'pointer'
+      }
       document.addEventListener('click', this.closeOnClick, true)
+    },
+    cleanupEventListeners () {
+      // Reset our document cursor style, if necessary
+      if ('ontouchstart' in document.documentElement) {
+        document.documentElement.style.cursor = 'auto'
+      }
+      document.removeEventListener('click', this.closeOnClick, true)
     },
     queueShowDetails () {
       // Only queue up if we aren't already loading or viewing things
@@ -172,9 +185,6 @@ export default {
         this.cleanupEventListeners()
       }
       // Otherwise, just leave things well enough alone
-    },
-    cleanupEventListeners () {
-      document.removeEventListener('click', this.closeOnClick, true)
     },
   },
 }
