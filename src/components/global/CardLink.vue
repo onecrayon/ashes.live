@@ -56,6 +56,8 @@ export default {
   },
   beforeUnmount () {
     // Ensure that we don't have any lingering listeners
+    this.clearOpenTimeout()
+    this.clearCloseTimeout()
     this.cleanupEventListeners()
   },
   computed: {
@@ -110,6 +112,12 @@ export default {
       if (this.checkOpenTimeout) {
         clearTimeout(this.checkOpenTimeout)
         this.checkOpenTimeout = null
+      }
+    },
+    clearCloseTimeout () {
+      if (this.checkCloseTimeout) {
+        clearTimeout(this.checkCloseTimeout)
+        this.checkCloseTimeout = null
       }
     },
     async showDetails () {
@@ -171,7 +179,7 @@ export default {
     closeDetails () {
       this.clearOpenTimeout()
       if (!this.areDetailsShowing) return
-      if (this.checkCloseTimeout) clearTimeout(this.checkCloseTimeout)
+      this.clearCloseTimeout()
       // Delay our close check to allow them time to move into the hovering element
       this.checkCloseTimeout = setTimeout(() => {
         // Don't close if we're still over either the link or the popup
