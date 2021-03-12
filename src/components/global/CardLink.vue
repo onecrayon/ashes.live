@@ -83,9 +83,8 @@ export default {
       // Looks like someone's impatient...
       if (this.loadingDetails) return
       this.showDetails()
-      document.addEventListener('click', this.closeOnClick, true)
-      // iOS Safari doesn't bubble click events, because it is this generation's IE 6. Full details
-      // here: https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html
+      document.addEventListener('click', this.closeOnClick)
+      // iOS Safari doesn't bubble click events, because it is this generation's IE 6.
       document.getElementById('app').addEventListener('click', this.noop)
     },
     closeOnClick (event) {
@@ -100,10 +99,10 @@ export default {
       // Otherwise, just leave things well enough alone
     },
     cleanupEventListeners () {
-      document.removeEventListener('click', this.closeOnClick, true)
+      document.removeEventListener('click', this.closeOnClick)
       document.getElementById('app').removeEventListener('click', this.noop)
     },
-    noop () {},
+    noop () {console.log('noop!')},
     queueShowDetails () {
       // Only queue up if we aren't already loading or viewing things
       if (this.loadingDetails || this.areDetailsShowing || this.checkOpenTimeout) return
