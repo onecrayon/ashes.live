@@ -80,15 +80,7 @@ export default {
         // If we already have the details showing, then do the default behavior
         return this.$router.push(this.cardTarget)
       }
-      // Looks like someone's impatient...
-      if (this.loadingDetails) return
       this.showDetails()
-      document.addEventListener('click', this.closeOnClick)
-      // iOS Safari doesn't bubble click events, because it is this generation's IE 6.
-      if ('ontouchstart' in document.documentElement) {
-        console.log('setting touchstart event')
-        document.getElementById('app').addEventListener('touchstart', this.closeOnClick)
-      }
     },
     closeOnClick (event) {
       // If the click was outside our open element, then close the popper
@@ -101,13 +93,6 @@ export default {
       }
       // Otherwise, just leave things well enough alone
     },
-    cleanupEventListeners () {
-      document.removeEventListener('click', this.closeOnClick)
-      if ('ontouchstart' in document.documentElement) {
-        document.getElementById('app').removeEventListener('touchstart', this.closeOnClick)
-      }
-    },
-    noop () {console.log('noop!')},
     queueShowDetails () {
       // Only queue up if we aren't already loading or viewing things
       if (this.loadingDetails || this.areDetailsShowing || this.checkOpenTimeout) return
@@ -175,11 +160,15 @@ export default {
         ],
       })
       this.areDetailsShowing = true
+      document.addEventListener('click', this.closeOnClick, true)
       // If we don't run an update on the next tick, the popper treats its size as 0 width/height
       // No idea why; even setting an explicit size in the styling doesn't help
       this.$nextTick(() => {
         this.popper.forceUpdate()
       })
+    },
+    cleanupEventListeners () {
+      document.removeEventListener('click', this.closeOnClick, true)
     },
     closeDetails () {
       this.clearOpenTimeout()
@@ -191,6 +180,7 @@ export default {
         if (this.$refs.link.$el.matches(':hover') || this.$refs.popup.matches(':hover')) return
         this.areDetailsShowing = false
         this.popper.destroy()
+        this.cleanupEventListeners()
       }, 100)
     },
   },
