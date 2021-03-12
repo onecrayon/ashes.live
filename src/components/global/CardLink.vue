@@ -85,7 +85,7 @@ export default {
       this.showDetails()
       // iOS doesn't propogate click events for arbitrary elements to the document, so we have to also
       // watch for touchstart
-      ['click', 'touchstart'].forEach(action => document.documentElement.addEventListener(action, this.closeOnClick, true))
+      ['click', 'touchstart'].forEach(action => document.documentElement.addEventListener(action, this.closeOnClick))
     },
     closeOnClick (event) {
       // TEMP: debugging code
@@ -101,7 +101,7 @@ export default {
       // Otherwise, just leave things well enough alone
     },
     cleanupEventListeners () {
-      ['click', 'touchstart'].forEach(action => document.documentElement.removeEventListener(action, this.closeOnClick, true))
+      ['click', 'touchstart'].forEach(action => document.documentElement.removeEventListener(action, this.closeOnClick))
     },
     queueShowDetails () {
       // Only queue up if we aren't already loading or viewing things
