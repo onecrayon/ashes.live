@@ -9,6 +9,7 @@
       @click="linkClick">
       <slot>{{ card.name }}</slot>
     </router-link>
+    <div class="fixed inset-0 z-50" :class="{hidden: !areDetailsShowing}" ref="closeTarget"></div>
     <div ref="popup" class="absolute z-50" @mouseleave="closeDetails">
       <div
         v-if="card.is_legacy && areDetailsShowing"
@@ -83,9 +84,11 @@ export default {
       // Looks like someone's impatient...
       if (this.loadingDetails) return
       this.showDetails()
-      document.addEventListener('click', this.closeOnClick)
-      // iOS Safari doesn't bubble click events, because it is this generation's IE 6.
-      document.getElementById('app').addEventListener('click', this.noop)
+      // iOS Safari doesn't bubble click events, because it is this generation's IE 6. So we're
+      // stuck blanking out the whole darn page just to capture a single click event (iOS Safari
+      // refuses to bubble or capture events up to the root document unless they're buttons, links,
+      // etc.)
+      this.$refs.closeTarget('click', this.closeOnClick)
     },
     closeOnClick (event) {
       // If the click was outside our open element, then close the popper
@@ -99,10 +102,8 @@ export default {
       // Otherwise, just leave things well enough alone
     },
     cleanupEventListeners () {
-      document.removeEventListener('click', this.closeOnClick)
-      document.getElementById('app').removeEventListener('click', this.noop)
+      this.$refs.closeTarget('click', this.closeOnClick)
     },
-    noop () {console.log('noop!')},
     queueShowDetails () {
       // Only queue up if we aren't already loading or viewing things
       if (this.loadingDetails || this.areDetailsShowing || this.checkOpenTimeout) return
