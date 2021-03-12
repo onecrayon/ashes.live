@@ -85,7 +85,10 @@ export default {
       this.showDetails()
       document.addEventListener('click', this.closeOnClick)
       // iOS Safari doesn't bubble click events, because it is this generation's IE 6.
-      document.getElementById('app').addEventListener('click', this.noop)
+      if ('ontouchstart' in document.documentElement) {
+        console.log('setting touchstart event')
+        document.getElementById('app').addEventListener('touchstart', this.closeOnClick)
+      }
     },
     closeOnClick (event) {
       // If the click was outside our open element, then close the popper
@@ -100,7 +103,9 @@ export default {
     },
     cleanupEventListeners () {
       document.removeEventListener('click', this.closeOnClick)
-      document.getElementById('app').removeEventListener('click', this.noop)
+      if ('ontouchstart' in document.documentElement) {
+        document.getElementById('app').removeEventListener('touchstart', this.closeOnClick)
+      }
     },
     noop () {console.log('noop!')},
     queueShowDetails () {
