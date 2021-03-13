@@ -1,7 +1,27 @@
 <template>
   <modal :open="open" @update:open="$emit('update:open', false)">
     <div class="sm:w-96 sm:mx-auto">
-      <h2 class="phg-natural-power">Export as text</h2>
+      <h2 class="phg-natural-power">Share and export</h2>
+
+      <div v-if="deck.direct_share_uuid" class="mb-4">
+        <p v-if="!deck.is_snapshot" class="border-2 border-orange rounded bg-inexhaustible px-4 py-2 mb-2">
+          <strong>Warning:</strong> anyone with this link can see the most recent saved copy of your deck!
+        </p>
+        <p v-else class="mb-2">
+          Use this link to <span v-if="!deck.is_public">privately share your deck or</span> import in TableTop Simulator.
+        </p>
+        <input-button
+          v-model="shareURL"
+          button-title="Copy"
+          button-icon-class="far fa-copy"
+          readonly
+          @focus="selectDirectShare"
+          @click-button="copyDirectShare"
+          ref="directShare"
+        />
+        <hr class="mt-4 mb-4" />
+      </div>
+
       <textarea
         class="border-2 border-gray w-full h-40 rounded text-sm px-2 py-1 mb-4"
         ref="textarea"
@@ -24,8 +44,10 @@
 </template>
 
 <script>
+import { useToast } from 'vue-toastification'
 import { capitalize } from '/src/utils/text.js'
 import { deckToSections } from '/src/utils/decks.js'
+import InputButton from '../shared/InputButton.vue'
 import Modal from '../shared/Modal.vue'
 import Toggle from '../shared/Toggle.vue'
 
@@ -39,10 +61,18 @@ export default {
   },
   emits: ['update:open'],
   components: {
+    InputButton,
     Modal,
     Toggle,
   },
+  setup () {
+    // Expose toasts for use in other portions of this component
+    return { toast: useToast() }
+  },
   computed: {
+    shareURL () {
+      return `https://ashes.live/decks/share/${this.deck.direct_share_uuid}/`
+    },
     showCardCounts: {
       get () {
         return this.$store.state.options.exportShowCardCounts
@@ -142,14 +172,27 @@ export default {
         text.push('Created with https://ashes.live')
       }
       return text.join('').trim()
-    }
+    },
   },
   methods: {
     selectAll () {
       this.$refs.textarea.focus()
       this.$refs.textarea.select()
       this.$refs.textarea.scrollTop = 0
-    }
+    },
+    selectDirectShare () {
+      this.$refs.directShare.focus()
+      this.$refs.directShare.select()
+    },
+    copyDirectShare () {
+      if (navigator && navigator.clipboard) {
+        navigator.clipboard.writeText(this.shareURL)
+      } else {
+        this.selectDirectShare()
+        document.execCommand('copy')
+      }
+      this.toast.success('Share URL copied!')
+    },
   },
 }
 </script>

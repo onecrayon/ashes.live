@@ -40,7 +40,7 @@
 
         <button class="btn py-1 w-full mb-8" @click="showTextExport = true">
           <i class="fas fa-share-square"></i>
-          Export...
+          Share...
         </button>
         <deck-export-modal v-model:open="showTextExport" :deck="deck"></deck-export-modal>
 
