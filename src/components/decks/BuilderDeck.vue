@@ -13,10 +13,12 @@
         <span
           class="inline-block border border-blue-dark px-1 bg-white">Spellboard <strong>{{ phoenixbornCard.spellboard }}</strong></span>
       </div>
+      <!-- Setting a key ensures that this updates when the Phoenixborn card updates (not reactive otherwise, thanks to our setup-based compilation) -->
       <card-codes
         v-if="phoenixbornCard"
         class="border-gray border rounded px-2 py-1 pt-4 m-0"
         :content="phoenixbornCard.text"
+        :key="phoenixbornCard.stub"
         is-card-effect></card-codes>
     </div>
     <ul class="grid gap-2 mb-4" :class="$style.autoFitDiceGrid">
@@ -80,16 +82,10 @@ export default {
     // Standard composite containing { toast, handleResponseError }
     return useHandleResponseError()
   },
-  data: () => ({
-    phoenixbornCard: null,
-  }),
   components: {
     CardCodes,
     DieCounter,
     DeckQtyButtons,
-  },
-  async mounted () {
-    await this.loadPhoenixbornCard()
   },
   computed: {
     allDiceTypes () {
@@ -97,6 +93,15 @@ export default {
     },
     phoenixborn () {
       return this.$store.state.builder.deck.phoenixborn
+    },
+    phoenixbornCard () {
+      if (!this.phoenixborn || !this.phoenixborn.stub) return null
+      // This is a mild abuse of reactivity; basically, we return nothing while the API call executes, then this whole thing gets re-evaluated when it finishes
+      // Unfortunately I haven't found any good way to make this function async/await (because then I'd have to await in templates), and it doesn't fire often, so ¯\_(ツ)_/¯
+      if (!this.$store.state.cards.stubMap[this.phoenixborn.stub]) {
+        this.$store.dispatch('cards/fetchCard', this.phoenixborn)
+      }
+      return this.$store.state.cards.stubMap[this.phoenixborn.stub]
     },
     diceList () {
       let diceArray = new Array(10)
@@ -130,11 +135,6 @@ export default {
   },
   methods: {
     capitalize,
-    async loadPhoenixbornCard () {
-      if (this.phoenixborn) {
-        this.phoenixbornCard = await this.$store.dispatch('cards/fetchCard', this.phoenixborn)
-      }
-    },
     reduceDieCount (dieName) {
       if (!dieName) return
       this.$store.dispatch('builder/reduceDieCount', dieName)
