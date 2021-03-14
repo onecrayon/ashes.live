@@ -7,6 +7,7 @@ import CardListing from './components/cards/CardListing.vue'
 import CardDetails from './components/cards/CardDetails.vue'
 import PublicDecks from './components/decks/PublicDecks.vue'
 import DeckDetails from './components/decks/DeckDetails.vue'
+import SharedDeckDetails from './components/decks/SharedDeckDetails.vue'
 import PlayerAccount from './components/players/PlayerAccount.vue'
 import PlayerDecks from './components/decks/PlayerDecks.vue'
 import PlayerPublicProfile from './components/players/PlayerPublicProfile.vue'
@@ -97,6 +98,12 @@ const router = createRouter({
         showMine: true,
         needsAuth: true,
       },
+    },
+    {
+      path: '/decks/share/:uuid/',
+      name: 'SharedDeckDetails',
+      component: SharedDeckDetails,
+      props: true,
     },
     {
       path: '/decks/:id/',

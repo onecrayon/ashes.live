@@ -71,7 +71,7 @@ export default {
   },
   computed: {
     shareURL () {
-      return `https://ashes.live/decks/share/${this.deck.direct_share_uuid}/`
+      return `${location.protocol}//${location.host}/decks/share/${this.deck.direct_share_uuid}/`
     },
     showCardCounts: {
       get () {
