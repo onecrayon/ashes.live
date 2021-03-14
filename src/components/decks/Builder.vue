@@ -39,7 +39,7 @@
         </button>
         <button class="btn btn-last mb-4" @click="exportDeck">
           <i class="fas fa-share-square"></i>
-          Export...
+          Share...
         </button>
       </div>
     </transition-height>
