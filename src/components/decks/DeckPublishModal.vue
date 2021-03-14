@@ -13,6 +13,7 @@
           class="mb-4"></text-input>
         <text-editor
           label="Description"
+          :placeholder="defaultDescription"
           v-model="description"
           class="mb-4"
           @focus="description = ''"></text-editor>
