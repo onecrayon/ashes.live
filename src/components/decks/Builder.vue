@@ -37,13 +37,18 @@
           <i class="fas fa-eye"></i>
           Preview
         </button>
-        <button class="btn btn-last mb-4" @click="exportDeck">
+        <button class="btn btn-inner" @click="exportDeck">
           <i class="fas fa-share-square"></i>
           Export...
+        </button>
+        <button class="btn btn-last mb-4 btn-green" @click="publishDeck" :disabled="invalidDeck">
+          <i class="far fa-plus-square"></i>
+          Publish...
         </button>
       </div>
     </transition-height>
     <deck-export-modal v-model:open="showExportModal" :deck="$store.state.builder.deck"></deck-export-modal>
+    <deck-publish-modal v-model:open="showPublishModal" :deck="$store.state.builder.deck"></deck-publish-modal>
     <div class="flex mb-2">
       <text-input
         class="flex-grow"
@@ -103,6 +108,7 @@
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import BuilderDeck from './BuilderDeck.vue'
 import DeckExportModal from './DeckExportModal.vue'
+import DeckPublishModal from './DeckPublishModal.vue'
 import LinkAlike from '../shared/LinkAlike.vue'
 import TextEditor from '../shared/TextEditor.vue'
 import TextInput from '../shared/TextInput.vue'
@@ -117,6 +123,7 @@ export default {
   components: {
     BuilderDeck,
     DeckExportModal,
+    DeckPublishModal,
     LinkAlike,
     TextEditor,
     TextInput,
@@ -129,6 +136,7 @@ export default {
     editingDescription: false,
     showActions: false,
     showExportModal: false,
+    showPublishModal: false,
     // Tracks whether the deckbuilder pane is open on small screens
     paneOpen: true,
   }),
@@ -172,7 +180,10 @@ export default {
       if (this.noPhoenixborn) return 'Phoenixborn required'
       if (this.isDirty) return 'Save your deck'
       return 'Deck is saved!'
-    }
+    },
+    invalidDeck () {
+      return this.$store.getters['builder/totalDice'] !== 10 || this.$store.getters['builder/totalCards'] !== 30 || this.$store.state.builder.isDirty || this.$store.state.builder.isSaving
+    },
   },
   methods: {
     choosePhoenixborn () {
@@ -219,6 +230,10 @@ export default {
         // The toggle button is only shown at screen sizes where the pan actually toggles
         document.body.style.overflow = 'hidden'
       }
+    },
+    publishDeck () {
+      this.showPublishModal = true
+      this.showActions = false
     },
   },
   watch: {
