@@ -13,10 +13,8 @@
           class="mb-4"></text-input>
         <text-editor
           label="Description"
-          :placeholder="defaultDescription"
           v-model="description"
-          class="mb-4"
-          @focus="description = ''"></text-editor>
+          class="mb-4"></text-editor>
         <button class="btn btn-blue px-4 py-1 mb-4" :disabled="isSubmittingRequest" @click="publishDeck">Publish deck!</button>
       </form>
     </div>
@@ -67,14 +65,11 @@ export default {
     },
     description: {
       get () {
-        return this._description || ''
+        return this._description !== null ? this._description : this.deck.description
       },
       set (value) {
         this._description = value
       },
-    },
-    defaultDescription () {
-      return this.deck.description
     },
   },
   methods: {
@@ -105,6 +100,16 @@ export default {
       }).finally(() => {
         this.isSubmittingRequest = false
       })
+    },
+  },
+  watch: {
+    open (newValue) {
+      if (!newValue) {
+        this.$nextTick(() => {
+          this._title = null
+          this._description = null
+        })
+      }
     },
   },
 }
