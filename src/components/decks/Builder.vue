@@ -94,7 +94,7 @@
           </button>
         </div>
       </div>
-      <builder-deck class="pb-16 xl:pb-0"></builder-deck>
+      <builder-deck class="pb-16 xl:pb-0" @close-pane="paneOpen = false"></builder-deck>
     </div>
   </section>
 </template>

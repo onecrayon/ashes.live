@@ -35,7 +35,13 @@
     <!-- TODO: do I want to implement the "Clear dice" and "Set filters" buttons? Not sure anyone actually used them... -->
     <hr class="mt-6 mb-4">
 
-    <h3>Cards <span class="text-gray">(<span :class="{'text-red': totalCards > 30}">{{ totalCards }} / 30</span>)</span></h3>
+    <div class="flex mb-4">
+      <h3 class="flex-grow m-0">Cards <span class="text-gray">(<span :class="{'text-red': totalCards > 30}">{{ totalCards }} / 30</span>)</span></h3>
+      <button class="text-lg text-black px-1" title="Add cards..." @click="addCards">
+        <i class="fas fa-plus"></i>
+        <span class="alt-text">Add cards...</span>
+      </button>
+    </div>
 
     <div v-for="section of deckSections" :key="section.title">
       <h4><i :class="typeClass(section.contents[0].type)"></i> {{ section.title }} <span class="text-gray">({{ section.count }})</span></h4>
@@ -87,6 +93,7 @@ export default {
     DieCounter,
     DeckQtyButtons,
   },
+  emits: ['closePane'],
   computed: {
     allDiceTypes () {
       return diceList
@@ -141,6 +148,10 @@ export default {
     },
     typeClass (type) {
       return typeToFontAwesome[type]
+    },
+    addCards () {
+      this.$emit('closePane')
+      this.$router.push('/cards/')
     },
   },
 }
