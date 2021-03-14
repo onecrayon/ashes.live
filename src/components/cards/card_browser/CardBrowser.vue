@@ -170,7 +170,7 @@ export default {
           this[key] = cachedValues[key]
         }
       })
-    }, 750)
+    }, 1250)
     watch(
       // All filter properties that can trigger a new API call
       // DO NOT REORDER THESE! If you do, you must change the index logic in `debouncedFilterCall` above
