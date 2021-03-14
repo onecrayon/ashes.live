@@ -141,6 +141,7 @@ export default {
         return this.deck.title
       },
       set (value) {
+        this.$store.commit('builder/setIsDirty', true)
         this.$store.commit('builder/setTitle', value)
       },
     },
@@ -149,6 +150,7 @@ export default {
         return this.$store.state.builder.deck.description
       },
       set (value) {
+        this.$store.commit('builder/setIsDirty', true)
         this.$store.commit('builder/setDescription', value)
       },
     },
