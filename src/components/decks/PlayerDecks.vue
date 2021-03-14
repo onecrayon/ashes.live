@@ -9,7 +9,7 @@
       </router-link>
     </div>
     <div class="sm:order-1 flex-grow">
-      <p class="mt-0 mb-8"><span class="font-bold text-lg">By default, your decks are completely private.</span> When you are happy with your deck, you can create a public snapshot that will be visible to other players. After a snapshot is published, further edits to the deck will remain private until you create a new public snapshot.</p>
+      <p class="mt-0 mb-8"><span class="font-bold text-lg">By default, your decks are completely private.</span> When you are happy with your deck, you can publish it for other players to see. After a deck is published, further edits to the deck will remain private until you publish it again.</p>
     </div>
   </div>
   <div v-else>

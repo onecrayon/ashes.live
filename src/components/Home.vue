@@ -73,10 +73,18 @@
         </li>
         <li class="flex flex-nowrap">
           <span class="pr-2">
+            <i class="far fa-check-square"></i>
+          </span>
+          <span>
+            Publishing decks and TTS integration
+          </span>
+        </li>
+        <li class="flex flex-nowrap">
+          <span class="pr-2">
             <i class="far fa-square"></i>
           </span>
           <span class="text-gray-dark">
-            Publishing decks; Ashteki and TTS integration
+            Private snapshots; Ashteki integration
           </span>
         </li>
         <li class="flex flex-nowrap">
