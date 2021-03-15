@@ -8,7 +8,7 @@
           <strong>Warning:</strong> anyone with this link can see the most recent saved copy of your deck!
         </p>
         <p v-else class="mb-2">
-          Use this link to <span v-if="!deck.is_public">privately share your deck or</span> import in Tabletop Simulator.
+          Use this link to <span v-if="!deck.is_public">privately share your deck or</span> import in Ashteki or Tabletop Simulator.
         </p>
         <input-button
           v-model="shareURL"

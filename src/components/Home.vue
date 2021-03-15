@@ -76,7 +76,7 @@
             <i class="far fa-check-square"></i>
           </span>
           <span>
-            Publishing decks and TTS integration
+            Publishing decks; TTS &amp; Ashteki integration
           </span>
         </li>
         <li class="flex flex-nowrap">
@@ -84,7 +84,7 @@
             <i class="far fa-square"></i>
           </span>
           <span class="text-gray-dark">
-            Private snapshots; Ashteki integration
+            Private snapshots; deckbuilding improvements
           </span>
         </li>
         <li class="flex flex-nowrap">
