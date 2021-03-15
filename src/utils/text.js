@@ -26,7 +26,7 @@ export function capitalize (value) {
  *
  * @param {string} text
  */
-export function parseFormattedText (text, ensureParagraphs=false, isLegacy=false) {
+export function parseFormattedText (text, ensureParagraphs=false, isLegacy=false, asCardEffect=false) {
   // First make sure that we don't have any HTML in our string; no XSS, thanks
   const unescapedHTML = /[&<"']/g
   const escapeMap = {
@@ -110,6 +110,10 @@ export function parseFormattedText (text, ensureParagraphs=false, isLegacy=false
     .replace(/<\/li>\n+<\/ul>/g, '</li></ul>\n')
     .replace(/<\/li><\/ul>\n+<li>|<\/li>\n+<ul><li>/g, '</li><li>')
     .replace(/<\/li>$/, '</li></ul>')
+  // Insert accessible text, if this is a card effect
+  if (asCardEffect){
+    text = text.replace('<li>', '<li><span class="alt-text">(Inexhaustible effect) </span>')
+  }
   // ~ ordered list item (not typically used for posts, but allows easy conversion between post
   //  syntax and card syntax)
   // Routes through fake element `<oli>` to ensure that we don't screw with unordered lists
@@ -119,8 +123,13 @@ export function parseFormattedText (text, ensureParagraphs=false, isLegacy=false
     .replace(/<\/oli>\n+<oli>/g, '</oli><oli>')
     .replace(/<\/oli>\n+<\/ol>/g, '</oli></ol>\n')
     .replace(/<\/oli><\/ol>\n+<oli>|<\/oli>\n+<ol><oli>/g, '</oli><oli>')
-    .replace(/<(\/?)oli>/g, '<$1li>')
     .replace(/<\/oli>$/, '</oli></ol>')
+  // Add accessible text, if this is a card effect
+  if (asCardEffect) {
+    text = text.replace('<oli>', '<oli><span class="alt-text">(Reaction effect) </span>')
+  }
+  // And convert back to normal <li> elements
+  text = text.replace(/<(\/?)oli>/g, '<$1li>')
   // Fix single linebreaks after a block level element (these break the paragraph logic further down)
   text = text.replace(/(<\/(?:blockquote|ul|ol)>\n)(?=[^\n])/g, '$1\n')
   // lone star: *
@@ -166,13 +175,13 @@ export function parseFormattedText (text, ensureParagraphs=false, isLegacy=false
  * @param {str} text Card effect text to parse
  */
 export function parseEffectText (text, isLegacy=false) {
-  text = parseFormattedText(text, true, isLegacy)
+  text = parseFormattedText(text, true, isLegacy, true)
   // Convert lists to inexhaustible and blue blocks
   text = text.replace('<ul>', '<div class="inexhaustible-effects">')
     .replace('<ol>', '<div class="reaction-effects">')
     .replace(/<\/(?:ul|ol)>/g, '</div>')
     .replace(/<(\/?)li>/g, '<$1p>')
   // Bold ability names (&#39; is apostrophe)
-  text = text.replace(/(?:<p>|^)((?:[a-z 0-9]|&#39;)+:)(?= \w| <i class="phg-)/ig, '<p><strong>$1</strong>')
+  text = text.replace(/(?:<p>|^)(<span class="alt-text">.+?<\/span>)?((?:[a-z 0-9]|&#39;)+:)(?= \w| <i class="phg-)/ig, '<p>$1<strong>$2</strong>')
   return text
 }
