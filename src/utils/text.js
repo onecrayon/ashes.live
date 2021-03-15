@@ -168,8 +168,8 @@ export function parseFormattedText (text, ensureParagraphs=false, isLegacy=false
 export function parseEffectText (text, isLegacy=false) {
   text = parseFormattedText(text, true, isLegacy)
   // Convert lists to inexhaustible and blue blocks
-  text = text.replace('<ul>', '<div class="inexhaustible-effects">')
-    .replace('<ol>', '<div class="reaction-effects">')
+  text = text.replace('<ul>', '<div class="inexhaustible-effects" aria-label="Inexhaustible effects">')
+    .replace('<ol>', '<div class="reaction-effects" aria-label="Reaction effects">')
     .replace(/<\/(?:ul|ol)>/g, '</div>')
     .replace(/<(\/?)li>/g, '<$1p>')
   // Bold ability names (&#39; is apostrophe)
