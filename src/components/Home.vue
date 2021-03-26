@@ -24,11 +24,22 @@
         <li><a href="https://boardgamegeek.com/boardgame/167400/ashes-rise-phoenixborn/forums/0">Ashes on BoardGameGeek</a></li>
       </ul>
 
+      <h3 class="my-4">Media</h3>
+
+      <ul class="list-disc pl-4">
+        <li><a href="https://plaidhatgames.libsyn.com">The PlaidHat Podcast</a></li>
+        <li><a href="https://soundcloud.com/user-489430998/tracks">The Reaction - Ashes Podcast</a></li>
+        <li><a href="https://www.youtube.com/channel/UC245bv3dtpv4j35iHnwmI9g">The Shuffle Bus - YouTube Channel</a> / <a href="https://theshufflebus.com/category/ecg/ashesreborn/">Ashes Blog</a></li>
+        <li><a href="https://www.youtube.com/watch?v=zkc2WmESddk&list=PLSoGmnPUGr7Gu2v8k-eahBYhUMFo2mLfl">Yote Gaming's Ashes YouTube Playlist</a></li>
+        <li><a href="https://www.youtube.com/watch?v=XUufNGvytzw&list=PLy_xfxviuIJfhK4W0ZDPD_7slKpuG3Lg9">ChaosTheory's Ashes YouTube Playlist</a></li>
+      </ul>
+
       <h3 class="font-bold my-4">Files</h3>
 
       <ul class="list-disc pl-4">
         <li><a :href="getCDNURL('/files/ashes-reborn-rules.pdf')">Ashes Reborn Rules</a> <span class="text-gray">(PDF)</span></li>
-        <li>Dice reference cards:
+        <li>
+          Dice reference cards:
           <div class="text-2xl mt-1">
             <a class="die ceremonial phg-ceremonial-power py-1 px-2" :href="getCDNURL('/images/cards/ceremonial-magic.jpg')" target="_blank"><span class="alt-text">Ceremonial Magic</span></a>
             <a class="die charm phg-charm-power py-1 px-2" :href="getCDNURL('/images/cards/charm-magic.jpg')" target="_blank"><span class="alt-text">Charm Magic</span></a>
