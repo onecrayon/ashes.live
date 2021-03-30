@@ -6,16 +6,15 @@
       v-model:search="filterText"
       :is-disabled="isDisabled"></clearable-search>
     <phoenixborn-picker
-      class="flex-auto h-10 mb-4 md:mb-0"
+      class="flex-auto h-10 mb-4 md:pr-4 md:mb-0"
       placeholder="Filter by Phoenixborn..."
       v-model:filter="phoenixborn"
       :is-legacy="showLegacy"
     />
-    <p v-if="!showMine">
-      <toggle v-model="preconOnly"></toggle>
-    </p>
+    <div v-if="!showMine" class="flex flex-col justify-center h-10 mb-4">
+      <toggle v-model="preconOnly"><span class="ml-2 text-sm">Pre-Constructed Only</span></toggle>
+    </div>
   </div>
-
   <deck-table
     :is-disabled="isDisabled"
     :decks="decks"
@@ -220,6 +219,7 @@ export default {
       const filterText = trimmed(this.filterText)
       if (this.phoenixborn) params.phoenixborn = this.phoenixborn
       if (filterText) params.q = filterText
+      if (this.preconOnly) params.show_preconstructed = true
       this.fetchDecks({ options: { params }, failureCallback })
     },
     loadNext () {
