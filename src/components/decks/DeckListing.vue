@@ -12,7 +12,7 @@
       :is-legacy="showLegacy"
     />
     <div v-if="!showMine" class="flex flex-col justify-center h-10 mb-4">
-      <toggle v-model="preconOnly"><span class="ml-2 text-sm">Pre-Constructed Only</span></toggle>
+      <toggle v-model="preconOnly"><span class="ml-2 text-sm">Preconstructed Only</span></toggle>
     </div>
   </div>
   <deck-table
