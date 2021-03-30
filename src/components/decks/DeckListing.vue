@@ -11,6 +11,9 @@
       v-model:filter="phoenixborn"
       :is-legacy="showLegacy"
     />
+    <p v-if="!showMine">
+      <toggle v-model="preconOnly"></toggle>
+    </p>
   </div>
 
   <deck-table
@@ -36,6 +39,7 @@ import ClearableSearch from '../shared/ClearableSearch.vue'
 import { debounce, request } from '/src/utils/index.js'
 import { trimmed } from '/src/utils/text.js'
 import PhoenixbornPicker from '../shared/PhoenixbornPicker.vue'
+import Toggle from '../shared/Toggle.vue'
 
 const DECKS_PER_PAGE = 30;
 
@@ -59,11 +63,13 @@ export default {
     // This is the list of decks currently shown
     decks: null,
     deckCount: 0,
+    preconOnly: false
   }),
   components: {
     DeckTable,
     ClearableSearch,
     PhoenixbornPicker,
+    Toggle
   },
   computed: {
     showLegacy () {
@@ -140,6 +146,15 @@ export default {
         this.filterList(() => {})
       }
     )
+    watch(
+      [
+        () => this.preconOnly,
+      ],
+      (curProps, prevProps) => {
+        this.offset = 0
+        this.filterList(() => {})
+      }
+    )
     // Trigger initial listing load
     this.filterList()
   },
@@ -148,6 +163,7 @@ export default {
       this.filterText = ''
       this.phoenixborn = null
       this.offset = 0
+      this.preconOnly = false
     },
     fetchDecks ({endpoint = null, options = {}, failureCallback = null} = {}) {
       if (!endpoint) {
