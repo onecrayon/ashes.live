@@ -62,13 +62,13 @@ export default {
     // This is the list of decks currently shown
     decks: null,
     deckCount: 0,
-    preconOnly: false
+    preconOnly: false,
   }),
   components: {
     DeckTable,
     ClearableSearch,
     PhoenixbornPicker,
-    Toggle
+    Toggle,
   },
   computed: {
     showLegacy () {
@@ -139,15 +139,7 @@ export default {
     watch(
       [
         () => this.phoenixborn,
-      ],
-      (curProps, prevProps) => {
-        this.offset = 0
-        this.filterList(() => {})
-      }
-    )
-    watch(
-      [
-        () => this.preconOnly,
+        () => this.preconOnly
       ],
       (curProps, prevProps) => {
         this.offset = 0
