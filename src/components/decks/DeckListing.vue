@@ -6,13 +6,15 @@
       v-model:search="filterText"
       :is-disabled="isDisabled"></clearable-search>
     <phoenixborn-picker
-      class="flex-auto h-10 mb-4 md:mb-0"
+      class="flex-auto h-10 mb-4 md:pr-4 md:mb-0"
       placeholder="Filter by Phoenixborn..."
       v-model:filter="phoenixborn"
       :is-legacy="showLegacy"
     />
+    <div v-if="!showMine" class="flex flex-col justify-center h-10 mb-4">
+      <toggle v-model="preconOnly"><span class="ml-2 text-sm">Preconstructed Only</span></toggle>
+    </div>
   </div>
-
   <deck-table
     :is-disabled="isDisabled"
     :decks="decks"
@@ -36,6 +38,7 @@ import ClearableSearch from '../shared/ClearableSearch.vue'
 import { debounce, request } from '/src/utils/index.js'
 import { trimmed } from '/src/utils/text.js'
 import PhoenixbornPicker from '../shared/PhoenixbornPicker.vue'
+import Toggle from '../shared/Toggle.vue'
 
 const DECKS_PER_PAGE = 30;
 
@@ -59,11 +62,13 @@ export default {
     // This is the list of decks currently shown
     decks: null,
     deckCount: 0,
+    preconOnly: false,
   }),
   components: {
     DeckTable,
     ClearableSearch,
     PhoenixbornPicker,
+    Toggle,
   },
   computed: {
     showLegacy () {
@@ -134,6 +139,7 @@ export default {
     watch(
       [
         () => this.phoenixborn,
+        () => this.preconOnly
       ],
       (curProps, prevProps) => {
         this.offset = 0
@@ -148,6 +154,7 @@ export default {
       this.filterText = ''
       this.phoenixborn = null
       this.offset = 0
+      this.preconOnly = false
     },
     fetchDecks ({endpoint = null, options = {}, failureCallback = null} = {}) {
       if (!endpoint) {
@@ -204,6 +211,7 @@ export default {
       const filterText = trimmed(this.filterText)
       if (this.phoenixborn) params.phoenixborn = this.phoenixborn
       if (filterText) params.q = filterText
+      if (this.preconOnly) params.show_preconstructed = true
       this.fetchDecks({ options: { params }, failureCallback })
     },
     loadNext () {
