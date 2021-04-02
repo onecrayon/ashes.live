@@ -4,7 +4,7 @@
         class="w-6 h-6 text-sm sm:w-8 sm:h-8 sm:text-xl die"
         :class="[die ? die : 'basic', 'phg-' + (die ? die + '-power' : 'basic-magic')]"
         @click="reduceDieCount(die)">
-        <span class="alt-text">{{ die ? `${capitalize(die.name)} Die` : '(missing die)' }}</span>
+        <span class="alt-text">{{ die ? `${capitalize(die)} Die` : '(missing die)' }}</span>
     </li>
   </ul>
 </template>
