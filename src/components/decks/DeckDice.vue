@@ -1,5 +1,5 @@
 <template>
-  <ul class="flex m-0 mb-2 sm:mb-0">
+  <ul class="flex m-0 mb-2 sm:mb-0" :aria-label="legibleDiceCount">
     <li v-for="(die, index) of diceList" :key="index"
         class="w-6 h-6 text-sm sm:w-8 sm:h-8 sm:text-xl die"
         :class="[die ? die : 'basic', 'phg-' + (die ? die + '-power' : 'basic-magic')]"
@@ -32,6 +32,17 @@ export default {
         nextIndex++
       }
       return diceArray
+    },
+    legibleDiceCount () {
+      const diceValues = []
+      for (const dieObject of this.dice) {
+        diceValues.push(`${dieObject.count} ${capitalize(dieObject.name)} dice`)
+      }
+      if (diceValues.length) {
+        return diceValues.join('; ')
+      } else {
+        return "(No dice assigned)"
+      }
     },
   },
   methods: {
