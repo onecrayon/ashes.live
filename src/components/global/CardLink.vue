@@ -5,8 +5,7 @@
       ref="link"
       :to="cardTarget"
       @mouseover="queueShowDetails"
-      @mouseleave="closeDetails"
-      @click="linkClick">
+      @mouseleave="closeDetails">
       <slot>{{ card.name }}</slot>
     </router-link>
     <div ref="popup" class="absolute z-50" @mouseleave="closeDetails">
@@ -35,8 +34,11 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex'
 import { createPopper } from '@popperjs/core'
 import Card from '../shared/Card.vue'
+
+const { mapState, mapMutations } = createNamespacedHelpers('cardDetails');
 
 export default {
   name: 'CardLink',
@@ -47,20 +49,25 @@ export default {
   },
   data () {
     return {
-      areDetailsShowing: false,
       loadingDetails: false,
       details: null,
-      checkOpenTimeout: null,
       checkCloseTimeout: null,
+      linkId: null,
     }
+  },
+   beforeMount () {
+     this.linkId = `${this.card.stub}-${Math.random()}`
   },
   beforeUnmount () {
     // Ensure that we don't have any lingering listeners
-    this.clearOpenTimeout()
     this.clearCloseTimeout()
     this.cleanupEventListeners()
   },
   computed: {
+    ...mapState(['displayedId']),
+    areDetailsShowing() {
+      return this.linkId === this.displayedId;
+    },
     cardTarget () {
       const routeName = !this.card.is_legacy ? 'CardDetails' : 'CardDetailsLegacy'
       return {
@@ -73,21 +80,13 @@ export default {
     },
   },
   methods: {
-    linkClick (event) {
-      event.preventDefault()
-      event.stopPropagation()
-      if (this.areDetailsShowing) {
-        // If we already have the details showing, then do the default behavior
-        return this.$router.push(this.cardTarget)
-      }
-      this.showDetails()
-    },
+    ...mapMutations(['setDisplayedId', 'unsetDisplayedId']),
     closeOnClick (event) {
       // If the click was outside our open element, then close the popper
       if (!this.$refs.link.$el.contains(event.target) && !this.$refs.popup.contains(event.target)) {
         event.stopPropagation()
         event.preventDefault()
-        this.areDetailsShowing = false
+        this.unsetDisplayedId({ id: this.linkId })
         this.popper.destroy()
         this.cleanupEventListeners()
       }
@@ -95,14 +94,8 @@ export default {
     },
     queueShowDetails () {
       // Only queue up if we aren't already loading or viewing things
-      if (this.loadingDetails || this.areDetailsShowing || this.checkOpenTimeout) return
-      this.checkOpenTimeout = setTimeout(this.showDetails, 200)
-    },
-    clearOpenTimeout () {
-      if (this.checkOpenTimeout) {
-        clearTimeout(this.checkOpenTimeout)
-        this.checkOpenTimeout = null
-      }
+      if (this.loadingDetails || this.areDetailsShowing) return
+      this.showDetails()
     },
     clearCloseTimeout () {
       if (this.checkCloseTimeout) {
@@ -111,7 +104,6 @@ export default {
       }
     },
     async showDetails () {
-      this.clearOpenTimeout()
       if (this.loadingDetails) return
       this.loadingDetails = true
       // If we have more than three keys, that means we have a full details object so we can just render it
@@ -159,7 +151,7 @@ export default {
           },
         ],
       })
-      this.areDetailsShowing = true
+      this.setDisplayedId({ id: this.linkId });
       document.addEventListener('click', this.closeOnClick, true)
       // If we don't run an update on the next tick, the popper treats its size as 0 width/height
       // No idea why; even setting an explicit size in the styling doesn't help
@@ -171,15 +163,14 @@ export default {
       document.removeEventListener('click', this.closeOnClick, true)
     },
     closeDetails () {
-      this.clearOpenTimeout()
       if (!this.areDetailsShowing) return
       this.clearCloseTimeout()
       // Delay our close check to allow them time to move into the hovering element
       this.checkCloseTimeout = setTimeout(() => {
         // Don't close if we're still over either the link or the popup
         if (this.$refs.link.$el.matches(':hover') || this.$refs.popup.matches(':hover')) return
-        this.areDetailsShowing = false
         this.popper.destroy()
+        this.unsetDisplayedId({ id: this.linkId })
         this.cleanupEventListeners()
       }, 100)
     },

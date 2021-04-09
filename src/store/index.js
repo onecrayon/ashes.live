@@ -1,6 +1,7 @@
 import { createStore, createLogger } from 'vuex'
 import builder from './builder.js'
 import cards from './cards.js'
+import cardDetails from './cardDetails.js'
 import player from './player.js'
 import options from './options.js'
 
@@ -12,6 +13,7 @@ export default createStore({
     cards,
     player,
     options,
+    cardDetails
   },
   strict: debug,
   plugins: debug ? [createLogger()] : [],
