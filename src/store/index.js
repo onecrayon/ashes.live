@@ -13,7 +13,7 @@ export default createStore({
     cards,
     player,
     options,
-    cardDetails
+    cardDetails,
   },
   strict: debug,
   plugins: debug ? [createLogger()] : [],

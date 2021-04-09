@@ -38,7 +38,7 @@ import { createNamespacedHelpers } from 'vuex'
 import { createPopper } from '@popperjs/core'
 import Card from '../shared/Card.vue'
 
-const { mapState, mapMutations } = createNamespacedHelpers('cardDetails');
+const { mapState, mapMutations } = createNamespacedHelpers('cardDetails')
 
 export default {
   name: 'CardLink',
@@ -151,7 +151,7 @@ export default {
           },
         ],
       })
-      this.setDisplayedId({ id: this.linkId });
+      this.setDisplayedId({ id: this.linkId })
       document.addEventListener('click', this.closeOnClick, true)
       // If we don't run an update on the next tick, the popper treats its size as 0 width/height
       // No idea why; even setting an explicit size in the styling doesn't help
