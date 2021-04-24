@@ -1,5 +1,5 @@
 <template>
-  <h1 class="phg-time-power">Project Phoenix</h1>
+  <h1 class="phg-time-power-alt">Project Phoenix</h1>
 
   <p class="text-lg">Project Phoenix was a fan-driven initiative to develop Time magic expansions for the legacy version of Ashes: Rise of the Phoenixborn.</p>
 
@@ -7,7 +7,7 @@
 
   <p>Prior to the Reborn announcement in August 2020, Project Phoenix released four fan-made Time magic decks, a custom Time dice power, and Raven Rules (a complete replacement of the legacy FAQ that eventually informed some of the changes in Ashes Reborn). Although these decks are no longer legal, you can still download them if you wish to try some Legacy Ashes with that Project Phoenix flare.</p>
 
-  <h2 class="phg-time-class">Available files</h2>
+  <h2 class="phg-time-class-alt">Available files</h2>
 
   <ul class="list-disc pl-4">
     <li><a :href="getCDNURL('/legacy/files/pnp/time-dice-reference.png')">Time dice power reference</a></li>
