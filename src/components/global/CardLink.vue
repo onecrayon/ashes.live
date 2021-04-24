@@ -4,6 +4,7 @@
       class="font-bold text-black"
       ref="link"
       :to="cardTarget"
+      @click="linkClick"
       @mouseover="queueShowDetails"
       @mouseleave="closeDetails">
       <slot>{{ card.name }}</slot>
@@ -81,10 +82,17 @@ export default {
   },
   methods: {
     ...mapMutations(['setDisplayedId', 'unsetDisplayedId']),
+    linkClick (event) {
+      if (!this.areDetailsShowing) {
+        event.preventDefault()
+        event.stopPropagation()
+        return this.showDetails()
+      }
+      return this.$router.push(this.cardTarget)
+    },
     closeOnClick (event) {
       // If the click was outside our open element, then close the popper
       if (!this.$refs.link.$el.contains(event.target) && !this.$refs.popup.contains(event.target)) {
-        event.stopPropagation()
         event.preventDefault()
         this.unsetDisplayedId({ id: this.linkId })
         this.popper.destroy()
