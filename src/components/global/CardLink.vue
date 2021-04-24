@@ -1,14 +1,15 @@
 <template>
   <span>
-    <router-link
-      class="font-bold text-black"
-      ref="link"
-      :to="cardTarget"
-      @click="linkClick"
-      @mouseover="queueShowDetails"
-      @mouseleave="closeDetails">
+    <span @click.capture="linkClick">
+      <router-link
+        class="font-bold text-black"
+        ref="link"
+        :to="cardTarget"
+        @mouseover="queueShowDetails"
+        @mouseleave="closeDetails">
       <slot>{{ card.name }}</slot>
-    </router-link>
+      </router-link>
+    </span>
     <div ref="popup" class="absolute z-50" @mouseleave="closeDetails">
       <div
         v-if="card.is_legacy && areDetailsShowing"
@@ -85,10 +86,8 @@ export default {
     linkClick (event) {
       if (!this.areDetailsShowing) {
         event.preventDefault()
-        event.stopPropagation()
         return this.showDetails()
       }
-      return this.$router.push(this.cardTarget)
     },
     closeOnClick (event) {
       // If the click was outside our open element, then close the popper
