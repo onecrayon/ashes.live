@@ -122,7 +122,7 @@ export default {
       }
     },
     async showDetails (delay = 0) {
-      this.setDisplayedId({ id: this.linkId })
+      setTimeout(this.setDisplayedId({ id: this.linkId }))
       if (this.loadingDetails) return
       this.loadingDetails = true
       this.awaitingDelay = true
@@ -186,6 +186,7 @@ export default {
     closeDetails () {
       if (!this.isCurrentTarget) return
       this.clearCloseTimeout()
+      this.clearOpenTimeout()
       // Delay our close check to allow them time to move into the hovering element
       this.checkCloseTimeout = setTimeout(() => {
         // Don't close if we're still over either the link or the popup
