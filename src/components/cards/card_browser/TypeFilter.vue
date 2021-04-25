@@ -1,27 +1,44 @@
 <template>
   <div class="flex flex-nowrap" role="group" aria-label="Filter by card type">
+    <span class="pr-4">
+      <button
+        v-for="(curType, index) of cardTypes" :key="curType[1]"
+        class="btn py-1 px-2 font-normal text-sm"
+        :class="{
+          'btn-first': index === 0,
+          'btn-inner': index !== 0 && index < cardTypes.length - 1,
+          'btn-last': index === cardTypes.length - 1,
+          active: isTypeActive(curType[1]),
+        }"
+        :disabled="isDisabled"
+        :title="curType[0]"
+        @click="toggleType(curType[1])">
+          <filter-text :type="curType[0]" />
+        <span v-if="isTypeActive(curType[1])" class="alt-text absolute"> (active)</span>
+      </button>
+    </span>
     <button
-      v-for="(curType, index) of cardTypes" :key="curType[1]"
-      class="btn py-1 px-2 font-normal text-sm"
-      :class="{
-        'btn-first': index === 0,
-        'btn-inner': index !== 0 && index < cardTypes.length - 1,
-        'btn-last': index === cardTypes.length - 1,
-        active: isTypeActive(curType[1]),
-      }"
       :disabled="isDisabled"
-      :title="curType[0]"
-      @click="toggleType(curType[1])">
-      <i :class="typeIcon(curType[0])"></i> <span class="hidden xl:inline">{{ curType[0].split(' ')[0] }}</span>
-      <span v-if="isTypeActive(curType[1])" class="alt-text absolute"> (active)</span>
+      @click="setOnlySummoners(false)"
+      :class="{ active: !onlySummoners }"
+      class="btn py-1 px-2 font-normal text-sm btn-first">
+      All
+    </button>
+    <button
+      :disabled="isDisabled"
+      @click="setOnlySummoners(true)"
+      :class="{ active: onlySummoners }"
+      class="btn py-1 px-2 font-normal text-sm btn-last">
+      <filter-text type="Summon" text="Summons"/>
     </button>
   </div>
 </template>
 
 <script>
-import { typeToFontAwesome } from '/src/constants.js'
+import FilterText from './FilterText.vue';
 
 export default {
+  components: { FilterText },
   name: 'TypeFilter',
   props: {
     isDisabled: Boolean,
@@ -40,10 +57,12 @@ export default {
         ['Reaction Spell', 'reaction_spell'],
         ['Alteration Spell', 'alteration_spell'],
         ['Ready Spell', 'ready_spell'],
-        ['Summon', 'summon'],
         ['Phoenixborn', 'phoenixborn'],
         ['Conjuration', 'conjurations'],
       ]
+    },
+    onlySummoners () {
+      return this.isTypeActive('summon');
     }
   },
   methods: {
@@ -65,6 +84,10 @@ export default {
         this.$emit('update:filterList', Array.from(types))
       }
     },
+    setOnlySummoners (value) {
+      if (value === this.onlySummoners) return;
+      return this.toggleType('summon');
+    }
   },
 }
 </script>
