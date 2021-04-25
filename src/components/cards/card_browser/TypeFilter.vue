@@ -29,7 +29,7 @@
       @click="setOnlySummoners(true)"
       :class="{ active: onlySummoners }"
       class="btn py-1 px-2 font-normal text-sm btn-last">
-      <filter-text type="Summon" text="Only Summoning Cards"/>
+      <filter-text type="Summon" text="Summons"/>
     </button>
   </div>
 </template>
