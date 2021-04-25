@@ -51,9 +51,11 @@ export default {
   },
   data () {
     return {
+      awaitingDelay: false,
       loadingDetails: false,
       details: null,
       checkCloseTimeout: null,
+      checkOpenTimeout: null,
       linkId: null,
     }
   },
@@ -68,7 +70,10 @@ export default {
   computed: {
     ...mapState(['displayedId']),
     areDetailsShowing() {
-      return this.linkId === this.displayedId;
+       return this.isCurrentTarget && !this.awaitingDelay;
+    },
+    isCurrentTarget() {
+      return this.linkId === this.displayedId
     },
     cardTarget () {
       const routeName = !this.card.is_legacy ? 'CardDetails' : 'CardDetailsLegacy'
@@ -84,7 +89,7 @@ export default {
   methods: {
     ...mapMutations(['setDisplayedId', 'unsetDisplayedId']),
     linkClick (event) {
-      if (!this.areDetailsShowing) {
+      if (!this.isCurrentTarget) {
         event.preventDefault()
         return this.showDetails()
       }
@@ -102,7 +107,7 @@ export default {
     queueShowDetails () {
       // Only queue up if we aren't already loading or viewing things
       if (this.loadingDetails || this.areDetailsShowing) return
-      this.showDetails()
+      this.showDetails(1000)
     },
     clearCloseTimeout () {
       if (this.checkCloseTimeout) {
@@ -110,9 +115,19 @@ export default {
         this.checkCloseTimeout = null
       }
     },
-    async showDetails () {
+    clearOpenTimeout () {
+      if (this.checkOpenTimeout) {
+        clearTimeout(this.checkOpenTimeout)
+        this.checkOpenTimeout = null
+      }
+    },
+    async showDetails (delay = 0) {
+      this.setDisplayedId({ id: this.linkId })
       if (this.loadingDetails) return
       this.loadingDetails = true
+      this.awaitingDelay = true
+      this.checkOpenTimeout = setTimeout(() => this.awaitingDelay = false, delay)
+
       // If we have more than three keys, that means we have a full details object so we can just render it
       // (Looking for only two keys could fail for legacy cards)
       if (this.card.is_legacy || this.card.text) {
@@ -158,7 +173,6 @@ export default {
           },
         ],
       })
-      this.setDisplayedId({ id: this.linkId })
       document.addEventListener('click', this.closeOnClick, true)
       // If we don't run an update on the next tick, the popper treats its size as 0 width/height
       // No idea why; even setting an explicit size in the styling doesn't help
@@ -170,7 +184,7 @@ export default {
       document.removeEventListener('click', this.closeOnClick, true)
     },
     closeDetails () {
-      if (!this.areDetailsShowing) return
+      if (!this.isCurrentTarget) return
       this.clearCloseTimeout()
       // Delay our close check to allow them time to move into the hovering element
       this.checkCloseTimeout = setTimeout(() => {
