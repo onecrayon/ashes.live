@@ -122,7 +122,7 @@ export default {
       }
     },
     async showDetails (delay = 0) {
-      setTimeout(this.setDisplayedId({ id: this.linkId }))
+      setTimeout(this.setDisplayedId({ id: this.linkId }), 5)
       if (this.loadingDetails) return
       this.loadingDetails = true
       this.awaitingDelay = true
