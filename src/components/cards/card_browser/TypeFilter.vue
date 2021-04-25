@@ -19,10 +19,17 @@
     </span>
     <button
       :disabled="isDisabled"
-      @click="toggleType('summon')"
-      :class="{ active: isTypeActive('summon') }"
-      class="btn py-1 px-2 font-normal text-sm">
-      <filter-text type="Summon" text="Summons" />
+      @click="setOnlySummoners(false)"
+      :class="{ active: !onlySummoners }"
+      class="btn py-1 px-2 font-normal text-sm btn-first">
+      All
+    </button>
+    <button
+      :disabled="isDisabled"
+      @click="setOnlySummoners(true)"
+      :class="{ active: onlySummoners }"
+      class="btn py-1 px-2 font-normal text-sm btn-last">
+      <filter-text type="Summon" text="Only Summoning Cards"/>
     </button>
   </div>
 </template>
@@ -54,6 +61,9 @@ export default {
         ['Conjuration', 'conjurations'],
       ]
     },
+    onlySummoners () {
+      return this.isTypeActive('summon');
+    }
   },
   methods: {
     typeIcon (targetType) {
@@ -74,6 +84,10 @@ export default {
         this.$emit('update:filterList', Array.from(types))
       }
     },
+    setOnlySummoners (value) {
+      if (value === this.onlySummoners) return;
+      return this.toggleType('summon');
+    }
   },
 }
 </script>
