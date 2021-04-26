@@ -24,6 +24,17 @@
         <li><a href="https://boardgamegeek.com/boardgame/167400/ashes-rise-phoenixborn/forums/0">Ashes on BoardGameGeek</a></li>
       </ul>
 
+       <h3 class="font-bold my-4">Media</h3>
+
+      <ul class="list-disc pl-4">
+        <li>The Shuffle Bus: <a href="https://www.youtube.com/channel/UC245bv3dtpv4j35iHnwmI9g">YouTube</a> &amp; <a href="https://theshufflebus.com/category/ecg/ashesreborn/">Ashes Blog</a></li>
+        <li><a href="https://www.youtube.com/watch?v=zvvX1HQgwNU&list=PLmHifZPFC_JtixhVcpyDwXv4y6vKN0BUr">Team Covenant</a> <span class="text-gray">(YouTube)</span></li>
+        <li><a href="https://www.youtube.com/watch?v=zkc2WmESddk&list=PLSoGmnPUGr7Gu2v8k-eahBYhUMFo2mLfl">Yote's Gaming</a> <span class="text-gray">(YouTube)</span></li>
+        <li><a href="https://www.youtube.com/watch?v=XUufNGvytzw&list=PLy_xfxviuIJfhK4W0ZDPD_7slKpuG3Lg9">ChaosTheory's Ashes Games</a> <span class="text-gray">(YouTube)</span></li>
+        <li><a href="https://www.plaidhatgames.com/plaid-hat-podcast/">The Plaid Hat Podcast</a></li>
+        <li><a href="https://soundcloud.com/user-489430998/tracks">The Reaction - Ashes Podcast</a></li>
+      </ul>
+
       <h3 class="font-bold my-4">Files</h3>
 
       <ul class="list-disc pl-4">
