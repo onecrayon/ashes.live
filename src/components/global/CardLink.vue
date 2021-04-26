@@ -196,11 +196,11 @@ export default {
         ],
       })
       document.addEventListener('click', this.closeOnClick, true)
+      this.setDisplayedId({ id: this.linkId })
       // If we don't run an update on the next tick, the popper treats its size as 0 width/height
       // No idea why; even setting an explicit size in the styling doesn't help
       this.$nextTick(() => {
         this.popper.forceUpdate()
-        this.setDisplayedId({ id: this.linkId })
       })
     },
     cleanupEventListeners () {
