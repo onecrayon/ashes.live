@@ -1,17 +1,18 @@
 <template>
   <span>
-    <router-link
-      class="font-bold text-black"
-      ref="link"
-      :to="cardTarget"
-      @mouseover="queueShowDetails"
-      @mouseleave="closeDetails"
-      @click="linkClick">
+    <span @click.capture="linkClick">
+      <router-link
+        class="font-bold text-black"
+        ref="link"
+        :to="cardTarget"
+        @pointerover="queueShowDetails"
+        @pointerleave="closeDetails">
       <slot>{{ card.name }}</slot>
-    </router-link>
+      </router-link>
+    </span>
     <div ref="popup" class="absolute z-50" @mouseleave="closeDetails">
       <div
-        v-if="card.is_legacy && areDetailsShowing"
+        v-if="card.is_legacy && isCurrentTarget"
         class="border-8 border-gray-light bg-gray-light text-gray rounded-lg shadow relative"
         ref="popup">
         <i
@@ -25,7 +26,7 @@
           :alt="card.name">
       </div>
       <card
-        v-else-if="areDetailsShowing"
+        v-else-if="isCurrentTarget"
         ref="popup"
         class="text-left text-black"
         :card="details"
@@ -35,8 +36,11 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex'
 import { createPopper } from '@popperjs/core'
 import Card from '../shared/Card.vue'
+
+const { mapState, mapMutations } = createNamespacedHelpers('cardDetails')
 
 export default {
   name: 'CardLink',
@@ -47,12 +51,16 @@ export default {
   },
   data () {
     return {
-      areDetailsShowing: false,
       loadingDetails: false,
       details: null,
-      checkOpenTimeout: null,
       checkCloseTimeout: null,
+      checkOpenTimeout: null,
+      linkId: null,
+      pointerType: 'mouse',
     }
+  },
+  beforeMount () {
+     this.linkId = `${this.card.stub}-${Math.random()}`
   },
   beforeUnmount () {
     // Ensure that we don't have any lingering listeners
@@ -61,6 +69,10 @@ export default {
     this.cleanupEventListeners()
   },
   computed: {
+    ...mapState(['displayedId']),
+    isCurrentTarget() {
+      return this.linkId === this.displayedId
+    },
     cardTarget () {
       const routeName = !this.card.is_legacy ? 'CardDetails' : 'CardDetailsLegacy'
       return {
@@ -71,32 +83,56 @@ export default {
     legacyCardURL () {
       return `${import.meta.env.VITE_CDN_URL}/legacy/images/cards/${this.card.stub}.png`
     },
+    useHoverLogic () {
+      return this.pointerType === 'mouse'
+    }
   },
   methods: {
+    ...mapMutations(['setDisplayedId', 'unsetDisplayedId']),
+    /*
+    We have two different scenarios we are trying to target here:
+
+    1. User is using a mouse. In this case, we want a hover to cause the details to open (on a
+       slight delay to ensure mousing around the page doesn't trigger needless HTTP requests), but
+       clicks should always immediately execute the native router link behavior.
+    2. User is using a touch device (finger or stylus). In this case, we want the first touch to
+       open the details popup, and the second to execute the default link behavior.
+
+    To do this, we're currently using the following sequencing:
+
+    * `pointerover`: this PointerEvent includes the type of device that is being used (e.g. "mouse"
+      vs. "touch"). When this occurs, we store the pointer type and if it's a mouse proceed to queue
+      up a potential detail open since they are hovering. This event fires first, even if it was
+      triggered by a tap.
+    * `click`: once they click the link, we can check what type of interaction we are doing (hover
+      or otherwise), and behave accordingly.
+    * `pointerleave`: for consistency we're watching for the mouse to exit on pointerleave, but this
+      could equally well be mouseleave.
+    */
+    queueShowDetails (event) {
+      // Save our pointer mode so that we can check if we need to open the details popup on click
+      // (or just let the click event happen normally)
+      this.pointerType = event.pointerType
+      // Only queue up our details on a delay if we are using a device that hovers and aren't already loading or viewing things
+      if (!this.useHoverLogic || this.loadingDetails || this.isCurrentTarget || this.checkOpenTimeout) return
+      this.checkOpenTimeout = setTimeout(this.showDetails, 200)
+    },
     linkClick (event) {
-      event.preventDefault()
-      event.stopPropagation()
-      if (this.areDetailsShowing) {
-        // If we already have the details showing, then do the default behavior
-        return this.$router.push(this.cardTarget)
+      // We only want to cancel the default link behavior if we are handling touch input (thus don't have hover logic) and do not already have the details open
+      if (!this.useHoverLogic && !this.isCurrentTarget) {
+        event.preventDefault()
+        return this.showDetails()
       }
-      this.showDetails()
     },
     closeOnClick (event) {
       // If the click was outside our open element, then close the popper
       if (!this.$refs.link.$el.contains(event.target) && !this.$refs.popup.contains(event.target)) {
-        event.stopPropagation()
         event.preventDefault()
-        this.areDetailsShowing = false
+        this.unsetDisplayedId({ id: this.linkId })
         this.popper.destroy()
         this.cleanupEventListeners()
       }
       // Otherwise, just leave things well enough alone
-    },
-    queueShowDetails () {
-      // Only queue up if we aren't already loading or viewing things
-      if (this.loadingDetails || this.areDetailsShowing || this.checkOpenTimeout) return
-      this.checkOpenTimeout = setTimeout(this.showDetails, 200)
     },
     clearOpenTimeout () {
       if (this.checkOpenTimeout) {
@@ -111,9 +147,9 @@ export default {
       }
     },
     async showDetails () {
-      this.clearOpenTimeout()
       if (this.loadingDetails) return
       this.loadingDetails = true
+
       // If we have more than three keys, that means we have a full details object so we can just render it
       // (Looking for only two keys could fail for legacy cards)
       if (this.card.is_legacy || this.card.text) {
@@ -159,8 +195,8 @@ export default {
           },
         ],
       })
-      this.areDetailsShowing = true
       document.addEventListener('click', this.closeOnClick, true)
+      this.setDisplayedId({ id: this.linkId })
       // If we don't run an update on the next tick, the popper treats its size as 0 width/height
       // No idea why; even setting an explicit size in the styling doesn't help
       this.$nextTick(() => {
@@ -172,14 +208,14 @@ export default {
     },
     closeDetails () {
       this.clearOpenTimeout()
-      if (!this.areDetailsShowing) return
+      if (!this.isCurrentTarget) return
       this.clearCloseTimeout()
       // Delay our close check to allow them time to move into the hovering element
       this.checkCloseTimeout = setTimeout(() => {
         // Don't close if we're still over either the link or the popup
         if (this.$refs.link.$el.matches(':hover') || this.$refs.popup.matches(':hover')) return
-        this.areDetailsShowing = false
         this.popper.destroy()
+        this.unsetDisplayedId({ id: this.linkId })
         this.cleanupEventListeners()
       }, 100)
     },
