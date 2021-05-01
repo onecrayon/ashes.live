@@ -64,14 +64,12 @@ export default {
   },
   beforeUnmount () {
     // Ensure that we don't have any lingering listeners
-    this.clearOpenTimeout()
-    this.clearCloseTimeout()
     this.cleanupEventListeners()
   },
   computed: {
-    ...mapState(['displayedId']),
+    ...mapState(['displayedIds']),
     isCurrentTarget() {
-      return this.linkId === this.displayedId
+      return this.displayedIds.includes(this.linkId);
     },
     cardTarget () {
       const routeName = !this.card.is_legacy ? 'CardDetails' : 'CardDetailsLegacy'
@@ -88,7 +86,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setDisplayedId', 'unsetDisplayedId']),
+    ...mapMutations(['addDisplayedId', 'clearSelfAndDescendents']),
     /*
     We have two different scenarios we are trying to target here:
 
@@ -128,7 +126,7 @@ export default {
       // If the click was outside our open element, then close the popper
       if (!this.$refs.link.$el.contains(event.target) && !this.$refs.popup.contains(event.target)) {
         event.preventDefault()
-        this.unsetDisplayedId({ id: this.linkId })
+        this.clearSelfAndDescendents({ id: this.linkId });
         this.popper.destroy()
         this.cleanupEventListeners()
       }
@@ -196,7 +194,7 @@ export default {
         ],
       })
       document.addEventListener('click', this.closeOnClick, true)
-      this.setDisplayedId({ id: this.linkId })
+      this.addDisplayedId({ id: this.linkId })
       // If we don't run an update on the next tick, the popper treats its size as 0 width/height
       // No idea why; even setting an explicit size in the styling doesn't help
       this.$nextTick(() => {
@@ -205,6 +203,8 @@ export default {
     },
     cleanupEventListeners () {
       document.removeEventListener('click', this.closeOnClick, true)
+      this.clearCloseTimeout();
+      this.clearOpenTimeout();
     },
     closeDetails () {
       this.clearOpenTimeout()
@@ -215,7 +215,7 @@ export default {
         // Don't close if we're still over either the link or the popup
         if (this.$refs.link.$el.matches(':hover') || this.$refs.popup.matches(':hover')) return
         this.popper.destroy()
-        this.unsetDisplayedId({ id: this.linkId })
+        this.clearSelfAndDescendents({ id: this.linkId })
         this.cleanupEventListeners()
       }, 100)
     },
