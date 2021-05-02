@@ -7,16 +7,17 @@
  */
 
 const state = () => ({
-  displayedId: null,
+  displayedIds: [],
 })
 
 const mutations = {
-  setDisplayedId(state, { id }) {
-    state.displayedId = id
+  addDisplayedId(state, { id }) {
+    state.displayedIds.push(id);
   },
-  unsetDisplayedId(state, { id }) {
-    if (state.displayedId !== id) return
-    state.displayedId = null
+  clearSelfAndDescendents(state, { id }) {
+   const index = state.displayedIds.findIndex(x => x === id);
+   if (index === -1) return;
+   state.displayedIds.splice(index);
   }
 }
 
