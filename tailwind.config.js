@@ -66,6 +66,12 @@ module.exports = {
         'time-bg': 'var(--color-dice-time-bg)',
       },
     },
+    listStyleType: {
+      none: 'none',
+      disc: 'disc',
+      circle: 'circle',
+      decimal: 'decimal',
+    },
   },
   variants: {},
   plugins: [],
