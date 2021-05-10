@@ -113,6 +113,11 @@ export function areSetsEqual(setA, setB) {
   return setA.size === setB.size && [...setA].every(value => setB.has(value))
 }
 
+/**
+ * Converts a query parameter into a boolean
+ *
+ * If the parameter exists without a value, returns `true` (assuming `false` is the default).
+ */
 export function booleanQueryParam(value) {
   // Make sure we actually have a value
   if (value === undefined) return false
@@ -122,6 +127,14 @@ export function booleanQueryParam(value) {
   value = value.toLowerCase()
   if (['y', 'yes', 't', 'true', '1'].includes(value)) return true
   return false
+}
+
+/**
+ * Converts a query parameter to an integer (unset results in 0)
+ */
+export function integerQueryParam(value) {
+  if (!value) return 0
+  return parseInt(value)
 }
 
 /**

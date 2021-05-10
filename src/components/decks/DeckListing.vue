@@ -35,7 +35,7 @@ import { watch } from 'vue'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import DeckTable from './DeckTable.vue'
 import ClearableSearch from '../shared/ClearableSearch.vue'
-import { debounce, request, booleanQueryParam } from '/src/utils/index.js'
+import { debounce, request, booleanQueryParam, integerQueryParam } from '/src/utils/index.js'
 import { trimmed } from '/src/utils/text.js'
 import PhoenixbornPicker from '../shared/PhoenixbornPicker.vue'
 import Toggle from '../shared/Toggle.vue'
@@ -92,7 +92,7 @@ export default {
     if (Object.keys(this.$route.query).length) {
       this.filterText = this.$route.query.q
       this.phoenixborn = this.$route.query.phoenixborn
-      this.offset = this.$route.query.offset
+      this.offset = integerQueryParam(this.$route.query.offset)
       this.preconOnly = booleanQueryParam(this.$route.query.preconstructed)
     }
 
