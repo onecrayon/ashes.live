@@ -80,7 +80,9 @@
         <li><a href="https://www.twitch.tv/theshufflebus/">ShuffleBus Twitch</a> (stream; live Ashes content every Thursday and they're happy to answer questions from new players)</li>
       </ul>
 
-      <h2>Current progress</h2>
+      <hr class="border-gray-light mt-8 mb-4">
+
+      <h2>Current site progress</h2>
 
       <ul>
         <li class="flex flex-nowrap">
