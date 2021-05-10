@@ -20,14 +20,14 @@
       @click="$emit('update:sort', 'type')">Type<span v-if="sort === 'type'" class="alt-text"> (active)</span></button
     ><button
       class="btn btn-inner py-1 px-2 font-normal"
+      :class="{active: sort === 'release'}"
+      :disabled="isDisabled"
+      @click="$emit('update:sort', 'release')">Release<span v-if="sort === 'release'" class="alt-text"> (active)</span></button
+    ><button
+      class="btn btn-last py-1 px-2 font-normal"
       :class="{active: sort === 'cost'}"
       :disabled="isDisabled"
       @click="$emit('update:sort', 'cost')">Cost<span v-if="sort === 'cost'" class="alt-text"> (active)</span></button
-    ><button
-      class="btn btn-last py-1 px-2 font-normal"
-      :class="{active: sort === 'dice'}"
-      :disabled="isDisabled"
-      @click="$emit('update:sort', 'dice')">Dice<span v-if="sort === 'dice'" class="alt-text"> (active)</span></button
     >
   </div>
 </template>
