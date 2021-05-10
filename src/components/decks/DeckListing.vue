@@ -35,7 +35,7 @@ import { watch } from 'vue'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import DeckTable from './DeckTable.vue'
 import ClearableSearch from '../shared/ClearableSearch.vue'
-import { debounce, request } from '/src/utils/index.js'
+import { debounce, request, booleanQueryParam } from '/src/utils/index.js'
 import { trimmed } from '/src/utils/text.js'
 import PhoenixbornPicker from '../shared/PhoenixbornPicker.vue'
 import Toggle from '../shared/Toggle.vue'
@@ -88,11 +88,12 @@ export default {
     }
   },
   created () {
-    // Before we do anything, we need to translate any query parameters into filters
-    if (this.$route.query.q) {
+    // Before we do anything, we need to translate any query parameters into filters if we have any
+    if (Object.keys(this.$route.query).length) {
       this.filterText = this.$route.query.q
       this.phoenixborn = this.$route.query.phoenixborn
       this.offset = this.$route.query.offset
+      this.preconOnly = booleanQueryParam(this.$route.query.preconstructed)
     }
 
     let firstPreviousProps = null
@@ -173,6 +174,10 @@ export default {
         }
         if (this.offset) {
           query.offset = this.offset
+        }
+        if (this.preconOnly) {
+          // Setting to null makes it an opt-in parameter that doesn't show a value
+          query.preconstructed = null
         }
         // Only push to router is query has changed. In the case of scrolling, we don't want to push as
         // it's the same url but pushing to the router will make it scroll back to top

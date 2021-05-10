@@ -113,6 +113,15 @@ export function areSetsEqual(setA, setB) {
   return setA.size === setB.size && [...setA].every(value => setB.has(value))
 }
 
+export function booleanQueryParam(value) {
+  // Okay, this sounds wrong, but...a null value means just the query parameter is there (e.g. `?param`)
+  // That only happens for boolean values that default to false.
+  if (value === null) return true
+  value = value.toLowerCase()
+  if (['y', 'yes', 't', 'true', '1'].includes(value)) return true
+  return false
+}
+
 /**
  * Returns phoenixborn image url from the CDN.
  *
