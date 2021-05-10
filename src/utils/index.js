@@ -114,6 +114,8 @@ export function areSetsEqual(setA, setB) {
 }
 
 export function booleanQueryParam(value) {
+  // Make sure we actually have a value
+  if (value === undefined) return false
   // Okay, this sounds wrong, but...a null value means just the query parameter is there (e.g. `?param`)
   // That only happens for boolean values that default to false.
   if (value === null) return true
