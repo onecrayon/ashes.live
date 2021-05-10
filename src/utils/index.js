@@ -114,6 +114,30 @@ export function areSetsEqual(setA, setB) {
 }
 
 /**
+ * Converts a query parameter into a boolean
+ *
+ * If the parameter exists without a value, returns `true` (assuming `false` is the default).
+ */
+export function booleanQueryParam(value) {
+  // Make sure we actually have a value
+  if (value === undefined) return false
+  // Okay, this sounds wrong, but...a null value means just the query parameter is there (e.g. `?param`)
+  // That only happens for boolean values that default to false.
+  if (value === null) return true
+  value = value.toLowerCase()
+  if (['y', 'yes', 't', 'true', '1'].includes(value)) return true
+  return false
+}
+
+/**
+ * Converts a query parameter to an integer (unset results in 0)
+ */
+export function integerQueryParam(value) {
+  if (!value) return 0
+  return parseInt(value)
+}
+
+/**
  * Returns phoenixborn image url from the CDN.
  *
  * @param {str} stub Phoenixborn card name

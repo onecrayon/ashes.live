@@ -62,6 +62,15 @@ const router = createRouter({
       meta: { title: 'Decks' },
     },
     {
+      path: '/decks/preconstructed/',
+      redirect: {
+        name: 'Decks',
+        query: {
+          preconstructed: null,
+        },
+      },
+    },
+    {
       path: '/decks/legacy/',
       name: 'LegacyDecks',
       component: PublicDecks,
