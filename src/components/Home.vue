@@ -65,6 +65,20 @@
       </ul>
     </div>
     <div class="sm:w-1/3">
+      <h2>Resources for new players</h2>
+
+      <p>Welcome to Ashes Reborn! In addition to the resources below, we would love to have you come say "hello" in the <a href="https://discord.gg/UU5bduq">Community Discord</a>, perhaps join in on First Five Fridays (an online, casual play event where you can easily find someone to teach you to play), and ask any questions about rules/deck-building/Mist Spirit plushies/etc!</p>
+
+      <ul class="list-disc pl-4">
+        <li><a href="https://beckism.com/2021/04/a-beginners-guide-to-ashes-reborn/">A beginner's guide to Ashes Reborn</a> (text)</li>
+        <li><a href="https://beckism.com/2021/04/archetypal-strategies-in-ashes-reborn/">Archetypal strategies in Ashes Reborn</a> (text; best after you've played a few games)</li>
+        <li><a href="https://jaysonsethlindley.medium.com/colorful-cubes-foundations-of-deckbuilding-in-ashes-reborn-c49cd1abbe29">Colorful Cubes: Foundations of Deckbuilding in Ashes Reborn</a> (text)</li>
+        <li><a href="https://jaysonsethlindley.medium.com/argaia-by-the-numbers-live-blogging-ashes-draft-tournament-season-2-20853c51f522">Argaia By The Numbers: Live-Blogging Ashes Draft Tournament Season 2</a> (text; not strictly new player advice, but it's coverage of a draft event played by some of the top Ashes players which can give you insight into what cards they consider competitive)</li>
+        <li><a href="https://youtu.be/oburqXYS9-4">Ashes Reborn Tabletop Simulator Tutorial</a> (video)</li>
+        <li><a href="https://thejadethronepodcast.libsyn.com/website/episode-200-the-jade-throne-reborn">The Jade Throne Reborn</a> (audio; starting with this episode, Jade Throne covers the basics of Ashes Reborn)</li>
+        <li><a href="https://www.twitch.tv/theshufflebus/">ShuffleBus Twitch</a> (stream; live Ashes content every Thursday and they're happy to answer questions from new players)</li>
+      </ul>
+
       <h2>Current progress</h2>
 
       <ul>
@@ -119,20 +133,6 @@
       </ul>
 
       <p>If you are a web developer interested in contributing, please <a href="https://github.com/onecrayon/ashes.live">visit the GitHub repo</a>.</p>
-
-      <h2>Resources for new players</h2>
-
-      <p>Welcome to Ashes Reborn! In addition to the resources below, we would love to have you come say "hello" in the <a href="https://discord.gg/UU5bduq">Community Discord</a>, perhaps join in on First Five Fridays (an online, casual play event where you can easily find someone to teach you to play), and ask any questions about rules/deck-building/Mist Spirit plushies/etc!</p>
-
-      <ul class="list-disc pl-4">
-        <li><a href="https://beckism.com/2021/04/a-beginners-guide-to-ashes-reborn/">A beginner's guide to Ashes Reborn</a> (text)</li>
-        <li><a href="https://beckism.com/2021/04/archetypal-strategies-in-ashes-reborn/">Archetypal strategies in Ashes Reborn</a> (text; best after you've played a few games)</li>
-        <li><a href="https://jaysonsethlindley.medium.com/colorful-cubes-foundations-of-deckbuilding-in-ashes-reborn-c49cd1abbe29">Colorful Cubes: Foundations of Deckbuilding in Ashes Reborn</a> (text)</li>
-        <li><a href="https://jaysonsethlindley.medium.com/argaia-by-the-numbers-live-blogging-ashes-draft-tournament-season-2-20853c51f522">Argaia By The Numbers: Live-Blogging Ashes Draft Tournament Season 2</a> (text; not strictly new player advice, but it's coverage of a draft event played by some of the top Ashes players which can give you insight into what cards they consider competitive)</li>
-        <li><a href="https://youtu.be/oburqXYS9-4">Ashes Reborn Tabletop Simulator Tutorial</a> (video)</li>
-        <li><a href="https://thejadethronepodcast.libsyn.com/website/episode-200-the-jade-throne-reborn">The Jade Throne Reborn</a> (audio; starting with this episode, Jade Throne covers the basics of Ashes Reborn)</li>
-        <li><a href="https://www.twitch.tv/theshufflebus/">ShuffleBus Twitch</a> (stream; live Ashes content every Thursday and they're happy to answer questions from new players)</li>
-      </ul>
     </div>
   </div>
 </template>
