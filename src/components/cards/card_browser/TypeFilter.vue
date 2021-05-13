@@ -23,8 +23,8 @@
       :class="{ active: !onlySummoners }"
       class="btn py-1 px-2 font-normal text-sm btn-first">
       All
-    </button>
-    <button
+    </button
+    ><button
       :disabled="isDisabled"
       @click="setOnlySummoners(true)"
       :class="{ active: onlySummoners }"
