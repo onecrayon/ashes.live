@@ -12,10 +12,18 @@
         v-model:search="filterText"
         :is-disabled="isDisabled"></clearable-search>
     </div>
-    <type-filter
-      class="mb-4"
-      v-model:filter-list="typeFilterList"
-      :is-disabled="isDisabled"></type-filter>
+    <div class="flex flex-nowrap mb-4">
+      <type-filter
+        class="flex-auto"
+        v-model:filter-list="typeFilterList"
+        :is-disabled="isDisabled"></type-filter>
+      <collection-filter
+        class="flex-none"
+        v-model:filter-logic="collectionFilterLogic"
+        v-model:release-list="collectionReleaseList"
+        :show-legacy="showLegacy"
+        :is-disabled="isDisabled"></collection-filter>
+    </div>
     <div class="flex flex-nowrap">
       <card-sort
         class="mb-4 flex-auto"
@@ -45,6 +53,7 @@ import { watch } from 'vue'
 import { useToast } from 'vue-toastification'
 import { debounce, areSetsEqual, request } from '/src/utils/index.js'
 import { trimmed } from '/src/utils/text.js'
+import CollectionFilter from './CollectionFilter.vue'
 import DiceFilter from './DiceFilter.vue'
 import TypeFilter from './TypeFilter.vue'
 import ClearableSearch from '../../shared/ClearableSearch.vue'
@@ -74,6 +83,8 @@ export default {
       diceFilterList: [],
       filterText: '',
       typeFilterList: [],
+      collectionFilterLogic: 'all',
+      collectionReleaseList: [],
       sort: 'name',
       order: 'asc',
       // This is the list of cards currently shown
@@ -83,6 +94,7 @@ export default {
     }
   },
   components: {
+    CollectionFilter,
     DiceFilter,
     ClearableSearch,
     TypeFilter,
@@ -121,6 +133,9 @@ export default {
     if (this.$route.query.types) {
       this.typeFilterList = ensureArray(this.$route.query.types)
     }
+    if (this.$route.query.r) {
+      this.collectionReleaseList = ensureArray(this.$route.query.r)
+    }
     if (this.$route.query.sort) {
       this.sort = this.$route.query.sort
     }
@@ -136,26 +151,31 @@ export default {
       // Check if we have changes to make; wrapped in a closure to ensure we perform as little
       // logic as necessary
       const haveChanges = (() => {
+        // Check sort logic
+        if (curProps[0] !== firstPreviousProps[0]) return true
+        // Check sort ordering
+        if (curProps[1] !== firstPreviousProps[1]) return true
         // Check filterText (string)
-        if (trimmed(curProps[0]) !== trimmed(firstPreviousProps[0])) return true
+        if (trimmed(curProps[2]) !== trimmed(firstPreviousProps[2])) return true
         // Check diceFilterLogic (string)
-        if (trimmed(curProps[1]) !== trimmed(firstPreviousProps[1])) return true
+        if (trimmed(curProps[3]) !== trimmed(firstPreviousProps[3])) return true
         // Check diceFilterList (list of strings)
-        if (!areSetsEqual(new Set(curProps[2]), new Set(firstPreviousProps[2]))) return true
+        if (!areSetsEqual(new Set(curProps[4]), new Set(firstPreviousProps[4]))) return true
         // Check typeFilterList (list of strings)
-        if (!areSetsEqual(new Set(curProps[3]), new Set(firstPreviousProps[3]))) return true
-        if (curProps[4] !== firstPreviousProps[4]) return true
-        if (curProps[5] !== firstPreviousProps[5]) return true
+        if (!areSetsEqual(new Set(curProps[5]), new Set(firstPreviousProps[5]))) return true
+        // Check collectionReleaseList (list of strings)
+        if (!areSetsEqual(new Set(curProps[6]), new Set(firstPreviousProps[6]))) return true
         return false
       })()
       // We cache the original values in case of failure
       const cachedValues = {
-        filterText: String(trimmed(firstPreviousProps[0])),
-        diceFilterLogic: String(firstPreviousProps[1]),
-        diceFilterList: Array.from(new Set(firstPreviousProps[2])),
-        typeFilterList: Array.from(new Set(firstPreviousProps[3])),
-        sort: firstPreviousProps[4],
-        order: firstPreviousProps[5],
+        sort: firstPreviousProps[0],
+        order: firstPreviousProps[1],
+        filterText: String(trimmed(firstPreviousProps[2])),
+        diceFilterLogic: String(firstPreviousProps[3]),
+        diceFilterList: Array.from(new Set(firstPreviousProps[4])),
+        typeFilterList: Array.from(new Set(firstPreviousProps[5])),
+        collectionReleaseList: Array.from(new Set(firstPreviousProps[6])),
       }
       // Reset our first previous props before exiting
       firstPreviousProps = null
@@ -175,12 +195,13 @@ export default {
       // All filter properties that can trigger a new API call
       // DO NOT REORDER THESE! If you do, you must change the index logic in `debouncedFilterCall` above
       [
+        () => this.sort,
+        () => this.order,
         () => this.filterText,
         () => this.diceFilterLogic,
         () => this.diceFilterList,
         () => this.typeFilterList,
-        () => this.sort,
-        () => this.order,
+        () => this.collectionReleaseList,
       ],
       (curProps, prevProps) => {
         if (firstPreviousProps === null) {
@@ -205,6 +226,12 @@ export default {
       // Checking for `this.isDisabled` doesn't work because the timing doesn't line up.
 
       // Make sure to update our filters if we navigate here via browser back/forward
+      if (to.sort !== from.sort) {
+        this.sort = to.sort === undefined ? 'name' : to.sort
+      }
+      if (to.order !== from.order) {
+        this.order = to.order === undefined ? 'asc' : to.order
+      }
       if (to.q !== from.q) {
         this.filterText = to.q === undefined ? '' : to.q
       }
@@ -217,11 +244,8 @@ export default {
       if (to.types !== from.types) {
         this.typeFilterList = ensureArray(to.types)
       }
-      if (to.sort !== from.sort) {
-        this.sort = to.sort === undefined ? 'name' : to.sort
-      }
-      if (to.order !== from.order) {
-        this.order = to.order === undefined ? 'asc' : to.order
+      if (to.r !== from.r) {
+        this.collectionReleaseList = ensureArray(to.r)
       }
     },
   },
@@ -229,7 +253,7 @@ export default {
     galleryStyle () {
       if (this.showLegacy) return 'list'
       return this.$store.state.options.galleryStyle
-    }
+    },
   },
   methods: {
     // Clear out filters; this will automatically cause the card listing to be refreshed due to the
@@ -239,6 +263,7 @@ export default {
       this.diceFilterLogic = 'any'
       this.diceFilterList = []
       this.typeFilterList = []
+      this.collectionReleaseList = []
     },
     /**
      * Perform the actual AJAX call to the API.
@@ -269,6 +294,9 @@ export default {
         }
         if (this.typeFilterList.length) {
           query.types = this.typeFilterList
+        }
+        if (this.collectionFilterLogic === 'all' && this.collectionReleaseList.length) {
+          query.r = this.collectionReleaseList
         }
         if (this.sort !== 'name') {
           query.sort = this.sort
@@ -343,6 +371,11 @@ export default {
           params.show_summons = true
         }
         params.types = filterList
+      }
+      if (this.collectionFilterLogic === 'all' && this.collectionReleaseList.length) {
+        params.r = this.collectionReleaseList
+      } else if (this.collectionFilterLogic !== 'all') {
+        params.releases = this.collectionFilterLogic
       }
       this.fetchCards({ options: { params }, failureCallback })
     },
