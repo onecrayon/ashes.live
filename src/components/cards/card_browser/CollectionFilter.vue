@@ -6,12 +6,12 @@
       class="btn py-1 px-2 font-normal text-sm"
       ref="button"
       @click="togglePopup">
-      <i class="fa-filter" :class="{ fas: filtersActive, far: !filtersActive }"></i> <span class="hidden xl:inline">Releases</span>
+      <i class="fa-filter" :class="{ fas: filtersActive, far: !filtersActive }"></i> <span class="hidden sm:inline">Releases</span>
       <span v-if="filtersActive" class="alt-text"> (active)</span>
     </button>
     <div ref="popup" class="absolute z-50" :class="{ hidden: !popper }">
       <transition name="fade" @after-leave="cleanupPopper">
-        <div v-if="isOpen" class="w-48 max-h-80 border-2 border-black bg-white rounded-md rounded-tr-none text-black">
+        <div v-if="isOpen" class="w-80 max-h-80 border-2 border-black bg-white rounded-md rounded-tr-none text-black">
           <div class="flex flex-nowrap" role="group" aria-label="Show cards:">
              <button
               class="flex-auto btn btn-first rounded-none border-t-0 border-l-0 rounded-tl-sm"

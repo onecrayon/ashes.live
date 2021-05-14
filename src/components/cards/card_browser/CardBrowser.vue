@@ -12,21 +12,21 @@
         v-model:search="filterText"
         :is-disabled="isDisabled"></clearable-search>
     </div>
-    <div class="flex flex-nowrap mb-4">
+    <div class="flex flex-nowrap">
       <type-filter
         class="flex-auto"
         v-model:filter-list="typeFilterList"
         :is-disabled="isDisabled"></type-filter>
       <collection-filter
-        class="flex-none"
+        class="flex-none mb-4"
         v-model:filter-logic="collectionFilterLogic"
         v-model:release-list="collectionReleaseList"
         :show-legacy="showLegacy"
         :is-disabled="isDisabled"></collection-filter>
     </div>
-    <div class="flex flex-nowrap">
+    <div class="flex flex-wrap sm:flex-nowrap">
       <card-sort
-        class="mb-4 flex-auto"
+        class="mb-4 pr-4 flex-auto"
         v-model:sort="sort"
         v-model:order="order"
         :is-phoenixborn-picker="isPhoenixbornPicker"
