@@ -136,6 +136,8 @@ export default {
     }
     if (this.$route.query.r) {
       this.collectionReleaseList = ensureArray(this.$route.query.r)
+      // If we are filtering by release, we want to be sure to set our filter logic to "all"
+      this.$store.commit('options/setReleaseFilter', 'all')
     }
     if (this.$route.query.sort) {
       this.sort = this.$route.query.sort
