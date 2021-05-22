@@ -22,7 +22,8 @@
         v-model:filter-logic="collectionFilterLogic"
         v-model:release-list="collectionReleaseList"
         :show-legacy="showLegacy"
-        :is-disabled="isDisabled"></collection-filter>
+        :is-disabled="isDisabled"
+        @force-filtration="filterList"></collection-filter>
     </div>
     <div class="flex flex-wrap sm:flex-nowrap">
       <card-sort
@@ -83,7 +84,7 @@ export default {
       diceFilterList: [],
       filterText: '',
       typeFilterList: [],
-      collectionFilterLogic: 'all',
+      // collectionFilterLogic is defined as a computed property off the store
       collectionReleaseList: [],
       sort: 'name',
       order: 'asc',
@@ -147,7 +148,7 @@ export default {
     // We use this to shortcut out when an AJAX failure occurs (otherwise could loop on failing lookups)
     let resettingFailedValues = false
     // Both arguments are arrays with the current/next values in the same order as the watch array below
-    this.debouncedFilterCall = debounce((curProps, prevProps) => {
+    this.instantFilterCall = (curProps, prevProps) => {
       // Check if we have changes to make; wrapped in a closure to ensure we perform as little
       // logic as necessary
       const haveChanges = (() => {
@@ -190,7 +191,8 @@ export default {
           this[key] = cachedValues[key]
         }
       })
-    }, 1250)
+    }
+    this.debouncedFilterCall = debounce(this.instantFilterCall, 1250)
     watch(
       // All filter properties that can trigger a new API call
       // DO NOT REORDER THESE! If you do, you must change the index logic in `debouncedFilterCall` above
@@ -207,7 +209,13 @@ export default {
         if (firstPreviousProps === null) {
           firstPreviousProps = prevProps
         }
-        this.debouncedFilterCall(curProps, prevProps)
+        // Make an instant call if a release-related change triggered the filter (because these are
+        // triggered explicitly when the user closes the "Releases" popup)
+        if (!areSetsEqual(new Set(curProps[6]), new Set(prevProps[6]))) {
+          this.instantFilterCall(curProps, prevProps)
+        } else {
+          this.debouncedFilterCall(curProps, prevProps)
+        }
       }
     )
 
@@ -253,6 +261,15 @@ export default {
     galleryStyle () {
       if (this.showLegacy) return 'list'
       return this.$store.state.options.galleryStyle
+    },
+    collectionFilterLogic: {
+      get () {
+        return this.$store.state.options.releaseFilter
+      },
+      set (newValue) {
+        this.$store.commit('options/setReleaseFilter', newValue)
+        this.filterList()
+      },
     },
   },
   methods: {

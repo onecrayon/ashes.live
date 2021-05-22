@@ -16,34 +16,35 @@
              <button
               class="flex-auto btn btn-first rounded-none border-t-0 border-l-0 rounded-tl-sm"
               :class="{ 'active': targetFilterLogic === 'all' }"
-              @click="targetFilterLogic = 'all'">
+              @click="setFilterMine(false)">
               All
             </button
             ><button
               class="flex-auto btn btn-last rounded-none border-t-0 border-r-0"
               :class="{ 'active': targetFilterLogic === 'mine' }"
-              @click="targetFilterLogic = 'mine'">
+              :disabled="anonymousUser"
+              @click="setFilterMine(true)">
               Mine
             </button>
           </div>
-          <div v-if="targetFilterLogic = 'all'" class="p-2 overflow-y-auto flex-auto">
-            <toggle v-model="showEverything"><span class="ml-2">Show everything</span></toggle>
+          <div class="p-2 overflow-y-auto flex-auto">
+            <toggle v-if="targetFilterLogic === 'all'" v-model="showEverything"><span class="ml-2">Show everything</span></toggle>
+            <span v-else>Choose the releases you own:</span>
             <ul class="grid grid-cols-2 gap-x-2 gap-y-1 py-2">
               <li
                 v-for="release of allCollections" :key="release.stub"
                 class="flex flex-nowrap items-start"
                 :class="{'col-span-2': release.stub === 'master-set' || release.stub === 'core-set'}">
-                <!-- TODO: figure out why this is not populating correctly on instantiation of the element; are Sets not reactive, perhaps? -->
                 <input type="checkbox" class="flex-none mt-1 mr-1"
                   :id="release.stub"
-                  :disabled="showEverything"
-                  :value="!showEverything && selectedReleases.has(release.stub)"
+                  :disabled="targetFilterLogic === 'all' && showEverything"
+                  :value="selectedReleases.has(release.stub)"
+                  :checked="selectedReleases.has(release.stub)"
                   @input="selectedReleases.has(release.stub) ? selectedReleases.delete(release.stub) : selectedReleases.add(release.stub)">
-                <label class="flex-initial text-sm" :class="{'text-gray': showEverything}" :for="release.stub">{{ release.name }}</label>
+                <label class="flex-initial text-sm" :class="{'text-gray': targetFilterLogic === 'all' && showEverything}" :for="release.stub">{{ release.name }}</label>
               </li>
             </ul>
           </div>
-          <!-- TODO: add the output for the collection interface (maybe this just replaces the "show everything" option?) -->
         </div>
       </transition>
     </div>
@@ -70,7 +71,7 @@ export default {
       type: Array,
     },
   },
-  emits: ['update:filterLogic', 'update:releaseList'],
+  emits: ['update:filterLogic', 'update:releaseList', 'forceFiltration'],
   setup () {
     // Standard composite containing { toast, handleResponseError }
     return useHandleResponseError()
@@ -83,13 +84,22 @@ export default {
     isOpen: false,
     loadingCollections: false,
     allCollections: [],
-    showEverything: instance.releaseList.length === 0,
+    showEverything: instance.releaseList.length === 0 || instance.filterLogic === 'mine',
     targetFilterLogic: instance.filterLogic,
-    selectedReleases: new Set(instance.releaseList),
+    selectedReleases: new Set(),
   }),
   computed: {
     filtersActive () {
       return this.filterLogic !== 'all' || this.releaseList.length
+    },
+    anonymousUser () {
+      return !this.$store.getters['player/isAuthenticated']
+    },
+    myReleases () {
+      return this.allCollections.reduce((endList, curObj) => {
+        if (curObj.is_mine) endList.push(curObj.stub)
+        return endList
+      }, [])
     },
   },
   methods: {
@@ -98,9 +108,6 @@ export default {
         // If this.isOpen is false, then we're mid clean-up as we animate out, so just ignore
         if (this.isOpen) {
           // First handle sending the updated data, if necessary
-          if (this.targetFilterLogic !== this.filterLogic) {
-            this.$emit('update:filterLogic', this.targetFilterLogic)
-          }
           if (this.targetFilterLogic === 'all') {
             if (this.showEverything && this.releaseList.length) {
               // We're showing everything, so clear out the release list
@@ -109,7 +116,29 @@ export default {
               // We're not showing everything, and we selected some releases to filter by
               this.$emit('update:releaseList', Array.from(this.selectedReleases))
             }
+          } else {
+            // If showing "mine", make sure to patch the user's collection first
+            try {
+              await request('/v2/releases/mine', {
+                method: 'put',
+                data: Array.from(this.selectedReleases),
+              })
+              // If the only change was to adjust the collection, we need to force the filter,
+              // because otherwise nothing will change as far as the front-end is concerned (the
+              // collection is only persisted on the server)
+              if (this.targetFilterLogic === this.filterLogic) {
+                this.$emit('forceFiltration')
+              }
+            } catch (e) {
+              this.handleResponseError(e)
+            }
           }
+          // Set our filter logic; we always fire this off to ensure that the card list refreshes
+          // even if the only change was the modify the user's collection
+          if (this.targetFilterLogic !== this.filterLogic) {
+            this.$emit('update:filterLogic', this.targetFilterLogic)
+          }
+          // And finally close the popover
           this.isOpen = false
         }
         return
@@ -129,6 +158,11 @@ export default {
       } finally {
         this.loadingCollections = false
       }
+      if (this.filterLogic === 'all') {
+        this.selectedReleases = new Set(this.releaseList)
+      } else {
+        this.selectedReleases = new Set(this.myReleases)
+      }
       this.popper = createPopper(this.$refs.button, this.$refs.popup, {
         placement: 'bottom-end',
       })
@@ -142,7 +176,15 @@ export default {
     cleanupPopper () {
       this.popper.destroy()
       this.popper = null
-    }
+    },
+    setFilterMine (showMine) {
+      this.targetFilterLogic = showMine ? 'mine' : 'all'
+      if (this.targetFilterLogic === 'mine') {
+        this.selectedReleases = new Set(this.myReleases)
+      } else {
+        this.selectedReleases = new Set(this.releaseList)
+      }
+    },
   },
 }
 </script>
