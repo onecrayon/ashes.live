@@ -1,5 +1,8 @@
 <template>
-  <i :class="typeIcon(type)"></i> <span class="hidden xl:inline">{{ text || type.split(' ')[0] }}</span>
+  <i :class="typeIcon(type)"></i> <span class="hidden" :class="{
+    'xl:inline': !$store.state.builder.enabled,
+    '2xl:inline': $store.state.builder.enabled,
+  }">{{ text || type.split(' ')[0] }}</span>
 </template>
 
 <script>

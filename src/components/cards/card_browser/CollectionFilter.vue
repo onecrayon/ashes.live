@@ -138,6 +138,10 @@ export default {
           if (this.targetFilterLogic !== this.filterLogic) {
             this.$emit('update:filterLogic', this.targetFilterLogic)
           }
+          // And finally set to "show everything" if nothing was selected when closing the popup
+          if (this.filterLogic === 'all' && !this.selectedReleases.size) {
+            this.showEverything = true
+          }
           // And finally close the popover
           this.isOpen = false
         }
