@@ -12,13 +12,33 @@
         v-model:search="filterText"
         :is-disabled="isDisabled"></clearable-search>
     </div>
-    <type-filter
-      class="mb-4"
-      v-model:filter-list="typeFilterList"
-      :is-disabled="isDisabled"></type-filter>
     <div class="flex flex-nowrap">
+      <type-filter
+        class="flex-auto"
+        v-model:filter-list="typeFilterList"
+        :is-disabled="isDisabled"></type-filter>
+      <div class="flex-none mb-4 mr-2">
+        <button
+          v-if="isDeckbuilderActive"
+          class="btn py-1 px-2 font-normal text-sm"
+          :class="{active: deckbuilderMode}"
+          :title="`${deckbuilderMode ? 'Show' : 'Hide'} conjurations and Phoenixborn`"
+          @click="deckbuilderMode = !deckbuilderMode">
+          <i class="fa-minus-square" :class="{far: !deckbuilderMode, fas: deckbuilderMode}"></i>
+          <span class="alt-text"><span v-if="deckbuilderMode">Show</span><span v-else>Hide</span> conjurations and Phoenixborn</span>
+        </button>
+      </div>
+      <collection-filter
+        class="flex-none mb-4"
+        v-model:filter-logic="collectionFilterLogic"
+        v-model:release-list="collectionReleaseList"
+        :show-legacy="showLegacy"
+        :is-disabled="isDisabled"
+        @force-filtration="filterList"></collection-filter>
+    </div>
+    <div class="flex flex-wrap sm:flex-nowrap">
       <card-sort
-        class="mb-4 flex-auto"
+        class="mb-4 pr-4 flex-auto"
         v-model:sort="sort"
         v-model:order="order"
         :is-phoenixborn-picker="isPhoenixbornPicker"
@@ -45,6 +65,7 @@ import { watch } from 'vue'
 import { useToast } from 'vue-toastification'
 import { debounce, areSetsEqual, request } from '/src/utils/index.js'
 import { trimmed } from '/src/utils/text.js'
+import CollectionFilter from './CollectionFilter.vue'
 import DiceFilter from './DiceFilter.vue'
 import TypeFilter from './TypeFilter.vue'
 import ClearableSearch from '../../shared/ClearableSearch.vue'
@@ -74,6 +95,8 @@ export default {
       diceFilterList: [],
       filterText: '',
       typeFilterList: [],
+      // collectionFilterLogic is defined as a computed property off the store
+      collectionReleaseList: [],
       sort: 'name',
       order: 'asc',
       // This is the list of cards currently shown
@@ -83,6 +106,7 @@ export default {
     }
   },
   components: {
+    CollectionFilter,
     DiceFilter,
     ClearableSearch,
     TypeFilter,
@@ -121,6 +145,11 @@ export default {
     if (this.$route.query.types) {
       this.typeFilterList = ensureArray(this.$route.query.types)
     }
+    if (this.$route.query.r) {
+      this.collectionReleaseList = ensureArray(this.$route.query.r)
+      // If we are filtering by release, we want to be sure to set our filter logic to "all"
+      this.$store.commit('options/setReleaseFilter', 'all')
+    }
     if (this.$route.query.sort) {
       this.sort = this.$route.query.sort
     }
@@ -132,30 +161,35 @@ export default {
     // We use this to shortcut out when an AJAX failure occurs (otherwise could loop on failing lookups)
     let resettingFailedValues = false
     // Both arguments are arrays with the current/next values in the same order as the watch array below
-    this.debouncedFilterCall = debounce((curProps, prevProps) => {
+    this.instantFilterCall = (curProps, prevProps) => {
       // Check if we have changes to make; wrapped in a closure to ensure we perform as little
       // logic as necessary
       const haveChanges = (() => {
+        // Check sort logic
+        if (curProps[0] !== firstPreviousProps[0]) return true
+        // Check sort ordering
+        if (curProps[1] !== firstPreviousProps[1]) return true
         // Check filterText (string)
-        if (trimmed(curProps[0]) !== trimmed(firstPreviousProps[0])) return true
+        if (trimmed(curProps[2]) !== trimmed(firstPreviousProps[2])) return true
         // Check diceFilterLogic (string)
-        if (trimmed(curProps[1]) !== trimmed(firstPreviousProps[1])) return true
+        if (trimmed(curProps[3]) !== trimmed(firstPreviousProps[3])) return true
         // Check diceFilterList (list of strings)
-        if (!areSetsEqual(new Set(curProps[2]), new Set(firstPreviousProps[2]))) return true
+        if (!areSetsEqual(new Set(curProps[4]), new Set(firstPreviousProps[4]))) return true
         // Check typeFilterList (list of strings)
-        if (!areSetsEqual(new Set(curProps[3]), new Set(firstPreviousProps[3]))) return true
-        if (curProps[4] !== firstPreviousProps[4]) return true
-        if (curProps[5] !== firstPreviousProps[5]) return true
+        if (!areSetsEqual(new Set(curProps[5]), new Set(firstPreviousProps[5]))) return true
+        // Check collectionReleaseList (list of strings)
+        if (!areSetsEqual(new Set(curProps[6]), new Set(firstPreviousProps[6]))) return true
         return false
       })()
       // We cache the original values in case of failure
       const cachedValues = {
-        filterText: String(trimmed(firstPreviousProps[0])),
-        diceFilterLogic: String(firstPreviousProps[1]),
-        diceFilterList: Array.from(new Set(firstPreviousProps[2])),
-        typeFilterList: Array.from(new Set(firstPreviousProps[3])),
-        sort: firstPreviousProps[4],
-        order: firstPreviousProps[5],
+        sort: firstPreviousProps[0],
+        order: firstPreviousProps[1],
+        filterText: String(trimmed(firstPreviousProps[2])),
+        diceFilterLogic: String(firstPreviousProps[3]),
+        diceFilterList: Array.from(new Set(firstPreviousProps[4])),
+        typeFilterList: Array.from(new Set(firstPreviousProps[5])),
+        collectionReleaseList: Array.from(new Set(firstPreviousProps[6])),
       }
       // Reset our first previous props before exiting
       firstPreviousProps = null
@@ -170,23 +204,31 @@ export default {
           this[key] = cachedValues[key]
         }
       })
-    }, 1250)
+    }
+    this.debouncedFilterCall = debounce(this.instantFilterCall, 1250)
     watch(
       // All filter properties that can trigger a new API call
       // DO NOT REORDER THESE! If you do, you must change the index logic in `debouncedFilterCall` above
       [
+        () => this.sort,
+        () => this.order,
         () => this.filterText,
         () => this.diceFilterLogic,
         () => this.diceFilterList,
         () => this.typeFilterList,
-        () => this.sort,
-        () => this.order,
+        () => this.collectionReleaseList,
       ],
       (curProps, prevProps) => {
         if (firstPreviousProps === null) {
           firstPreviousProps = prevProps
         }
-        this.debouncedFilterCall(curProps, prevProps)
+        // Make an instant call if a release-related change triggered the filter (because these are
+        // triggered explicitly when the user closes the "Releases" popup)
+        if (!areSetsEqual(new Set(curProps[6]), new Set(prevProps[6]))) {
+          this.instantFilterCall(curProps, prevProps)
+        } else {
+          this.debouncedFilterCall(curProps, prevProps)
+        }
       }
     )
 
@@ -205,6 +247,12 @@ export default {
       // Checking for `this.isDisabled` doesn't work because the timing doesn't line up.
 
       // Make sure to update our filters if we navigate here via browser back/forward
+      if (to.sort !== from.sort) {
+        this.sort = to.sort === undefined ? 'name' : to.sort
+      }
+      if (to.order !== from.order) {
+        this.order = to.order === undefined ? 'asc' : to.order
+      }
       if (to.q !== from.q) {
         this.filterText = to.q === undefined ? '' : to.q
       }
@@ -217,11 +265,14 @@ export default {
       if (to.types !== from.types) {
         this.typeFilterList = ensureArray(to.types)
       }
-      if (to.sort !== from.sort) {
-        this.sort = to.sort === undefined ? 'name' : to.sort
+      if (to.r !== from.r) {
+        this.collectionReleaseList = ensureArray(to.r)
       }
-      if (to.order !== from.order) {
-        this.order = to.order === undefined ? 'asc' : to.order
+    },
+    isDeckbuilderActive (to, from) {
+      if (to && !from && this.deckbuilderMode) {
+        this.ensureNoConjurationFilter()
+        this.filterList()
       }
     },
   },
@@ -229,7 +280,30 @@ export default {
     galleryStyle () {
       if (this.showLegacy) return 'list'
       return this.$store.state.options.galleryStyle
-    }
+    },
+    collectionFilterLogic: {
+      get () {
+        return this.$store.state.options.releaseFilter
+      },
+      set (newValue) {
+        this.$store.commit('options/setReleaseFilter', newValue)
+        this.filterList()
+      },
+    },
+    isDeckbuilderActive () {
+      return this.$store.state.builder.enabled
+    },
+    deckbuilderMode: {
+      get () {
+        return this.$store.state.options.deckbuilderMode
+      },
+      set (newValue) {
+        this.$store.commit('options/setDeckbuilderMode', newValue)
+        // If we are in deckbuilder mode, make sure that 'conjurations' is removed from our filters
+        if (newValue) this.ensureNoConjurationFilter()
+        this.filterList()
+      },
+    },
   },
   methods: {
     // Clear out filters; this will automatically cause the card listing to be refreshed due to the
@@ -239,6 +313,7 @@ export default {
       this.diceFilterLogic = 'any'
       this.diceFilterList = []
       this.typeFilterList = []
+      this.collectionReleaseList = []
     },
     /**
      * Perform the actual AJAX call to the API.
@@ -269,6 +344,9 @@ export default {
         }
         if (this.typeFilterList.length) {
           query.types = this.typeFilterList
+        }
+        if (this.collectionFilterLogic === 'all' && this.collectionReleaseList.length) {
+          query.r = this.collectionReleaseList
         }
         if (this.sort !== 'name') {
           query.sort = this.sort
@@ -344,11 +422,31 @@ export default {
         }
         params.types = filterList
       }
+      if (this.collectionFilterLogic === 'all' && this.collectionReleaseList.length) {
+        params.r = this.collectionReleaseList
+      } else if (this.collectionFilterLogic !== 'all') {
+        params.releases = this.collectionFilterLogic
+      }
+      // Enable deckbuilder mode if:
+      // * The deckbuilder is actually active
+      // * We've opted into the mode
+      // * We are not viewing Phoenixborn (because in that case they're probably trying to switch PBs)
+      if (this.isDeckbuilderActive && this.deckbuilderMode && !this.typeFilterList.includes('phoenixborn')) {
+        params.mode = 'deckbuilder'
+        if (this.$store.state.builder.deck.phoenixborn) {
+          params.include_uniques_for = this.$store.state.builder.deck.phoenixborn.name
+        }
+      }
       this.fetchCards({ options: { params }, failureCallback })
     },
     // Load the next page of cards
     loadNext () {
       this.fetchCards({ endpoint: this.nextCardsURL, pushToRouter: false })
+    },
+    ensureNoConjurationFilter () {
+      if (this.typeFilterList.includes('conjurations')) {
+        this.typeFilterList.splice(this.typeFilterList.indexOf('conjurations'), 1)
+      }
     },
   },
 }

@@ -17,7 +17,11 @@ const defaultExportShowAttribution = storeGet('exportShowAttribution')
 const state = () => ({
   // Accepts 'list' or 'binder'
   galleryStyle: storeGet('galleryStyle') || 'list',
+  // Accepts 'all' or 'mine'
+  releaseFilter: storeGet('releaseFilter') || 'all',
   colorizeIcons: storeGet('colorizeIcons') || false,
+  // If true, uses "deckbuilder mode" for card listings when the deckbuilder is open
+  deckbuilderMode: storeGet('deckbuilderMode') || false,
   exportShowCardCounts: typeof defaultExportShowCardCounts === 'boolean' ? defaultExportShowCardCounts : true,
   exportSortByType: typeof defaultExportSortByType === 'boolean' ? defaultExportSortByType : true,
   exportShowAttribution: typeof defaultExportShowAttribution === 'boolean' ? defaultExportShowAttribution : true,
@@ -35,12 +39,20 @@ const mutations = {
     state.galleryStyle = galleryStyle
     storeSet('galleryStyle', galleryStyle)
   },
+  setReleaseFilter (state, releaseFilter) {
+    state.releaseFilter = releaseFilter
+    storeSet('releaseFilter', releaseFilter)
+  },
   // TODO: implement an action to update this setting from the front-end? Or just handle through
   // user patching view? Currently, this will not persist to the API and will be overwritten by
   // the user's setting there; it would need an action for persisted setting
   setColorizeIcons (state, colorizeIcons) {
     state.colorizeIcons = colorizeIcons
     storeSet('colorizeIcons', colorizeIcons)
+  },
+  setDeckbuilderMode (state, deckbuilderMode) {
+    state.deckbuilderMode = deckbuilderMode
+    storeSet('deckbuilderMode', deckbuilderMode)
   },
   setExportShowCardCounts (state, value) {
     state.exportShowCardCounts = value
