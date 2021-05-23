@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="relative">
     <button
       :disabled="isDisabled"
       :class="{ active: isOpen, 'rounded-b-none': isOpen }"
@@ -9,8 +9,8 @@
       <i class="fa-filter" :class="{ fas: filtersActive, far: !filtersActive }"></i> <span class="hidden sm:inline">Releases</span>
       <span v-if="filtersActive" class="alt-text"> (active)</span>
     </button>
-    <div ref="popup" class="absolute z-50" :class="{ hidden: !popper }">
-      <transition name="fade" @after-leave="cleanupPopper">
+    <div ref="popup" class="absolute z-50 right-0" :class="{ hidden: !popup }">
+      <transition name="fade" @after-leave="popup = false">
         <div v-if="isOpen" class="w-80 max-h-80 border-2 border-black bg-white rounded-md rounded-tr-none text-black flex flex-col">
           <div class="flex flex-nowrap flex-none" role="group" aria-label="Show cards:">
              <button
@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import { createPopper } from '@popperjs/core'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import { request } from '/src/utils/index.js'
 import Toggle from '../../shared/Toggle.vue'
@@ -80,7 +79,7 @@ export default {
     Toggle,
   },
   data: instance => ({
-    popper: null,
+    popup: false,
     isOpen: false,
     loadingCollections: false,
     allCollections: [],
@@ -104,7 +103,7 @@ export default {
   },
   methods: {
     async togglePopup () {
-      if (this.popper) {
+      if (this.popup) {
         // If this.isOpen is false, then we're mid clean-up as we animate out, so just ignore
         if (this.isOpen) {
           // First handle sending the updated data, if necessary
@@ -147,7 +146,7 @@ export default {
         }
         return
       }
-      // Otherwise, we need to create our popper and open 'er up
+      // Otherwise, we need to gather our data and open 'er up
       if (this.loadingCollections) return
       this.loadingCollections = true
       try {
@@ -167,19 +166,8 @@ export default {
       } else {
         this.selectedReleases = new Set(this.myReleases)
       }
-      this.popper = createPopper(this.$refs.button, this.$refs.popup, {
-        placement: 'bottom-end',
-      })
+      this.popup = true
       this.isOpen = true
-      // If we don't run an update on the next tick, the popper treats its size as 0 width/height
-      // No idea why; even setting an explicit size in the styling doesn't help
-      this.$nextTick(() => {
-        this.popper.forceUpdate()
-      })
-    },
-    cleanupPopper () {
-      this.popper.destroy()
-      this.popper = null
     },
     setFilterMine (showMine) {
       this.targetFilterLogic = showMine ? 'mine' : 'all'
