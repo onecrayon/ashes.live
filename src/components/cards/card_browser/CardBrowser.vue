@@ -17,15 +17,17 @@
         class="flex-auto"
         v-model:filter-list="typeFilterList"
         :is-disabled="isDisabled"></type-filter>
-      <button
-        v-if="isDeckbuilderActive"
-        class="flex-none btn mb-4 mr-2"
-        :class="{active: deckbuilderMode}"
-        :title="`${deckbuilderMode ? 'Show' : 'Hide'} conjurations and Phoenixborn`"
-        @click="deckbuilderMode = !deckbuilderMode">
-        <i class="fa-minus-square" :class="{far: !deckbuilderMode, fas: deckbuilderMode}"></i>
-        <span class="alt-text"><span v-if="deckbuilderMode">Show</span><span v-else>Hide</span> conjurations and Phoenixborn</span>
-      </button>
+      <div class="flex-none mb-4 mr-2">
+        <button
+          v-if="isDeckbuilderActive"
+          class="btn py-1 px-2 font-normal text-sm"
+          :class="{active: deckbuilderMode}"
+          :title="`${deckbuilderMode ? 'Show' : 'Hide'} conjurations and Phoenixborn`"
+          @click="deckbuilderMode = !deckbuilderMode">
+          <i class="fa-minus-square" :class="{far: !deckbuilderMode, fas: deckbuilderMode}"></i>
+          <span class="alt-text"><span v-if="deckbuilderMode">Show</span><span v-else>Hide</span> conjurations and Phoenixborn</span>
+        </button>
+      </div>
       <collection-filter
         class="flex-none mb-4"
         v-model:filter-logic="collectionFilterLogic"
