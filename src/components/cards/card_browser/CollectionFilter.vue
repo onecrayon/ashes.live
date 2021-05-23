@@ -30,8 +30,8 @@
           </div>
           <div class="p-2 overflow-y-auto flex-auto">
             <toggle v-if="targetFilterLogic === 'all'" v-model="showEverything"><span class="ml-2">Show everything</span></toggle>
-            <span v-else>Choose the releases you own:</span>
-            <ul class="grid grid-cols-2 gap-1 py-2">
+            <span v-else class="block mt-0.5 mb-1">Choose the releases you own:</span>
+            <ul class="grid grid-cols-2 gap-1 pb-2">
               <li
                 v-for="release of allCollections" :key="release.stub"
                 class="flex flex-nowrap items-start px-1 py-0.5"
@@ -165,21 +165,23 @@ export default {
       } finally {
         this.loadingCollections = false
       }
-      if (this.filterLogic === 'all') {
-        this.selectedReleases = new Set(this.releaseList)
-      } else {
-        this.selectedReleases = new Set(this.myReleases)
-      }
+      this.resetSelectedReleases(this.filterLogic)
       this.popup = true
       this.isOpen = true
     },
+    resetSelectedReleases (property) {
+      if (property === 'all') {
+        this.selectedReleases = new Set(this.releaseList)
+        if (!this.selectedReleases.size) {
+          this.showEverything = true
+        }
+      } else {
+        this.selectedReleases = new Set(this.myReleases)
+      }
+    },
     setFilterMine (showMine) {
       this.targetFilterLogic = showMine ? 'mine' : 'all'
-      if (this.targetFilterLogic === 'mine') {
-        this.selectedReleases = new Set(this.myReleases)
-      } else {
-        this.selectedReleases = new Set(this.releaseList)
-      }
+      this.resetSelectedReleases(this.targetFilterLogic)
     },
   },
 }
