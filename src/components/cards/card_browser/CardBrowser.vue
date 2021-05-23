@@ -17,6 +17,15 @@
         class="flex-auto"
         v-model:filter-list="typeFilterList"
         :is-disabled="isDisabled"></type-filter>
+      <button
+        v-if="isDeckbuilderActive"
+        class="flex-none btn mb-4 mr-2"
+        :class="{active: deckbuilderMode}"
+        :title="`${deckbuilderMode ? 'Show' : 'Hide'} conjurations and Phoenixborn`"
+        @click="deckbuilderMode = !deckbuilderMode">
+        <i class="fa-minus-square" :class="{far: !deckbuilderMode, fas: deckbuilderMode}"></i>
+        <span class="alt-text"><span v-if="deckbuilderMode">Show</span><span v-else>Hide</span> conjurations and Phoenixborn</span>
+      </button>
       <collection-filter
         class="flex-none mb-4"
         v-model:filter-logic="collectionFilterLogic"
@@ -258,6 +267,12 @@ export default {
         this.collectionReleaseList = ensureArray(to.r)
       }
     },
+    isDeckbuilderActive (to, from) {
+      if (to && !from && this.deckbuilderMode) {
+        this.ensureNoConjurationFilter()
+        this.filterList()
+      }
+    },
   },
   computed: {
     galleryStyle () {
@@ -270,6 +285,20 @@ export default {
       },
       set (newValue) {
         this.$store.commit('options/setReleaseFilter', newValue)
+        this.filterList()
+      },
+    },
+    isDeckbuilderActive () {
+      return this.$store.state.builder.enabled
+    },
+    deckbuilderMode: {
+      get () {
+        return this.$store.state.options.deckbuilderMode
+      },
+      set (newValue) {
+        this.$store.commit('options/setDeckbuilderMode', newValue)
+        // If we are in deckbuilder mode, make sure that 'conjurations' is removed from our filters
+        if (newValue) this.ensureNoConjurationFilter()
         this.filterList()
       },
     },
@@ -396,11 +425,26 @@ export default {
       } else if (this.collectionFilterLogic !== 'all') {
         params.releases = this.collectionFilterLogic
       }
+      // Enable deckbuilder mode if:
+      // * The deckbuilder is actually active
+      // * We've opted into the mode
+      // * We are not viewing Phoenixborn (because in that case they're probably trying to switch PBs)
+      if (this.isDeckbuilderActive && this.deckbuilderMode && !this.typeFilterList.includes('phoenixborn')) {
+        params.mode = 'deckbuilder'
+        if (this.$store.state.builder.deck.phoenixborn) {
+          params.include_uniques_for = this.$store.state.builder.deck.phoenixborn.name
+        }
+      }
       this.fetchCards({ options: { params }, failureCallback })
     },
     // Load the next page of cards
     loadNext () {
       this.fetchCards({ endpoint: this.nextCardsURL, pushToRouter: false })
+    },
+    ensureNoConjurationFilter () {
+      if (this.typeFilterList.includes('conjurations')) {
+        this.typeFilterList.splice(this.typeFilterList.indexOf('conjurations'), 1)
+      }
     },
   },
 }

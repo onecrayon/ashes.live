@@ -20,6 +20,8 @@ const state = () => ({
   // Accepts 'all' or 'mine'
   releaseFilter: storeGet('releaseFilter') || 'all',
   colorizeIcons: storeGet('colorizeIcons') || false,
+  // If true, uses "deckbuilder mode" for card listings when the deckbuilder is open
+  deckbuilderMode: storeGet('deckbuilderMode') || false,
   exportShowCardCounts: typeof defaultExportShowCardCounts === 'boolean' ? defaultExportShowCardCounts : true,
   exportSortByType: typeof defaultExportSortByType === 'boolean' ? defaultExportSortByType : true,
   exportShowAttribution: typeof defaultExportShowAttribution === 'boolean' ? defaultExportShowAttribution : true,
@@ -47,6 +49,10 @@ const mutations = {
   setColorizeIcons (state, colorizeIcons) {
     state.colorizeIcons = colorizeIcons
     storeSet('colorizeIcons', colorizeIcons)
+  },
+  setDeckbuilderMode (state, deckbuilderMode) {
+    state.deckbuilderMode = deckbuilderMode
+    storeSet('deckbuilderMode', deckbuilderMode)
   },
   setExportShowCardCounts (state, value) {
     state.exportShowCardCounts = value

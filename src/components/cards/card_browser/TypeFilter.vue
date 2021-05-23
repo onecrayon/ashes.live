@@ -53,15 +53,19 @@ export default {
   computed: {
     cardTypes () {
       // Returns a list of lists like `['Official Type', 'filter_name']`
-      return [
+      const cardTypes = [
         ['Ally', 'ally'],
         ['Action Spell', 'action_spell'],
         ['Reaction Spell', 'reaction_spell'],
         ['Alteration Spell', 'alteration_spell'],
         ['Ready Spell', 'ready_spell'],
         ['Phoenixborn', 'phoenixborn'],
-        ['Conjuration', 'conjurations'],
       ]
+      // Only allow filtering by conjurations if we aren't in deckbuilder mode
+      if (!this.$store.state.builder.enabled || !this.$store.state.options.deckbuilderMode) {
+        cardTypes.push(['Conjuration', 'conjurations'])
+      }
+      return cardTypes
     },
     onlySummoners () {
       return this.isTypeActive('summon');
