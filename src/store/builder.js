@@ -40,6 +40,7 @@ const getBaseState = () => ({
     tutor_map: {},
     // These aren't necessary for saving the deck, but cacheing them improves display logic
     conjurations: [],
+    direct_share_uuid: null,
   },
   // This is a local-only cache of stubs as keys and quantities as values (much simpler for per-card lookups)
   countMap: {},
@@ -85,6 +86,9 @@ const actions = {
       }
       if (deck.conjurations) {
         commit('setConjurations', deck.conjurations)
+      }
+      if (deck.direct_share_uuid) {
+        commit('setDirectShareUUID', deck.direct_share_uuid)
       }
       // TODO: first_five
       // TODO: effect_costs
@@ -335,6 +339,9 @@ const mutations = {
   },
   setConjurations (state, conjurations) {
     state.deck.conjurations = conjurations
+  },
+  setDirectShareUUID (state, directShareUUID) {
+    state.deck.direct_share_uuid = directShareUUID
   },
 }
 
