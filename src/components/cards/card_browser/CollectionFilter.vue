@@ -31,11 +31,14 @@
           <div class="p-2 overflow-y-auto flex-auto">
             <toggle v-if="targetFilterLogic === 'all'" v-model="showEverything"><span class="ml-2">Show everything</span></toggle>
             <span v-else>Choose the releases you own:</span>
-            <ul class="grid grid-cols-2 gap-x-2 gap-y-1 py-2">
+            <ul class="grid grid-cols-2 gap-1 py-2">
               <li
                 v-for="release of allCollections" :key="release.stub"
-                class="flex flex-nowrap items-start"
-                :class="{'col-span-2': release.stub === 'master-set' || release.stub === 'core-set'}">
+                class="flex flex-nowrap items-start px-1 py-0.5"
+                :class="{
+                  'col-span-2': release.stub === 'master-set' || release.stub === 'core-set',
+                  'bg-blue-light': selectedReleases.has(release.stub) && (targetFilterLogic !== 'all' || !showEverything),
+                }">
                 <input type="checkbox" class="flex-none mt-1 mr-1"
                   :id="release.stub"
                   :disabled="targetFilterLogic === 'all' && showEverything"
