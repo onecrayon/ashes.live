@@ -22,7 +22,7 @@
         <i class="fas fa-plus-square"></i>
       </card-link>
     </div>
-    <div v-if="hasStats(card)" class="px-2 inline-block">
+    <div v-if="hasStats(card)" class="px-2 inline-block whitespace-nowrap">
       <span v-if="card.attack !== undefined || card.battlefield !== undefined" class="text-red-light font-bold">
         {{ card.attack || card.battlefield || '0' }}
       </span>
