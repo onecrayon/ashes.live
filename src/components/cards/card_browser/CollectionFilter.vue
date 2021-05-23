@@ -6,7 +6,8 @@
       class="btn py-1 px-2 font-normal text-sm"
       ref="button"
       @click="togglePopup">
-      <i class="fa-filter" :class="{ fas: filtersActive, far: !filtersActive }"></i> <span class="hidden sm:inline">Releases</span>
+      <i class="fa-filter" :class="{ fas: filtersActive, far: !filtersActive }"></i>
+      <span class="hidden sm:inline"> Releases</span>
       <span v-if="filtersActive" class="alt-text"> (active)</span>
     </button>
     <div ref="popup" class="absolute z-50 right-0" :class="{ hidden: !popup }">
