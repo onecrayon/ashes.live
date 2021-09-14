@@ -52,7 +52,7 @@
             <div class="flex-grow pt-0.5">
               <card-link :card="card"></card-link>
               <span v-if="card.phoenixborn" class="text-gray" :title="card.phoenixborn">
-                ({{ card.phoenixborn.split(' ')[0] }})
+                ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
               </span>
             </div>
           </div>
@@ -66,7 +66,7 @@
         <li v-for="card of conjurations" :key="card.stub" class="mb-1">
           {{ card.count }}&times; <card-link :card="card"></card-link>
           <span v-if="card.phoenixborn" class="text-gray" :title="card.phoenixborn">
-            ({{ card.phoenixborn.split(' ')[0] }})
+            ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
           </span>
         </li>
       </ul>
