@@ -46,14 +46,14 @@ export function parseFormattedText (text, ensureParagraphs=false, isLegacy=false
     (_, isImage, text, url, standalone) => {
       let internalLink = false
       const textUrl = url || standalone
-      const parsedUrl = textUrl.replace(/^(https?:\/\/)?(.+)$/i, (_, prefix, url) => {
+      const parsedUrl = textUrl.replace(/^(https?:\/\/)?(.+)$/i, (fullUrl, prefix, url) => {
         if (/^ashes\.live(?:\/.*)?$/i.test(url)) {
           internalLink = true
           return 'https://' + url
         } else if (!prefix) {
-          return 'http://' + url
+          return 'https://' + url
         } else {
-          return url
+          return fullUrl
         }
       })
       text = text ? text.trim() : null
