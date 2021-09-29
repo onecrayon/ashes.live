@@ -14,6 +14,7 @@
       <ul class="list-disc pl-4">
         <li><a href="https://ashteki.com">Ashteki</a> <span class="text-gray">(Play Ashes in your browser! Under active development, so there may be rough edges)</span></li>
         <li><a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2386753960">Ashes Reborn for Tabletop Simulator</a> <span class="text-gray">(requires Tabletop Simulator on Steam)</span></li>
+        <li><a href="https://felttable.com/ashes">Felt Table</a> <span class="text-gray">(Play against an AI bot in your browser)</span></li>
       </ul>
 
       <h3 class="font-bold my-4">Community</h3>
