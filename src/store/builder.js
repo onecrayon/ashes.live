@@ -177,6 +177,20 @@ const actions = {
       })
     })
   },
+  cloneDeck ({ commit, dispatch, state }, id) {
+    return new Promise((resolve, reject) => {
+      request(`/v2/decks/${id}/clone`).then(response => {
+        // Load the cloned copy for editing
+        commit('RESET_STATE')
+        commit('enable')
+        dispatch('PERSIST_DECK', response.data).then(resolve)
+      }).catch(error => {
+        reject(error)
+      }).finally(() => {
+        commit('setIsSaving', false)
+      })
+    })
+  },
   deleteDeck ({ commit, state }, id) {
     return new Promise((resolve, reject) => {
       request(`/v2/decks/${id}`, {

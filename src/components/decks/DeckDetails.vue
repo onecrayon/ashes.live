@@ -44,7 +44,12 @@
         </button>
         <deck-export-modal v-model:open="showTextExport" :deck="deck"></deck-export-modal>
 
-        <!-- TODO: implement generic controls like Clone, Subscribe, etc. -->
+        <button class="btn py-1 w-full mb-8" @click="copyAndEdit" :disabled="isTalkingToServer">
+          <i class="far fa-copy"></i>
+          Clone &amp; Edit
+        </button>
+
+        <!-- TODO: implement generic controls like Subscribe, etc. -->
 
         <!-- Owner's controls -->
         <div v-if="showMine && !deck.is_legacy">
@@ -127,6 +132,7 @@ export default {
       hasPublishedSnapshot: false,
       error: false,
       showTextExport: false,
+      isTalkingToServer: false,
     }
   },
   beforeMount () {
@@ -187,6 +193,12 @@ export default {
       }).catch(error => {
         this.handleResponseError(error)
         this.error = true
+      })
+    },
+    copyAndEdit () {
+      this.isTalkingToServer = true
+      this.$store.dispatch('builder/cloneDeck', this.id).catch(this.handleResponseError).finally(() => {
+        this.isTalkingToServer = false
       })
     },
   },
