@@ -44,7 +44,7 @@
         </button>
         <deck-export-modal v-model:open="showTextExport" :deck="deck"></deck-export-modal>
 
-        <button class="btn py-1 w-full mb-8" @click="copyAndEdit" :disabled="isTalkingToServer">
+        <button v-if="isAuthenticated" class="btn py-1 w-full mb-8" @click="copyAndEdit" :disabled="isTalkingToServer">
           <i class="far fa-copy"></i>
           Clone &amp; Edit
         </button>
@@ -177,6 +177,9 @@ export default {
     title () {
       return this.deck.title || `Untitled ${this.deck.phoenixborn.name}`
     },
+    isAuthenticated () {
+      return this.$store.getters['player/isAuthenticated']
+    },
   },
   methods: {
     loadDeck () {
@@ -197,7 +200,7 @@ export default {
     },
     copyAndEdit () {
       this.isTalkingToServer = true
-      this.$store.dispatch('builder/cloneDeck', this.id).catch(this.handleResponseError).finally(() => {
+      this.$store.dispatch('builder/cloneDeck', { id: this.id }).catch(this.handleResponseError).finally(() => {
         this.isTalkingToServer = false
       })
     },
