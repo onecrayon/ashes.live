@@ -177,9 +177,11 @@ const actions = {
       })
     })
   },
-  cloneDeck ({ commit, dispatch, state }, id) {
+  cloneDeck ({ commit, dispatch, state }, { id, directShareUuid = null }) {
     return new Promise((resolve, reject) => {
-      request(`/v2/decks/${id}/clone`).then(response => {
+      let url = `/v2/decks/${id}/clone`
+      if (directShareUuid) url += `?direct_share_uuid=${directShareUuid}`
+      request(url).then(response => {
         // Load the cloned copy for editing
         commit('RESET_STATE')
         commit('enable')

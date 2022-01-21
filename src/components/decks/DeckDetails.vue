@@ -197,7 +197,7 @@ export default {
     },
     copyAndEdit () {
       this.isTalkingToServer = true
-      this.$store.dispatch('builder/cloneDeck', this.id).catch(this.handleResponseError).finally(() => {
+      this.$store.dispatch('builder/cloneDeck', { id: this.id }).catch(this.handleResponseError).finally(() => {
         this.isTalkingToServer = false
       })
     },
