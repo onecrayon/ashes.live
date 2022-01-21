@@ -1,19 +1,15 @@
 module.exports = {
-  purge: {
-    content: [
-      './src/**/*.html',
-      './src/**/*.vue',
-    ],
-    // Protect certain classes from being purged
-    options: {
-      safelist: [
-        // Protect classes used by Nanobar
-        'nanobar', 'bar',
-        // Protect classes assigned to toasts in main.js
-        'bg-red', 'bg-orange', 'bg-green', 'bg-blue',
-      ],
-    },
-  },
+  content: [
+    './src/**/*.html',
+    './src/**/*.vue',
+  ],
+  // Protect certain classes from being purged
+  safelist: [
+    // Protect classes used by Nanobar
+    'nanobar', 'bar',
+    // Protect classes assigned to toasts in main.js
+    'bg-red', 'bg-orange', 'bg-green', 'bg-blue',
+  ],
   theme: {
     colors: {
       black: 'var(--color-black)',
