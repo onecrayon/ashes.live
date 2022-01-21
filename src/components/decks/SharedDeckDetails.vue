@@ -11,7 +11,7 @@
           You can use this link to import the deck into <a href="https://ashteki.com">Ashteki</a> or the <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2386753960">Ashes Reborn Tabletop Simulator mod</a>.
         </p>
 
-        <button class="btn py-1 w-full" @click="copyAndEdit" :disabled="isTalkingToServer">
+        <button v-if="isAuthenticated" class="btn py-1 w-full" @click="copyAndEdit" :disabled="isTalkingToServer">
           <i class="far fa-copy"></i>
           Clone &amp; Edit
         </button>
@@ -104,6 +104,9 @@ export default {
         return prev + card.count
       }, 0)
     },
+    isAuthenticated () {
+      return this.$store.getters['player/isAuthenticated']
+    },
   },
   methods: {
     loadDeck () {
@@ -119,7 +122,7 @@ export default {
     copyAndEdit () {
       this.isTalkingToServer = true
       this.$store.dispatch('builder/cloneDeck', {
-        id: this.id, directShareUuid: this.uuid
+        id: this.deck.id, directShareUuid: this.uuid
       }).catch(this.handleResponseError).finally(() => {
         this.isTalkingToServer = false
       })
