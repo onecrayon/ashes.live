@@ -44,17 +44,17 @@
         </button>
         <deck-export-modal v-model:open="showTextExport" :deck="deck"></deck-export-modal>
 
-        <button v-if="isAuthenticated" class="btn py-1 w-full mb-8" @click="copyAndEdit" :disabled="isTalkingToServer">
-          <i class="far fa-copy"></i>
-          Clone &amp; Edit
-        </button>
-
         <!-- TODO: implement generic controls like Subscribe, etc. -->
 
         <!-- Owner's controls -->
-        <div v-if="showMine && !deck.is_legacy">
+        <div v-if="showMine && !deck.is_legacy" class="mb-8">
           <deck-edit-buttons :id="deck.id" :title="title" @deleted="$router.push('/decks/mine/')" standalone-buttons></deck-edit-buttons>
         </div>
+
+        <button v-if="isAuthenticated" class="btn py-1 w-full" @click="copyAndEdit" :disabled="isTalkingToServer">
+          <i class="far fa-copy"></i>
+          Clone &amp; Edit
+        </button>
       </div>
       <div
         class="lg:w-2/3 lg:order-1 flex">
