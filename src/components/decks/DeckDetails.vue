@@ -12,8 +12,15 @@
   <div v-else>
     <h1 class="phg-main-action mb-6" :class="{'italic font-normal': !deck.title}">{{ title }}</h1>
     <p v-if="showMine" class="text-l border-2 border-orange rounded bg-inexhaustible px-4 py-2 mb-8">
-      <i class="far fa-eye-slash"></i> You are viewing your most recent private save for this deck.
-      <router-link v-if="hasPublishedSnapshot" :to="{name: 'DeckDetails', params: {id: deck.id}}">View public URL.</router-link>
+      <i v-if="!!deck.is_snapshot" class="far fa-camera"></i>
+      <i v-if="!deck.is_public" class="far fa-eye-slash pl-1"></i>
+      <span v-if="!!deck.is_snapshot">
+        You are viewing a <strong v-if="!deck.is_public">private</strong><strong v-else>public</strong> snapshot for this deck.
+      </span>
+      <span v-else>
+        You are viewing your most recent private save for this deck.
+      </span>
+      <router-link v-if="hasPublishedSnapshot" :to="{name: 'DeckDetails', params: {id: deck.id}}">View latest published URL.</router-link>
     </p>
     <div class="lg:flex">
       <div class="mb-4 lg:pl-8 lg:w-1/3 lg:order-2">
@@ -47,8 +54,8 @@
         <!-- TODO: implement generic controls like Subscribe, etc. -->
 
         <!-- Owner's controls -->
-        <div v-if="showMine && !deck.is_legacy" class="mb-8">
-          <deck-edit-buttons :id="deck.id" :title="title" @deleted="$router.push('/decks/mine/')" standalone-buttons></deck-edit-buttons>
+        <div v-if="(showMine || user.badge === currentUserBadge) && !deck.is_legacy" class="mb-4">
+          <deck-edit-buttons :deck="deck" @deleted="$router.push('/decks/' + (showMine ? '/mine/' : ''))" @refresh="loadDeck()" standalone-buttons></deck-edit-buttons>
         </div>
 
         <button v-if="isAuthenticated" class="btn py-1 w-full" @click="copyAndEdit" :disabled="isTalkingToServer">
@@ -102,6 +109,7 @@
 <script>
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import { request, getPhoenixbornImageUrl } from '/src/utils/index.js'
+import { deckTitle } from '/src/utils/decks.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
@@ -151,6 +159,10 @@ export default {
     showMine () {
       return this.$route.meta.showMine
     },
+    currentUserBadge () {
+      const loggedInUser = this.$store.getters['player/user']
+      return (loggedInUser && loggedInUser.badge) || null
+    },
     deck () {
       if (this._deck && this.$store.state.builder.deck.id === this._deck.id) return this.$store.state.builder.deck
       return this._deck
@@ -175,7 +187,7 @@ export default {
       return releaseNames.join(', ')
     },
     title () {
-      return this.deck.title || `Untitled ${this.deck.phoenixborn.name}`
+      return deckTitle(this.deck)
     },
     isAuthenticated () {
       return this.$store.getters['player/isAuthenticated']

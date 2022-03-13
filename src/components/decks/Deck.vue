@@ -13,7 +13,7 @@
         <span class="flex-grow text-sm">
           <player-badge v-if="!showMine || deckData.is_legacy" :user="deckData.user" />
           <span v-else>
-            <deck-edit-buttons :id="deck.id" :title="title" @deleted="$emit('refresh')"></deck-edit-buttons>
+            <deck-edit-buttons :deck="deck" @deleted="$emit('refresh')" @refresh="$emit('refresh')"></deck-edit-buttons>
           </span>
         </span>
         <span class="text-sm float-right text-gray-darker">
@@ -37,6 +37,7 @@
 <script>
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import { getPhoenixbornImageUrl } from '/src/utils/index.js'
+import { deckTitle } from '/src/utils/decks.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
 import DeckEditButtons from '../shared/DeckEditButtons.vue'
@@ -89,7 +90,7 @@ export default {
       return getPhoenixbornImageUrl(this.deckData.phoenixborn.stub, false, this.deckData.is_legacy)
     },
     title () {
-      return this.deckData.title || `Untitled ${this.deckData.phoenixborn.name}`
+      return deckTitle(this.deckData)
     },
   },
   watch: {

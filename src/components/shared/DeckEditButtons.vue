@@ -1,5 +1,6 @@
 <template>
   <button
+    v-if="!deck.is_snapshot"
     class="btn px-2"
     :class="{
       'active': isCurrentlyEditing,
@@ -11,6 +12,17 @@
     <i class="fas fa-edit mr-1"></i>
     <span v-if="isCurrentlyEditing">Editing</span>
     <span v-else>Edit</span>
+  </button>
+  <button
+    v-else
+    class="btn px-2"
+    :class="{
+      'btn-first': !standaloneButtons,
+      'py-1 w-full mb-2': standaloneButtons,
+    }"
+    @click="showSnapshotModal = true">
+    <i class="fas fa-edit mr-1"></i>
+    Edit Snapshot...
   </button>
   <button
     class="btn transition-colors duration-300 ease-in-out"
@@ -27,28 +39,29 @@
       <span v-else>Delete</span>
     </transition>
   </button>
+  <deck-snapshot-modal v-model:open="showSnapshotModal" :deck="this.deck" is-editing @refresh="$emit('refresh')"></deck-snapshot-modal>
 </template>
 
 <script>
+import { deckTitle } from '/src/utils/decks.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
+import DeckSnapshotModal from '../decks/DeckSnapshotModal.vue'
 
 export default {
   name: 'DeckEditButtons',
   props: {
-    id: {
+    deck: {
       required: true,
-      type: Number,
-    },
-    title: {
-      required: true,
-      type: String,
     },
     standaloneButtons: {
       type: Boolean,
       default: false,
-    }
+    },
   },
-  emits: ['deleted'],
+  components: {
+    DeckSnapshotModal,
+  },
+  emits: ['deleted', 'refresh'],
   setup () {
     // Standard composite containing { toast, handleResponseError }
     return useHandleResponseError()
@@ -57,16 +70,20 @@ export default {
     deleting: false,
     deleteTimeout: null,
     isTalkingToServer: false,
+    showSnapshotModal: false,
   }),
   computed: {
     isCurrentlyEditing () {
-      return this.$store.state.builder.deck.id === this.id
+      return this.$store.state.builder.deck.id === this.deck.id
+    },
+    title () {
+      return deckTitle(this.deck)
     },
   },
   methods: {
     editThisDeck () {
       this.isTalkingToServer = true
-      this.$store.dispatch('builder/editDeck', this.id).catch(this.handleResponseError).finally(() => {
+      this.$store.dispatch('builder/editDeck', this.deck.id).catch(this.handleResponseError).finally(() => {
         this.isTalkingToServer = false
       })
     },
@@ -81,8 +98,8 @@ export default {
           clearTimeout(this.deleteTimeout)
         }
         this.isTalkingToServer = true
-        this.$store.dispatch('builder/deleteDeck', this.id).then(() => {
-          this.toast.success(`Your deck "${this.title}" has been deleted!`)
+        this.$store.dispatch('builder/deleteDeck', this.deck.id).then(() => {
+          this.toast.success(`Your ${!!this.deck.is_snapshot ? "snapshot" : "deck"} "${this.title}" has been deleted!`)
           this.$emit('deleted')
         }).catch(this.handleResponseError).finally(() => {
           this.isTalkingToServer = false
