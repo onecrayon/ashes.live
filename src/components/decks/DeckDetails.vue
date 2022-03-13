@@ -55,7 +55,7 @@
 
         <!-- Owner's controls -->
         <div v-if="(showMine || user.badge === currentUserBadge) && !deck.is_legacy" class="mb-4">
-          <deck-edit-buttons :deck="deck" @deleted="$router.push('/decks/' + (showMine ? '/mine/' : ''))" @refresh="loadDeck()" standalone-buttons></deck-edit-buttons>
+          <deck-edit-buttons :deck="savedDeck" @deleted="$router.push('/decks/' + (showMine ? '/mine/' : ''))" @refresh="loadDeck()" standalone-buttons></deck-edit-buttons>
         </div>
 
         <button v-if="isAuthenticated" class="btn py-1 w-full" @click="copyAndEdit" :disabled="isTalkingToServer">
@@ -167,9 +167,13 @@ export default {
       if (this._deck && this.$store.state.builder.deck.id === this._deck.id) return this.$store.state.builder.deck
       return this._deck
     },
+    savedDeck () {
+      // This is the latest save we have loaded; necessary for things like tracking the user and snapshot state
+      return this._deck
+    },
     user () {
       // This has to be to the saved version of the deck, because we don't persist it for the builder
-      return this._deck.user
+      return this.savedDeck.user
     },
     phoenixbornImagePath () {
       return getPhoenixbornImageUrl(this.deck.phoenixborn.stub, true, this.deck.is_legacy)
@@ -204,7 +208,7 @@ export default {
         this.releases = response.data.releases
         this.hasPublishedSnapshot = !!response.data.has_published_snapshot
         // And set the site title
-        document.title = `${this._deck.title || 'Untitled ' + this._deck.phoenixborn.name} - Ashes.live`
+        document.title = `${deckTitle(this._deck)} - Ashes.live`
       }).catch(error => {
         this.handleResponseError(error)
         this.error = true

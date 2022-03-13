@@ -1,6 +1,6 @@
 <template>
   <button
-    v-if="!deck.is_snapshot"
+    v-if="!deck.is_public"
     class="btn px-2"
     :class="{
       'active': isCurrentlyEditing,
@@ -14,14 +14,14 @@
     <span v-else>Edit</span>
   </button>
   <button
-    v-else
+    v-if="deck.is_snapshot"
     class="btn px-2"
     :class="{
       'btn-first': !standaloneButtons,
       'py-1 w-full mb-2': standaloneButtons,
     }"
     @click="showSnapshotModal = true">
-    <i class="fas fa-edit mr-1"></i>
+    <i class="far fa-pen-square mr-1"></i>
     Edit Snapshot...
   </button>
   <button
@@ -74,7 +74,9 @@ export default {
   }),
   computed: {
     isCurrentlyEditing () {
-      return this.$store.state.builder.deck.id === this.deck.id
+      const editingId = this.$store.state.builder.deck.id
+      if (!editingId) return false
+      return editingId === this.deck.id || (this.deck.is_snapshot && editingId === this.deck.source_id)
     },
     title () {
       return deckTitle(this.deck)
