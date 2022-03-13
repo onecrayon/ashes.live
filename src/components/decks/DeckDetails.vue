@@ -47,7 +47,7 @@
         <!-- TODO: implement generic controls like Subscribe, etc. -->
 
         <!-- Owner's controls -->
-        <div v-if="showMine && !deck.is_legacy" class="mb-8">
+        <div v-if="showMine && !deck.is_legacy" class="mb-4">
           <deck-edit-buttons :id="deck.id" :title="title" @deleted="$router.push('/decks/mine/')" standalone-buttons></deck-edit-buttons>
         </div>
 
