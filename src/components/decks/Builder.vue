@@ -195,7 +195,7 @@ export default {
     },
     saveDeck (forceSave = false) {
       if (this.noPhoenixborn || this.isSaving) return
-      this.$store.dispatch('builder/SAVE_DECK', forceSave)
+      this.$store.dispatch('builder/SAVE_DECK', { forceSave })
     },
     openDescriptionEditor () {
       this.editingDescription = true
