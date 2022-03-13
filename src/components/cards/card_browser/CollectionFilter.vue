@@ -10,17 +10,24 @@
       <span class="hidden sm:inline"> Releases</span>
       <span v-if="filtersActive" class="alt-text"> (active)</span>
     </button>
-    <div ref="popup" class="absolute z-50 right-0" :class="{ hidden: !popup }">
+    <div 
+      ref="popup" 
+      class="absolute z-50 right-0" 
+      :class="{ hidden: !popup }"
+      tabindex="0"
+      @focusout="focusOutPopup">
       <transition name="fade" @after-leave="popup = false">
         <div v-if="isOpen" class="w-80 max-h-80 border-2 border-black bg-white rounded-md rounded-tr-none text-black flex flex-col">
           <div class="flex flex-nowrap flex-none" role="group" aria-label="Show cards:">
              <button
+              ref="allCollectionTab"
               class="flex-auto btn btn-first rounded-none border-t-0 border-l-0 rounded-tl-sm"
               :class="{ 'active': targetFilterLogic === 'all' }"
               @click="setFilterMine(false)">
               All
-            </button
-            ><button
+            </button>
+            <button
+              ref="mineCollectionTab"
               class="flex-auto btn btn-last rounded-none border-t-0 border-r-0"
               :class="{ 'active': targetFilterLogic === 'mine' }"
               :disabled="anonymousUser"
@@ -168,6 +175,11 @@ export default {
       this.resetSelectedReleases(this.filterLogic)
       this.popup = true
       this.isOpen = true
+      this.$nextTick(() => {
+        this.targetFilterLogic === 'all'
+          ? this.$refs.allCollectionTab.focus()
+          : this.$refs.mineCollectionTab.focus()
+      })
     },
     resetSelectedReleases (property) {
       if (property === 'all') {
@@ -182,6 +194,10 @@ export default {
     setFilterMine (showMine) {
       this.targetFilterLogic = showMine ? 'mine' : 'all'
       this.resetSelectedReleases(this.targetFilterLogic)
+    },
+    focusOutPopup(event) {
+      if (!event.currentTarget.contains(event.relatedTarget))
+        this.togglePopup()
     },
   },
 }
