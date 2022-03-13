@@ -96,10 +96,17 @@ const actions = {
       resolve()
     })
   },
-  SAVE_DECK ({ commit, dispatch, state }, forceSave = false) {
+  SAVE_DECK ({ commit, dispatch, state }, { forceSave = false, skipRepopulate = false } = {}) {
     // Saves the deck to the API. Note that the promise does not return direct results from the API!
     // This method debounces the save (unless forceSave is true) so it resolves its promise prior
     // to the save request completing.
+    //
+    // forceSave will immediatley save (canceling any pending debounced call), and the promise will
+    // resolve after the full save is complete.
+    //
+    // skipRepopulate will prevent the builder's state from being repopulated after the save is
+    // complete; generally you want to let it repopulate if the builder remains open and only want
+    // to skip repopulation when the builder is saving as it closes.
     return new Promise((resolve, reject) => {
       // A Phoenixborn is required to save a deck at all, so check for that first
       if (!state.deck.phoenixborn) {
@@ -141,10 +148,18 @@ const actions = {
         {
           then: response => {
             // Persist our response data, just in case there was drift
-            dispatch('PERSIST_DECK', response.data).then(() => {
-              // And note that we're not dirty anymore
+            if (!skipRepopulate) {
+              dispatch('PERSIST_DECK', response.data).then(() => {
+                // And note that we're not dirty anymore
+                commit('setIsDirty', false)
+              })
+            } else {
               commit('setIsDirty', false)
-            })
+            }
+            // Resolve the outer promise, if we forced the save
+            if (forceSave) {
+              resolve()
+            }
           },
           catch: error => {
             // Ensure that our dirty flag is toggled
@@ -156,7 +171,10 @@ const actions = {
           },
         }
       )
-      resolve()
+      // Immediately resolve things if we are not forcing the save
+      if (!forceSave) {
+        resolve()
+      }
     })
   },
   editDeck ({ commit, dispatch, state }, id) {
@@ -206,13 +224,24 @@ const actions = {
       }).catch(reject)
     })
   },
-  reset ({ commit, state }) {
+  reset ({ commit, dispatch, state }) {
     return new Promise((resolve, reject) => {
       if (!state.enabled) return resolve()
       if (state.isSaving) return reject('You cannot exit the deckbuilder while changes are being saved.')
-      // Reset to the base state
-      commit('RESET_STATE')
-      resolve()
+      // If our state is dirty, manually exit, force a save through, and then reset everything after
+      if (state.isDirty) {
+        // Force a save, and make sure that we don't repopulate after it completes
+        commit('disable')
+        dispatch('SAVE_DECK', { forceSave: true, skipRepopulate: true }).then(() => {
+          commit('RESET_STATE')
+          resolve()
+        }).catch(reject)
+      } else {
+        // No save needed, so just reset to the base state
+        // Reset to the base state
+        commit('RESET_STATE')
+        resolve()
+      }
     })
   },
   setPhoenixborn ({ commit, dispatch, state }, card) {
