@@ -14,7 +14,7 @@ import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 function requestWithCallbacks (url, options, { then: thenCallback, catch: catchCallback, finally: finallyCallback }) {
   request(url, options).then(thenCallback).catch(catchCallback).finally(finallyCallback)
 }
-const debouncedRequestWithCallbacks = debounce(requestWithCallbacks, 750)
+const debouncedRequestWithCallbacks = debounce(requestWithCallbacks, 1000)
 // And grab our standard error handling so that save actions can throw their own errors
 const { handleResponseError, toast } = useHandleResponseError()
 
