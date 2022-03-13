@@ -59,9 +59,9 @@
         v-model="title"
         :placeholder="placeholderTitle"
         :disabled="noPhoenixborn"
-        @blur="saveDeck"
-        @enter="saveDeck"></text-input>
-      <button class="flex-none text-3xl pl-2" @click="saveDeck" :disabled="noPhoenixborn" :title="saveAction">
+        @blur="saveDeck()"
+        @enter="saveDeck(true)"></text-input>
+      <button class="flex-none text-3xl pl-2" @click="saveDeck(true)" :disabled="noPhoenixborn" :title="saveAction">
         <i :class="{
           'far fa-circle text-gray': noPhoenixborn,
           'fas fa-circle-notch fa-spin text-gray': isSaving,
@@ -94,7 +94,7 @@
           class="flex-grow mb-4"
           v-model="description"
           placeholder="Deck description..."
-          @blur="saveDeck"
+          @blur="saveDeck()"
           ref="description"></text-editor>
         <div class="pl-2.5">
           <button class="text-3xl text-blue" title="Done editing description" @click="closeDescriptionEditor">
@@ -198,9 +198,9 @@ export default {
       })
       this.paneOpen = false
     },
-    saveDeck () {
+    saveDeck (forceSave = false) {
       if (this.noPhoenixborn || this.isSaving) return
-      this.$store.dispatch('builder/SAVE_DECK', true)
+      this.$store.dispatch('builder/SAVE_DECK', forceSave)
     },
     openDescriptionEditor () {
       this.editingDescription = true
@@ -210,7 +210,7 @@ export default {
     },
     closeDescriptionEditor () {
       this.editingDescription = false
-      this.saveDeck()
+      this.saveDeck(true)
     },
     previewDeck () {
       this.$router.push({
