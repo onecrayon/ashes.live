@@ -27,7 +27,7 @@
     :currentPage="currentPage"
     :totalPage="totalPage"
     :show-mine="showMine"
-    :have-filters="!!filterText || !!phoenixborn"></deck-table>
+    :have-filters="!!filterText || !!phoenixborn || !!card"></deck-table>
 </template>
 
 <script>
@@ -63,6 +63,7 @@ export default {
     decks: null,
     deckCount: 0,
     preconOnly: false,
+    card: null,
   }),
   components: {
     DeckTable,
@@ -94,6 +95,7 @@ export default {
       this.phoenixborn = this.$route.query.phoenixborn
       this.offset = integerQueryParam(this.$route.query.offset)
       this.preconOnly = booleanQueryParam(this.$route.query.preconstructed)
+      this.card = this.$route.query.card
     }
 
     let firstPreviousProps = null
@@ -156,6 +158,7 @@ export default {
       this.phoenixborn = null
       this.offset = 0
       this.preconOnly = false
+      this.card = null
     },
     fetchDecks ({endpoint = null, options = {}, failureCallback = null} = {}) {
       if (!endpoint) {
@@ -178,6 +181,9 @@ export default {
         if (this.preconOnly) {
           // Setting to null makes it an opt-in parameter that doesn't show a value
           query.preconstructed = null
+        }
+        if (this.card) {
+          query.card = this.card
         }
         // Only push to router is query has changed. In the case of scrolling, we don't want to push as
         // it's the same url but pushing to the router will make it scroll back to top
@@ -217,6 +223,7 @@ export default {
       if (this.phoenixborn) params.phoenixborn = this.phoenixborn
       if (filterText) params.q = filterText
       if (this.preconOnly) params.show_preconstructed = true
+      if (this.card) params.card = [this.card]
       this.fetchDecks({ options: { params }, failureCallback })
     },
     loadNext () {

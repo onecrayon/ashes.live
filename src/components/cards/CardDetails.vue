@@ -105,7 +105,7 @@
               </span>
             </card-meta-row>
             <card-meta-row label="Usage:">
-              <strong>{{ usage.users }} user<span v-if="usage.users != 1">s</span></strong> <span v-if="usage.users != 1">have</span><span v-else>has</span> this card in <strong>{{ usage.decks }} deck<span v-if="usage.decks != 1">s</span></strong>
+              <strong>{{ usage.users }} user<span v-if="usage.users != 1">s</span></strong> <span v-if="usage.users != 1">have</span><span v-else>has</span> this card in <router-link :to="{'name': 'Decks', query: { card: card.stub }}"><strong>{{ usage.decks }} deck<span v-if="usage.decks != 1">s</span></strong></router-link>
             </card-meta-row>
             <card-meta-row label="Release:">
               <router-link v-if="preconstructedDeck && preconstructedDeck.title == card.release.name" :to="{'name': 'DeckDetails', params: { id: preconstructedDeck.id }}">{{ card.release.name }}</router-link>
