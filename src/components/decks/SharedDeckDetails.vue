@@ -3,7 +3,7 @@
     <h1 class="phg-natural-power text-gray"><i class="fas fa-circle-notch fa-spin"></i> Loading...</h1>
   </div>
   <div v-else>
-    <h1 class="phg-natural-power mb-6" :class="{'italic font-normal': !deck.title}">{{ title }}</h1>
+    <h1 class="phg-natural-power mb-6 pl-px" :class="{'italic font-normal': !deck.title}">{{ title }}</h1>
     <div class="lg:flex">
       <div class="mb-4 lg:pl-8 lg:w-1/3 lg:order-2">
         <p class="border-2 border-orange rounded bg-inexhaustible px-4 py-2 mb-8">
