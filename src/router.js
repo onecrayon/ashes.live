@@ -7,6 +7,7 @@ import CardListing from './components/cards/CardListing.vue'
 import CardDetails from './components/cards/CardDetails.vue'
 import PublicDecks from './components/decks/PublicDecks.vue'
 import DeckDetails from './components/decks/DeckDetails.vue'
+import DeckHistory from './components/decks/DeckHistory.vue'
 import SharedDeckDetails from './components/decks/SharedDeckDetails.vue'
 import PlayerAccount from './components/players/PlayerAccount.vue'
 import PlayerDecks from './components/decks/PlayerDecks.vue'
@@ -109,6 +110,16 @@ const router = createRouter({
       },
     },
     {
+      path: '/decks/mine/:id/history/',
+      name: 'PrivateDeckHistory',
+      component: DeckHistory,
+      props: true,
+      meta: {
+        showMine: true,
+        needsAuth: true,
+      },
+    },
+    {
       path: '/decks/share/:uuid/',
       name: 'SharedDeckDetails',
       component: SharedDeckDetails,
@@ -118,6 +129,12 @@ const router = createRouter({
       path: '/decks/:id/',
       name: 'DeckDetails',
       component: DeckDetails,
+      props: true,
+    },
+    {
+      path: '/decks/:id/history/',
+      name: 'DeckHistory',
+      component: DeckHistory,
       props: true,
     },
     {

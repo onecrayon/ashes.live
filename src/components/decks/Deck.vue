@@ -1,7 +1,17 @@
 <template>
   <div
-    class="border border-gray bg-white mt-4 mb-4 pl-12 bg-no-repeat"
+    class="border border-gray bg-white mt-4 mb-4 pl-12 bg-no-repeat relative"
+    :class="{
+      'border-inexhaustible-dark': showBadges && !deck.is_public,
+      'border-reaction-dark': showBadges && !deck.is_snapshot,
+    }"
     :style="`background-image: url(${phoenixbornImagePath})`">
+    <div
+      v-if="showBadges && (!deck.is_public || !deck.is_snapshot)"
+      class="absolute inset-x-0 text-center text-sm -top-3">
+      <span v-if="!deck.is_snapshot" class="inline-block rounded-full px-2 leading-tight text-white bg-reaction-dark">Latest</span>
+      <span v-else class="inline-block rounded-full px-2 leading-tight text-white bg-inexhaustible-dark">Private</span>
+    </div>
     <div class="p-2 text-xs">
       <div class="m-0 sm:mb-1 font-bold text-xl flex flex-col sm:flex-row">
         <span class="flex-grow pt-0 sm:pt-2 mb-2 sm:mb-0">
@@ -50,6 +60,10 @@ export default {
       required: true,
     },
     showMine: {
+      type: Boolean,
+      default: false,
+    },
+    showBadges: {
       type: Boolean,
       default: false,
     },

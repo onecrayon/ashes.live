@@ -45,11 +45,26 @@
           </span>
         </div>
 
-        <button class="btn py-1 w-full mb-8" @click="showTextExport = true">
+        <button class="btn py-1 w-full mb-4" @click="showTextExport = true">
           <i class="fas fa-share-square"></i>
           Share...
         </button>
         <deck-export-modal v-model:open="showTextExport" :deck="deck"></deck-export-modal>
+
+        <router-link
+          v-if="showMine"
+          :to="`/decks/mine/${deck.soure_id || deck.id}/history/`"
+          class="block hover:no-underline btn py-1 w-full mb-8">
+          <i class="fas fa-history"></i>
+          Private History
+        </router-link>
+        <router-link
+          v-else
+          :to="`/decks/${deck.source_id}/history/`"
+          class="block hover:no-underline btn py-1 w-full mb-8">
+          <i class="fas fa-history"></i>
+          History
+        </router-link>
 
         <!-- TODO: implement generic controls like Subscribe, etc. -->
 
