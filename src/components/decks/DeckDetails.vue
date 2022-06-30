@@ -11,9 +11,23 @@
   </div>
   <div v-else>
     <h1 class="phg-main-action mb-6 pl-px" :class="{'italic font-normal': !deck.title}">{{ title }}</h1>
-    <p v-if="showMine" class="text-l border-2 border-orange rounded bg-inexhaustible px-4 py-2 mb-8">
-      <i class="far fa-eye-slash"></i> You are viewing your most recent private save for this deck.
-      <router-link v-if="hasPublishedSnapshot" :to="{name: 'DeckDetails', params: {id: deck.id}}">View public URL.</router-link>
+    <p
+      v-if="showMine"
+      class="text-l border-2 rounded px-4 py-2 mb-8"
+      :class="{
+        'border-inexhaustible-dark bg-inexhaustible': !deck.is_public && deck.is_snapshot,
+        'border-reaction-dark bg-reaction': !deck.is_public && !deck.is_snapshot,
+        'border-gray bg-gray-light': deck.is_snapshot && deck.is_public,
+      }">
+      <span v-if="deck.is_snapshot">
+        <i class="far fa-eye-slash"></i>
+        You are viewing a <strong v-if="!deck.is_public">private</strong><strong v-else>public</strong> snapshot for this deck.
+      </span>
+      <span v-else>
+        <i class="far fa-clock"></i>
+        You are viewing your latest private save for this deck.
+      </span>
+      <router-link v-if="hasPublishedSnapshot" :to="{name: 'DeckDetails', params: {id: sourceId}}">View latest published URL.</router-link>
     </p>
     <div class="lg:flex">
       <div class="mb-4 lg:pl-8 lg:w-1/3 lg:order-2">
@@ -38,17 +52,32 @@
           </span>
         </div>
 
-        <button class="btn py-1 w-full mb-8" @click="showTextExport = true">
+        <button class="btn py-1 w-full mb-4" @click="showTextExport = true">
           <i class="fas fa-share-square"></i>
           Share...
         </button>
         <deck-export-modal v-model:open="showTextExport" :deck="deck"></deck-export-modal>
 
+        <router-link
+          v-if="showMine && !deck.is_public"
+          :to="`/decks/mine/${sourceId}/history/`"
+          class="block hover:no-underline btn py-1 w-full mb-8">
+          <i class="fas fa-history"></i>
+          Private History
+        </router-link>
+        <router-link
+          v-else
+          :to="`/decks/${deck.source_id}/history/`"
+          class="block hover:no-underline btn py-1 w-full mb-8">
+          <i class="fas fa-history"></i>
+          History
+        </router-link>
+
         <!-- TODO: implement generic controls like Subscribe, etc. -->
 
         <!-- Owner's controls -->
-        <div v-if="showMine && !deck.is_legacy" class="mb-4">
-          <deck-edit-buttons :id="deck.id" :title="title" @deleted="$router.push('/decks/mine/')" standalone-buttons></deck-edit-buttons>
+        <div v-if="(showMine || user.badge === currentUserBadge) && !deck.is_legacy" class="mb-4">
+          <deck-edit-buttons :deck="savedDeck" @deleted="$router.push('/decks/' + (showMine ? '/mine/' : ''))" @refresh="loadDeck()" standalone-buttons></deck-edit-buttons>
         </div>
 
         <button v-if="isAuthenticated" class="btn py-1 w-full" @click="copyAndEdit" :disabled="isTalkingToServer">
@@ -102,6 +131,7 @@
 <script>
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import { request, getPhoenixbornImageUrl } from '/src/utils/index.js'
+import { deckTitle } from '/src/utils/decks.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
@@ -151,13 +181,25 @@ export default {
     showMine () {
       return this.$route.meta.showMine
     },
+    currentUserBadge () {
+      const loggedInUser = this.$store.getters['player/user']
+      return (loggedInUser && loggedInUser.badge) || null
+    },
     deck () {
       if (this._deck && this.$store.state.builder.deck.id === this._deck.id) return this.$store.state.builder.deck
       return this._deck
     },
+    sourceId () {
+      if (this.deck.is_snapshot) return this.deck.source_id
+      return this.deck.id
+    },
+    savedDeck () {
+      // This is the latest save we have loaded; necessary for things like tracking the user and snapshot state
+      return this._deck
+    },
     user () {
       // This has to be to the saved version of the deck, because we don't persist it for the builder
-      return this._deck.user
+      return this.savedDeck.user
     },
     phoenixbornImagePath () {
       return getPhoenixbornImageUrl(this.deck.phoenixborn.stub, true, this.deck.is_legacy)
@@ -175,7 +217,7 @@ export default {
       return releaseNames.join(', ')
     },
     title () {
-      return this.deck.title || `Untitled ${this.deck.phoenixborn.name}`
+      return deckTitle(this.deck)
     },
     isAuthenticated () {
       return this.$store.getters['player/isAuthenticated']
@@ -189,10 +231,14 @@ export default {
       }
       request(`/v2/decks/${this.id}`, options).then(response => {
         this._deck = response.data.deck
+        // Redirect to the public URL if they try to access a public deck through the private link
+        if (this._deck.is_public && this.showMine) {
+          this.$router.replace(`/decks/${this._deck.id}/`)
+        }
         this.releases = response.data.releases
         this.hasPublishedSnapshot = !!response.data.has_published_snapshot
         // And set the site title
-        document.title = `${this._deck.title || 'Untitled ' + this._deck.phoenixborn.name} - Ashes.live`
+        document.title = `${deckTitle(this._deck)} - Ashes.live`
       }).catch(error => {
         this.handleResponseError(error)
         this.error = true

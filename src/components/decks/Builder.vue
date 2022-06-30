@@ -41,14 +41,18 @@
           <i class="fas fa-share-square"></i>
           Share...
         </button>
-        <button class="btn btn-last mb-4 btn-green" @click="publishDeck" :disabled="invalidDeck">
+        <button class="btn btn-inner" @click="snapshotDeck(false)">
+          <i class="far fa-camera"></i>
+          Snapshot...
+        </button>
+        <button class="btn btn-last mb-4 btn-green" @click="snapshotDeck(true)" :disabled="invalidDeck">
           <i class="far fa-plus-square"></i>
           Publish...
         </button>
       </div>
     </transition-height>
     <deck-export-modal v-model:open="showExportModal" :deck="$store.state.builder.deck"></deck-export-modal>
-    <deck-publish-modal v-model:open="showPublishModal" :deck="$store.state.builder.deck"></deck-publish-modal>
+    <deck-snapshot-modal v-model:open="showSnapshotModal" :deck="$store.state.builder.deck" :publish-snapshot="publishSnapshot"></deck-snapshot-modal>
     <div class="flex mb-2">
       <text-input
         class="flex-grow"
@@ -108,7 +112,7 @@
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import BuilderDeck from './BuilderDeck.vue'
 import DeckExportModal from './DeckExportModal.vue'
-import DeckPublishModal from './DeckPublishModal.vue'
+import DeckSnapshotModal from './DeckSnapshotModal.vue'
 import LinkAlike from '../shared/LinkAlike.vue'
 import TextEditor from '../shared/TextEditor.vue'
 import TextInput from '../shared/TextInput.vue'
@@ -123,7 +127,7 @@ export default {
   components: {
     BuilderDeck,
     DeckExportModal,
-    DeckPublishModal,
+    DeckSnapshotModal,
     LinkAlike,
     TextEditor,
     TextInput,
@@ -136,7 +140,8 @@ export default {
     editingDescription: false,
     showActions: false,
     showExportModal: false,
-    showPublishModal: false,
+    showSnapshotModal: false,
+    publishSnapshot: false,
     // Tracks whether the deckbuilder pane is open on small screens
     paneOpen: true,
   }),
@@ -231,8 +236,9 @@ export default {
         document.body.style.overflow = 'hidden'
       }
     },
-    publishDeck () {
-      this.showPublishModal = true
+    snapshotDeck (publishMode) {
+      this.publishSnapshot = publishMode
+      this.showSnapshotModal = true
       this.showActions = false
     },
   },

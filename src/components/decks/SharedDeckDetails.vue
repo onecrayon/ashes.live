@@ -61,6 +61,7 @@
 <script>
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import { request, getPhoenixbornImageUrl } from '/src/utils/index.js'
+import { deckTitle } from '/src/utils/decks.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import CardCodes from '../shared/CardCodes.vue'
 import DeckCardsPreview from './DeckCardsPreview.vue'
@@ -91,7 +92,7 @@ export default {
   },
   computed: {
     title () {
-      return this.deck.title || `Untitled ${this.deck.phoenixborn.name}`
+      return deckTitle(this.deck)
     },
     phoenixbornImagePath () {
       return getPhoenixbornImageUrl(this.deck.phoenixborn.stub, true, this.deck.is_legacy)

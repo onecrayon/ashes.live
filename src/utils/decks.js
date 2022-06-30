@@ -10,6 +10,10 @@ function pluralCardType (cardType) {
   return cardType + 's'
 }
 
+export function deckTitle (deck) {
+  return deck.title || `Untitled ${deck.phoenixborn.name}`
+}
+
 /**
  * deckToSections(deck)
  * 

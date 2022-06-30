@@ -1,5 +1,6 @@
 <template>
   <button
+    v-if="(!deck.is_public && standaloneButtons) || !deck.is_snapshot"
     class="btn px-2"
     :class="{
       'active': isCurrentlyEditing,
@@ -10,7 +11,27 @@
     @click="editThisDeck()">
     <i class="fas fa-edit mr-1"></i>
     <span v-if="isCurrentlyEditing">Editing</span>
-    <span v-else>Edit</span>
+    <span v-else>Edit <span v-if="deck.is_snapshot">Latest Save</span></span>
+  </button>
+  <button
+    v-if="deck.is_snapshot && standaloneButtons"
+    class="btn px-2"
+    :class="{
+      'py-1 w-full mb-8': standaloneButtons,
+    }" @click="$router.push(`/decks/mine/${deck.source_id}/`)">
+    <i class="far fa-clock"></i>
+    View Latest Save
+  </button>
+  <button
+    v-if="deck.is_snapshot"
+    class="btn px-2"
+    :class="{
+      'btn-first': !standaloneButtons,
+      'py-1 w-full mb-4': standaloneButtons,
+    }"
+    @click="showSnapshotModal = true">
+    <i class="far fa-pen-square mr-1"></i>
+    Edit Snapshot...
   </button>
   <button
     class="btn transition-colors duration-300 ease-in-out"
@@ -27,28 +48,44 @@
       <span v-else>Delete</span>
     </transition>
   </button>
+  <router-link
+    v-if="includeShareLink && deck.direct_share_uuid && !deck.is_public"
+    :to="`/decks/share/${deck.direct_share_uuid}/`"
+    class="btn px-2 hover:no-underline"
+    :class="{
+      'block py-1 w-full': standaloneButtons,
+      'inline-block ml-2': !standaloneButtons,
+    }"
+    title="Share link">
+    <i class="far fa-share-square"></i>
+  </router-link>
+  <deck-snapshot-modal v-model:open="showSnapshotModal" :deck="this.deck" is-editing @refresh="$emit('refresh')"></deck-snapshot-modal>
 </template>
 
 <script>
+import { deckTitle } from '/src/utils/decks.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
+import DeckSnapshotModal from '../decks/DeckSnapshotModal.vue'
 
 export default {
   name: 'DeckEditButtons',
   props: {
-    id: {
+    deck: {
       required: true,
-      type: Number,
-    },
-    title: {
-      required: true,
-      type: String,
     },
     standaloneButtons: {
       type: Boolean,
       default: false,
-    }
+    },
+    includeShareLink: {
+      type: Boolean,
+      default: false,
+    },
   },
-  emits: ['deleted'],
+  components: {
+    DeckSnapshotModal,
+  },
+  emits: ['deleted', 'refresh'],
   setup () {
     // Standard composite containing { toast, handleResponseError }
     return useHandleResponseError()
@@ -57,16 +94,22 @@ export default {
     deleting: false,
     deleteTimeout: null,
     isTalkingToServer: false,
+    showSnapshotModal: false,
   }),
   computed: {
     isCurrentlyEditing () {
-      return this.$store.state.builder.deck.id === this.id
+      const editingId = this.$store.state.builder.deck.id
+      if (!editingId) return false
+      return editingId === this.deck.id || (this.deck.is_snapshot && editingId === this.deck.source_id)
+    },
+    title () {
+      return deckTitle(this.deck)
     },
   },
   methods: {
     editThisDeck () {
       this.isTalkingToServer = true
-      this.$store.dispatch('builder/editDeck', this.id).catch(this.handleResponseError).finally(() => {
+      this.$store.dispatch('builder/editDeck', this.deck.is_snapshot ? this.deck.source_id : this.deck.id).catch(this.handleResponseError).finally(() => {
         this.isTalkingToServer = false
       })
     },
@@ -81,8 +124,8 @@ export default {
           clearTimeout(this.deleteTimeout)
         }
         this.isTalkingToServer = true
-        this.$store.dispatch('builder/deleteDeck', this.id).then(() => {
-          this.toast.success(`Your deck "${this.title}" has been deleted!`)
+        this.$store.dispatch('builder/deleteDeck', this.deck.id).then(() => {
+          this.toast.success(`Your ${this.deck.is_snapshot ? "snapshot" : "deck"} "${this.title}" has been deleted!`)
           this.$emit('deleted')
         }).catch(this.handleResponseError).finally(() => {
           this.isTalkingToServer = false

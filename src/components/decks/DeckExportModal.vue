@@ -46,7 +46,7 @@
 <script>
 import { useToast } from 'vue-toastification'
 import { capitalize } from '/src/utils/text.js'
-import { deckToSections } from '/src/utils/decks.js'
+import { deckToSections, deckTitle } from '/src/utils/decks.js'
 import InputButton from '../shared/InputButton.vue'
 import Modal from '../shared/Modal.vue'
 import Toggle from '../shared/Toggle.vue'
@@ -99,7 +99,7 @@ export default {
     },
     deckText () {
       const text = [
-        this.deck.title || `Untitled ${this.deck.phoenixborn.name}`,
+        deckTitle(this.deck),
         '\n\nPhoenixborn: ',
         this.deck.phoenixborn.name,
         '\n\n'

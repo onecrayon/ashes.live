@@ -1,7 +1,27 @@
 <template>
   <div
-    class="border border-gray bg-white mt-4 mb-4 pl-12 bg-no-repeat"
+    class="border border-gray bg-white mt-4 mb-4 pl-12 bg-no-repeat relative"
+    :class="{
+      'border-inexhaustible-dark': showBadges && !deck.is_public,
+      'border-reaction-dark': showBadges && !deck.is_snapshot,
+    }"
     :style="`background-image: url(${phoenixbornImagePath})`">
+    <div
+      v-if="showBadges"
+      class="absolute inset-x-0 text-center text-sm -top-3">
+      <span v-if="!deck.is_snapshot" class="inline-block rounded-full px-2 leading-tight text-white bg-reaction-dark">
+        <i class="far fa-clock"></i>
+        Latest
+      </span>
+      <span v-else-if="!deck.is_public" class="inline-block rounded-full px-2 leading-tight text-white bg-inexhaustible-dark">
+        <i class="far fa-eye-slash pl-1"></i>
+        Private
+      </span>
+      <span v-else class="inline-block rounded-full px-2 leading-tight text-white bg-gray">
+        <i class="far fa-eye pl-1"></i>
+        Public
+      </span>
+    </div>
     <div class="p-2 text-xs">
       <div class="m-0 sm:mb-1 font-bold text-xl flex flex-col sm:flex-row">
         <span class="flex-grow pt-0 sm:pt-2 mb-2 sm:mb-0">
@@ -13,7 +33,7 @@
         <span class="flex-grow text-sm">
           <player-badge v-if="!showMine || deckData.is_legacy" :user="deckData.user" />
           <span v-else>
-            <deck-edit-buttons :id="deck.id" :title="title" @deleted="$emit('refresh')"></deck-edit-buttons>
+            <deck-edit-buttons :deck="deck" @deleted="$emit('refresh')" @refresh="$emit('refresh')" :include-share-link="includeShareLink"></deck-edit-buttons>
           </span>
         </span>
         <span class="text-sm float-right text-gray-darker">
@@ -37,6 +57,7 @@
 <script>
 import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import { getPhoenixbornImageUrl } from '/src/utils/index.js'
+import { deckTitle } from '/src/utils/decks.js'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
 import DeckEditButtons from '../shared/DeckEditButtons.vue'
@@ -49,6 +70,18 @@ export default {
       required: true,
     },
     showMine: {
+      type: Boolean,
+      default: false,
+    },
+    showBadges: {
+      type: Boolean,
+      default: false,
+    },
+    useDirectLinks: {
+      type: Boolean,
+      default: false,
+    },
+    includeShareLink: {
       type: Boolean,
       default: false,
     },
@@ -71,10 +104,10 @@ export default {
       return this.deck
     },
     linkTarget () {
-      const viewName = this.showMine ? 'PrivateDeckDetails' : 'DeckDetails'
+      const viewName = this.showMine && !this.deck.is_public ? 'PrivateDeckDetails' : 'DeckDetails'
       return {
         name: viewName,
-        params: { id: this.deckData.id },
+        params: { id: this.deckData.is_snapshot && !this.useDirectLinks ? this.deckData.source_id : this.deckData.id },
       }
     },
     lastUpdatedDateFormatted () {
@@ -89,7 +122,7 @@ export default {
       return getPhoenixbornImageUrl(this.deckData.phoenixborn.stub, false, this.deckData.is_legacy)
     },
     title () {
-      return this.deckData.title || `Untitled ${this.deckData.phoenixborn.name}`
+      return deckTitle(this.deckData)
     },
   },
   watch: {
