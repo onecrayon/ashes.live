@@ -7,10 +7,20 @@
     }"
     :style="`background-image: url(${phoenixbornImagePath})`">
     <div
-      v-if="showBadges && (!deck.is_public || !deck.is_snapshot)"
+      v-if="showBadges"
       class="absolute inset-x-0 text-center text-sm -top-3">
-      <span v-if="!deck.is_snapshot" class="inline-block rounded-full px-2 leading-tight text-white bg-reaction-dark">Latest</span>
-      <span v-else class="inline-block rounded-full px-2 leading-tight text-white bg-inexhaustible-dark">Private</span>
+      <span v-if="!deck.is_snapshot" class="inline-block rounded-full px-2 leading-tight text-white bg-reaction-dark">
+        <i class="far fa-clock"></i>
+        Latest
+      </span>
+      <span v-else-if="!deck.is_public" class="inline-block rounded-full px-2 leading-tight text-white bg-inexhaustible-dark">
+        <i class="far fa-eye-slash pl-1"></i>
+        Private
+      </span>
+      <span v-else class="inline-block rounded-full px-2 leading-tight text-white bg-gray">
+        <i class="far fa-eye pl-1"></i>
+        Public
+      </span>
     </div>
     <div class="p-2 text-xs">
       <div class="m-0 sm:mb-1 font-bold text-xl flex flex-col sm:flex-row">
@@ -67,6 +77,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    useDirectLinks: {
+      type: Boolean,
+      default: false,
+    }
   },
   emits: ['refresh'],
   components: {
@@ -86,10 +100,10 @@ export default {
       return this.deck
     },
     linkTarget () {
-      const viewName = this.showMine ? 'PrivateDeckDetails' : 'DeckDetails'
+      const viewName = this.showMine && !this.deck.is_public ? 'PrivateDeckDetails' : 'DeckDetails'
       return {
         name: viewName,
-        params: { id: this.deckData.id },
+        params: { id: this.deckData.is_snapshot && !this.useDirectLinks ? this.deckData.source_id : this.deckData.id },
       }
     },
     lastUpdatedDateFormatted () {

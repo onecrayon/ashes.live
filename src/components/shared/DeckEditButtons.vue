@@ -14,7 +14,7 @@
     <span v-else>Edit</span>
   </button>
   <button
-    v-if="deck.is_snapshot"
+    v-if="deck.is_snapshot && (standaloneButtons || deck.is_public)"
     class="btn px-2"
     :class="{
       'btn-first': !standaloneButtons,
@@ -23,6 +23,15 @@
     @click="showSnapshotModal = true">
     <i class="far fa-pen-square mr-1"></i>
     Edit Snapshot...
+  </button>
+  <button
+    v-if="deck.is_snapshot && standaloneButtons"
+    class="btn px-2"
+    :class="{
+      'py-1 w-full mb-2': standaloneButtons,
+    }" @click="$router.push(`/decks/mine/${deck.source_id}/`)">
+    <i class="far fa-clock"></i>
+    View Latest Save
   </button>
   <button
     class="btn transition-colors duration-300 ease-in-out"

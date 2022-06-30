@@ -11,16 +11,23 @@
   </div>
   <div v-else>
     <h1 class="phg-main-action mb-6" :class="{'italic font-normal': !deck.title}">{{ title }}</h1>
-    <p v-if="showMine" class="text-l border-2 border-orange rounded bg-inexhaustible px-4 py-2 mb-8">
-      <i v-if="!!deck.is_snapshot" class="far fa-camera"></i>
-      <i v-if="!deck.is_public" class="far fa-eye-slash pl-1"></i>
-      <span v-if="!!deck.is_snapshot">
+    <p
+      v-if="showMine"
+      class="text-l border-2 rounded px-4 py-2 mb-8"
+      :class="{
+        'border-inexhaustible-dark bg-inexhaustible': !deck.is_public && deck.is_snapshot,
+        'border-reaction-dark bg-reaction': !deck.is_snapshot,
+        'border-gray bg-gray-light': deck.is_snapshot && deck.is_public,
+      }">
+      <span v-if="deck.is_snapshot">
+        <i class="far fa-eye-slash"></i>
         You are viewing a <strong v-if="!deck.is_public">private</strong><strong v-else>public</strong> snapshot for this deck.
       </span>
       <span v-else>
-        You are viewing your most recent private save for this deck.
+        <i class="far fa-clock"></i>
+        You are viewing your latest private save for this deck.
       </span>
-      <router-link v-if="hasPublishedSnapshot" :to="{name: 'DeckDetails', params: {id: deck.id}}">View latest published URL.</router-link>
+      <router-link v-if="hasPublishedSnapshot" :to="{name: 'DeckDetails', params: {id: deck.is_snapshot ? deck.source_id : deck.id}}">View latest published URL.</router-link>
     </p>
     <div class="lg:flex">
       <div class="mb-4 lg:pl-8 lg:w-1/3 lg:order-2">
@@ -220,6 +227,10 @@ export default {
       }
       request(`/v2/decks/${this.id}`, options).then(response => {
         this._deck = response.data.deck
+        // Redirect to the public URL if they try to access a public deck through the private link
+        if (this._deck.is_public && this.showMine) {
+          this.$router.replace(`/decks/${this._deck.id}/`)
+        }
         this.releases = response.data.releases
         this.hasPublishedSnapshot = !!response.data.has_published_snapshot
         // And set the site title

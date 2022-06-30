@@ -23,8 +23,8 @@
       <span :class="{'italic font-normal': !topDeck.title}">{{ title }}</span>
     </h1>
 
-    <deck v-if="showMine" :deck="topDeck" show-badges></deck>
-    <deck v-for="snapshot in snapshots" :key="snapshot.id" :deck="snapshot" show-badges></deck>
+    <deck v-if="showMine" :deck="topDeck" show-badges :show-mine="showMine"></deck>
+    <deck v-for="snapshot in snapshots" :key="snapshot.id" :deck="snapshot" show-badges :show-mine="showMine" use-direct-links></deck>
   </div>
 </template>
 
