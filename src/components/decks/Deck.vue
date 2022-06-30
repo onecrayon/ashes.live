@@ -33,7 +33,7 @@
         <span class="flex-grow text-sm">
           <player-badge v-if="!showMine || deckData.is_legacy" :user="deckData.user" />
           <span v-else>
-            <deck-edit-buttons :deck="deck" @deleted="$emit('refresh')" @refresh="$emit('refresh')"></deck-edit-buttons>
+            <deck-edit-buttons :deck="deck" @deleted="$emit('refresh')" @refresh="$emit('refresh')" :include-share-link="includeShareLink"></deck-edit-buttons>
           </span>
         </span>
         <span class="text-sm float-right text-gray-darker">
@@ -80,7 +80,11 @@ export default {
     useDirectLinks: {
       type: Boolean,
       default: false,
-    }
+    },
+    includeShareLink: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ['refresh'],
   components: {

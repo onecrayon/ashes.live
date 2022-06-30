@@ -16,7 +16,7 @@
       class="text-l border-2 rounded px-4 py-2 mb-8"
       :class="{
         'border-inexhaustible-dark bg-inexhaustible': !deck.is_public && deck.is_snapshot,
-        'border-reaction-dark bg-reaction': !deck.is_snapshot,
+        'border-reaction-dark bg-reaction': !deck.is_public && !deck.is_snapshot,
         'border-gray bg-gray-light': deck.is_snapshot && deck.is_public,
       }">
       <span v-if="deck.is_snapshot">
@@ -27,7 +27,7 @@
         <i class="far fa-clock"></i>
         You are viewing your latest private save for this deck.
       </span>
-      <router-link v-if="hasPublishedSnapshot" :to="{name: 'DeckDetails', params: {id: deck.is_snapshot ? deck.source_id : deck.id}}">View latest published URL.</router-link>
+      <router-link v-if="hasPublishedSnapshot" :to="{name: 'DeckDetails', params: {id: sourceId}}">View latest published URL.</router-link>
     </p>
     <div class="lg:flex">
       <div class="mb-4 lg:pl-8 lg:w-1/3 lg:order-2">
@@ -59,8 +59,8 @@
         <deck-export-modal v-model:open="showTextExport" :deck="deck"></deck-export-modal>
 
         <router-link
-          v-if="showMine"
-          :to="`/decks/mine/${deck.soure_id || deck.id}/history/`"
+          v-if="showMine && !deck.is_public"
+          :to="`/decks/mine/${sourceId}/history/`"
           class="block hover:no-underline btn py-1 w-full mb-8">
           <i class="fas fa-history"></i>
           Private History
@@ -188,6 +188,10 @@ export default {
     deck () {
       if (this._deck && this.$store.state.builder.deck.id === this._deck.id) return this.$store.state.builder.deck
       return this._deck
+    },
+    sourceId () {
+      if (this.deck.is_snapshot) return this.deck.source_id
+      return this.deck.id
     },
     savedDeck () {
       // This is the latest save we have loaded; necessary for things like tracking the user and snapshot state

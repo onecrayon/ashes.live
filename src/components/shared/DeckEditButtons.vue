@@ -1,6 +1,6 @@
 <template>
   <button
-    v-if="!deck.is_public"
+    v-if="(!deck.is_public && standaloneButtons) || !deck.is_snapshot"
     class="btn px-2"
     :class="{
       'active': isCurrentlyEditing,
@@ -11,27 +11,27 @@
     @click="editThisDeck()">
     <i class="fas fa-edit mr-1"></i>
     <span v-if="isCurrentlyEditing">Editing</span>
-    <span v-else>Edit</span>
-  </button>
-  <button
-    v-if="deck.is_snapshot && (standaloneButtons || deck.is_public)"
-    class="btn px-2"
-    :class="{
-      'btn-first': !standaloneButtons,
-      'py-1 w-full mb-2': standaloneButtons,
-    }"
-    @click="showSnapshotModal = true">
-    <i class="far fa-pen-square mr-1"></i>
-    Edit Snapshot...
+    <span v-else>Edit <span v-if="deck.is_snapshot">Latest Save</span></span>
   </button>
   <button
     v-if="deck.is_snapshot && standaloneButtons"
     class="btn px-2"
     :class="{
-      'py-1 w-full mb-2': standaloneButtons,
+      'py-1 w-full mb-8': standaloneButtons,
     }" @click="$router.push(`/decks/mine/${deck.source_id}/`)">
     <i class="far fa-clock"></i>
     View Latest Save
+  </button>
+  <button
+    v-if="deck.is_snapshot"
+    class="btn px-2"
+    :class="{
+      'btn-first': !standaloneButtons,
+      'py-1 w-full mb-4': standaloneButtons,
+    }"
+    @click="showSnapshotModal = true">
+    <i class="far fa-pen-square mr-1"></i>
+    Edit Snapshot...
   </button>
   <button
     class="btn transition-colors duration-300 ease-in-out"
@@ -48,6 +48,17 @@
       <span v-else>Delete</span>
     </transition>
   </button>
+  <router-link
+    v-if="includeShareLink && deck.direct_share_uuid && !deck.is_public"
+    :to="`/decks/share/${deck.direct_share_uuid}/`"
+    class="btn px-2 hover:no-underline"
+    :class="{
+      'block py-1 w-full': standaloneButtons,
+      'inline-block ml-2': !standaloneButtons,
+    }"
+    title="Share link">
+    <i class="far fa-share-square"></i>
+  </router-link>
   <deck-snapshot-modal v-model:open="showSnapshotModal" :deck="this.deck" is-editing @refresh="$emit('refresh')"></deck-snapshot-modal>
 </template>
 
@@ -63,6 +74,10 @@ export default {
       required: true,
     },
     standaloneButtons: {
+      type: Boolean,
+      default: false,
+    },
+    includeShareLink: {
       type: Boolean,
       default: false,
     },
@@ -94,7 +109,7 @@ export default {
   methods: {
     editThisDeck () {
       this.isTalkingToServer = true
-      this.$store.dispatch('builder/editDeck', this.deck.id).catch(this.handleResponseError).finally(() => {
+      this.$store.dispatch('builder/editDeck', this.deck.is_snapshot ? this.deck.source_id : this.deck.id).catch(this.handleResponseError).finally(() => {
         this.isTalkingToServer = false
       })
     },
@@ -110,7 +125,7 @@ export default {
         }
         this.isTalkingToServer = true
         this.$store.dispatch('builder/deleteDeck', this.deck.id).then(() => {
-          this.toast.success(`Your ${!!this.deck.is_snapshot ? "snapshot" : "deck"} "${this.title}" has been deleted!`)
+          this.toast.success(`Your ${this.deck.is_snapshot ? "snapshot" : "deck"} "${this.title}" has been deleted!`)
           this.$emit('deleted')
         }).catch(this.handleResponseError).finally(() => {
           this.isTalkingToServer = false

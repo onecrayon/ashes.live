@@ -24,7 +24,7 @@
     </h1>
 
     <deck v-if="showMine" :deck="topDeck" show-badges :show-mine="showMine"></deck>
-    <deck v-for="snapshot in snapshots" :key="snapshot.id" :deck="snapshot" show-badges :show-mine="showMine" use-direct-links></deck>
+    <deck v-for="snapshot in snapshots" :key="snapshot.id" :deck="snapshot" show-badges :show-mine="showMine" use-direct-links include-share-link></deck>
   </div>
 </template>
 
