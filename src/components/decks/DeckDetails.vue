@@ -10,7 +10,7 @@
     <h1 class="phg-main-action text-gray"><i class="fas fa-circle-notch fa-spin"></i> Loading...</h1>
   </div>
   <div v-else>
-    <h1 class="phg-main-action mb-6" :class="{'italic font-normal': !deck.title}">{{ title }}</h1>
+    <h1 class="phg-main-action mb-6 pl-px" :class="{'italic font-normal': !deck.title}">{{ title }}</h1>
     <p
       v-if="showMine"
       class="text-l border-2 rounded px-4 py-2 mb-8"
