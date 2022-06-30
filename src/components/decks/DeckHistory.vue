@@ -25,6 +25,17 @@
 
     <deck v-if="showMine" :deck="topDeck" show-badges :show-mine="showMine"></deck>
     <deck v-for="snapshot in snapshots" :key="snapshot.id" :deck="snapshot" show-badges :show-mine="showMine" use-direct-links include-share-link></deck>
+
+    <div v-show="nextSnapshots" class="my-4 text-center">
+      <button class="btn btn-blue py-2 px-4" :disabled="isLoading" @click="loadSnapshots(true)">
+        <span v-if="isLoading">
+          <i class="fas fa-circle-notch fa-spin"></i> Loading...
+        </span>
+        <span v-if="!isLoading">
+          Load more snapshots...
+        </span>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -49,6 +60,7 @@ export default {
       _deck: null,
       snapshots: null,
       nextSnapshots: null,
+      isLoading: false,
       error: false,
     }
   },
@@ -63,6 +75,7 @@ export default {
     3. User viewing a deck they *do not* own from the "public deck" view
         * Should see most recent public snapshot at top, followed by older public snapshots
     */
+    this.isLoading = true
     this.loadDeck()
     this.loadSnapshots()
     if (this.showMine) {
@@ -109,14 +122,22 @@ export default {
         this.error = true
       })
     },
-    loadSnapshots () {
-      // TODO: figure out how to handle pagination/endless scrolling
+    loadSnapshots (loadNext = false) {
+      let url = `/v2/decks/${this.id}/snapshots`
+      if (loadNext) {
+        url = this.nextSnapshots
+      }
       const options = {}
       if (!this.showMine) {
         options.params = { show_public_only: true }
       }
-      request(`/v2/decks/${this.id}/snapshots`, options).then(response => {
-        this.snapshots = response.data.results
+      this.isLoading = true
+      request(url, options).then(response => {
+        if (loadNext) {
+          this.snapshots = this.snapshots.concat(response.data.results)
+        } else {
+          this.snapshots = response.data.results
+        }
         this.nextSnapshots = response.data.next
         // Set the site title, if necessary
         if (!this.showMine) {
@@ -125,6 +146,8 @@ export default {
       }).catch(error => {
         this.handleResponseError(error)
         this.error = true
+      }).finally(() => {
+        this.isLoading = false
       })
     },
   },
