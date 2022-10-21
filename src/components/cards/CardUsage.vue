@@ -1,5 +1,5 @@
 <template>
-  <h1>Recent Decks using these cards</h1>
+  <h1>Recent Decks using this card</h1>
   <div v-if="loading" class="text-center text-gray text-2xl py-8 px-4">
     <i class="fas fa-circle-notch fa-spin"></i> Loading...
   </div>
