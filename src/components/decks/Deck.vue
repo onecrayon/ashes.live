@@ -40,16 +40,19 @@
           Last updated: {{ lastUpdatedDateFormatted }} ago
         </span>
       </div>
-      <hr class="mb-1 mt-2" />
-      <div class="mb-1">
-        <span class="text-lg">
-          <card-link :card="deckData.phoenixborn"></card-link>
-        </span>
-        <span class="text-sm float-right font-bold" :class="{'text-red': cardsCount !== 30, 'text-gray': cardsCount === 30}">
-          {{ cardsCount }} / 30
-        </span>
+
+      <div v-if="showCards">
+        <hr class="mb-1 mt-2" />
+        <div class="mb-1">
+          <span class="text-lg">
+            <card-link :card="deckData.phoenixborn"></card-link>
+          </span>
+          <span class="text-sm float-right font-bold" :class="{'text-red': cardsCount !== 30, 'text-gray': cardsCount === 30}">
+            {{ cardsCount }} / 30
+          </span>
+        </div>
+        <deck-cards-preview :deck="deckData" />
       </div>
-      <deck-cards-preview :deck="deckData" />
     </div>
   </div>
 </template>
@@ -84,6 +87,10 @@ export default {
     includeShareLink: {
       type: Boolean,
       default: false,
+    },
+    showCards: {
+      type: Boolean,
+      default: true,
     },
   },
   emits: ['refresh'],
