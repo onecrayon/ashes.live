@@ -10,7 +10,7 @@
     </p>
   </div>
   <div v-else-if="decks && decks.length">
-      <deck v-for="deck of decks" :key="deck.id" :deck="deck" :show-cards="false">
+      <deck v-for="deck of decks" :key="deck.id" :deck="deck">
       </deck>
     <div v-if="limit">
       <button class="btn px-4 py-2" @click="showAll">Show All</button>
