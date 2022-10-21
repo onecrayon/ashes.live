@@ -9,7 +9,7 @@
   <div v-else-if="decks && decks.length">
       <deck v-for="deck of decks" :key="deck.id" :deck="deck" />
 
-      <router-link v-if="allDecks.length > 10" :to="'/decks?card=' + stub">
+      <router-link v-if="hasMoreDecks" :to="'/decks?card=' + stub">
         See all decks using this card
       </router-link>
   </div>
@@ -29,13 +29,13 @@ export default {
   data: () => ({
     loading: true,
     decks: null,
-    allDecks: null,
+    hasMoreDecks: null,
     error: false,
   }),
   beforeMount () {
-    request(`/v2/decks?limit=11&card=${this.stub}`).then(response => {
-      this.allDecks = response.data.results;
-      this.decks = this.allDecks.slice(0, 10)
+    request(`/v2/decks?limit=10&card=${this.stub}`).then(response => {
+      this.hasMoreDecks = response.data.count > 10
+      this.decks = response.data.results
       this.loading=false;
     }).catch(error => {
       this.error = true;
