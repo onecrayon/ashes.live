@@ -13,8 +13,7 @@
     <h1 class="phg-illusion-power">{{ username }}<span class="text-gray">#{{ badge }}</span></h1>
 
     <!-- TODO: move description into a sidebar and add deck-listing that only shows this user's decks -->
-
-    <div>{{ description }}</div>
+    <card-codes :content="description" needs-paragraphs></card-codes>
     <player-decks :badge="badge" :username="username" />
   </div>
 </template>
