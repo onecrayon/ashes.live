@@ -14,19 +14,22 @@
 
     <!-- TODO: move description into a sidebar and add deck-listing that only shows this user's decks -->
 
-    <card-codes :content="description" needs-paragraphs></card-codes>
+    <div>{{ description }}</div>
+    <player-decks :badge="badge" :username="username" />
   </div>
 </template>
 
 <script>
 import { request } from '/src/utils/index.js'
 import CardCodes from '../shared/CardCodes.vue'
+import PlayerDecks from './PlayerDecks.vue'
 
 export default {
   name: 'PlayerPublicProfile',
   props: ['badge'],
   components: {
     CardCodes,
+    PlayerDecks,
   },
   data: () => ({
     username: null,
