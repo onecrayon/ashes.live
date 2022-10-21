@@ -5,16 +5,13 @@
   </div>
   <div v-else-if="(!decks || !decks.length)" class="text-center bg-inexhaustible border border-gray-light my-4 py-8">
     <h2>No Decks found</h2>
-    <p>
-      <button class="btn btn-blue px-4 py-2">Be the First!</button>
-    </p>
   </div>
   <div v-else-if="decks && decks.length">
-      <deck v-for="deck of decks" :key="deck.id" :deck="deck">
-      </deck>
-    <div v-if="limit">
-      <button class="btn px-4 py-2" @click="showAll">Show All</button>
-    </div>
+      <deck v-for="deck of decks" :key="deck.id" :deck="deck" />
+
+      <router-link v-if="allDecks.length > 10" :to="'/decks?card=' + stub">
+        See all decks using this card
+      </router-link>
   </div>
 
 </template>
@@ -32,25 +29,18 @@ export default {
   data: () => ({
     loading: true,
     decks: null,
-    limit: true,
+    allDecks: null,
     error: false,
   }),
   beforeMount () {
-    request(`/v2/decks?card=${this.stub}`).then(response => {
+    request(`/v2/decks?limit=11&card=${this.stub}`).then(response => {
       this.allDecks = response.data.results;
-      this.decks = this.allDecks.slice(0, 5)
-      console.log(this.allDecks);
+      this.decks = this.allDecks.slice(0, 10)
       this.loading=false;
     }).catch(error => {
       this.error = true;
       this.loading=false;
     })
-  },
-  methods: {
-    showAll () {
-      this.limit = false;
-      this.decks = this.allDecks;
-    }
   }
 }
 </script>
