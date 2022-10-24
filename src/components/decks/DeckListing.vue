@@ -58,6 +58,8 @@ export default {
     isDisabled: false,
     filterText: '',
     phoenixborn: null,
+    player: null,
+    card: null,
     offset: 0,
     // This is the list of decks currently shown
     decks: null,
@@ -92,6 +94,8 @@ export default {
     if (Object.keys(this.$route.query).length) {
       this.filterText = this.$route.query.q
       this.phoenixborn = this.$route.query.phoenixborn
+      this.player = this.$route.query.player
+      this.card = this.$route.query.card
       this.offset = integerQueryParam(this.$route.query.offset)
       this.preconOnly = booleanQueryParam(this.$route.query.preconstructed)
     }
@@ -172,6 +176,12 @@ export default {
         if (this.phoenixborn) {
           query.phoenixborn = this.phoenixborn
         }
+        if (this.player) {
+          query.player = this.player
+        }
+        if (this.card) {
+          query.card = this.card
+        }
         if (this.offset) {
           query.offset = this.offset
         }
@@ -215,6 +225,8 @@ export default {
       }
       const filterText = trimmed(this.filterText)
       if (this.phoenixborn) params.phoenixborn = this.phoenixborn
+      if (this.player) params.player = this.player
+      if (this.card) params.card = this.card
       if (filterText) params.q = filterText
       if (this.preconOnly) params.show_preconstructed = true
       this.fetchDecks({ options: { params }, failureCallback })

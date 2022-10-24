@@ -128,6 +128,8 @@
         </div>
       </div>
     </div>
+    <card-usage :stub="stub"></card-usage>
+
   </div>
 </template>
 
@@ -139,6 +141,7 @@ import CardCosts from '../shared/CardCosts.vue'
 import DeckQtyButtons from '../shared/DeckQtyButtons.vue'
 import CardMetaRow from './CardMetaRow.vue'
 import CardRelatedCards from './CardRelatedCards.vue'
+import CardUsage from './CardUsage.vue'
 
 export default {
   name: 'CardDetails',
@@ -149,6 +152,7 @@ export default {
     CardMetaRow,
     CardRelatedCards,
     DeckQtyButtons,
+    CardUsage,
   },
   data: () => ({
     card: null,
