@@ -182,6 +182,6 @@ export function parseEffectText (text, isLegacy=false) {
     .replace(/<\/(?:ul|ol)>/g, '</div>')
     .replace(/<(\/?)li>/g, '<$1p>')
   // Bold ability names (&#39; is apostrophe)
-  text = text.replace(/(?:<p>|^)(<span class="alt-text">.+?<\/span>)?((?:[a-z 0-9]|&#39;)+:)(?= \w| <i class="phg-)/ig, '<p>$1<strong>$2</strong>')
+  text = text.replace(/(?:<p>|^)(<span class="alt-text">.+?<\/span>)?((?:[a-z 0-9!]|&#39;)+:)(?= \w| <i class="phg-)/ig, '<p>$1<strong>$2</strong>')
   return text
 }
