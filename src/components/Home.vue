@@ -21,20 +21,15 @@
 
       <ul class="list-disc pl-4">
         <li><a href="https://discord.gg/UU5bduq">Community Discord</a> <span class="text-gray">(TTS, Ashteki, or webcam matchmaking + general discussion)</span></li>
-        <li><a href="https://www.reddit.com/r/AshesGame/">Ashes on reddit</a></li>
         <li><a href="https://boardgamegeek.com/boardgame/167400/ashes-rise-phoenixborn/forums/0">Ashes on BoardGameGeek</a></li>
       </ul>
 
        <h3 class="font-bold my-4">Media</h3>
 
       <ul class="list-disc pl-4">
-        <li>The Shuffle Bus: <a href="https://www.youtube.com/channel/UC245bv3dtpv4j35iHnwmI9g">YouTube</a> &amp; <a href="https://theshufflebus.com/category/ecg/ashesreborn/">Ashes Blog</a></li>
+        <li><a href="https://wiki.ashes.live">Ashes Community Wiki</a></li>
         <li><a href="https://www.youtube.com/watch?v=zvvX1HQgwNU&list=PLmHifZPFC_JtixhVcpyDwXv4y6vKN0BUr">Team Covenant</a> <span class="text-gray">(YouTube)</span></li>
-        <li><a href="https://www.youtube.com/watch?v=XUufNGvytzw&list=PLy_xfxviuIJfhK4W0ZDPD_7slKpuG3Lg9">ChaosTheory's Ashes Games</a> <span class="text-gray">(YouTube)</span></li>
-        <li><a href="https://www.youtube.com/watch?v=zkc2WmESddk&list=PLSoGmnPUGr7Gu2v8k-eahBYhUMFo2mLfl">Yote's Gaming</a> <span class="text-gray">(YouTube)</span></li>
         <li><a href="https://www.plaidhatgames.com/plaid-hat-podcast/">The Plaid Hat Podcast</a></li>
-        <li><a href="https://soundcloud.com/user-489430998/tracks">The Reaction - Ashes Podcast</a></li>
-        <li><a href="https://thejadethronepodcast.libsyn.com/website">The Jade Throne Podcast</a></li>
       </ul>
 
       <h3 class="font-bold my-4">Files</h3>
@@ -42,6 +37,7 @@
       <ul class="list-disc pl-4">
         <li><a :href="getCDNURL('/files/ashes-reborn-rules.pdf')">Ashes Reborn Rules</a> <span class="text-gray">(PDF)</span></li>
         <li><a :href="getCDNURL('/files/ashes-reborn-faq.pdf')">Ashes Reborn FAQ</a> <span class="text-gray">(PDF)</span></li>
+        <li><a :href="getCDNURL('/files/ashes-red-rains-rules.pdf')">Ashes Red Rains Rules</a> or <a :href="getCDNURL('/files/ashes-red-rains-combined-rules.pdf')">Exhaustive Red Rains Rules</a> <span class="text-gray">(PDF)</span></li>
         <li>Dice reference cards:
           <div class="text-2xl mt-1">
             <a class="die ceremonial phg-ceremonial-power py-1 px-2" :href="getCDNURL('/images/cards/ceremonial-magic.jpg')" target="_blank"><span class="alt-text">Ceremonial Magic</span></a>
@@ -69,17 +65,14 @@
     <div class="sm:w-1/3">
       <h2>Resources for new players</h2>
 
-      <p>Welcome to Ashes Reborn! In addition to the resources below, we would love to have you come say "hello" in the <a href="https://discord.gg/UU5bduq">Community Discord</a>, perhaps join in on First Five Fridays (an online, casual play event where you can easily find someone to teach you to play), and ask any questions about rules/deck-building/Mist Spirit plushies/etc!</p>
+      <p>Welcome to Ashes Reborn! In addition to the resources below, we would love to have you come say "hello" in the <a href="https://discord.gg/UU5bduq">Community Discord</a>!</p>
 
       <ul class="list-disc pl-4">
+        <li><a href="https://wiki.ashes.live">Ashes Community Wiki</a> (text; most up-to-date collection of learning material!)</li>
         <li><a href="https://jaysonsethlindley.medium.com/phoenix-rising-a-new-player-guide-to-ashes-reborn-c93c9d5d981e">Phoenix Rising: A New Player Guide to Ashes Reborn</a> (text; some overlap with the links below)</li>
         <li><a href="https://beckism.com/2021/04/a-beginners-guide-to-ashes-reborn/">A beginner's guide to Ashes Reborn</a> (text)</li>
         <li><a href="https://beckism.com/2021/04/archetypal-strategies-in-ashes-reborn/">Archetypal strategies in Ashes Reborn</a> (text; best after you've played a few games)</li>
         <li><a href="https://jaysonsethlindley.medium.com/colorful-cubes-foundations-of-deckbuilding-in-ashes-reborn-c49cd1abbe29">Colorful Cubes: Foundations of Deckbuilding in Ashes Reborn</a> (text)</li>
-        <li><a href="https://jaysonsethlindley.medium.com/argaia-by-the-numbers-live-blogging-ashes-draft-tournament-season-2-20853c51f522">Argaia By The Numbers: Live-Blogging Ashes Draft Tournament Season 2</a> (text; not strictly new player advice, but it's coverage of a draft event played by some of the top Ashes players which can give you insight into what cards they consider competitive)</li>
-        <li><a href="https://youtu.be/oburqXYS9-4">Ashes Reborn Tabletop Simulator Tutorial</a> (video)</li>
-        <li><a href="https://thejadethronepodcast.libsyn.com/website/episode-200-the-jade-throne-reborn">The Jade Throne Reborn</a> (audio; starting with this episode, Jade Throne covers the basics of Ashes Reborn)</li>
-        <li><a href="https://www.twitch.tv/theshufflebus/">ShuffleBus Twitch</a> (stream; live Ashes content every Thursday and they're happy to answer questions from new players)</li>
       </ul>
 
       <hr class="border-gray-light mt-8 mb-4">
