@@ -99,7 +99,6 @@
 
 <script>
 import axios from 'axios'
-import qs from 'qs'
 import { useToast } from 'vue-toastification'
 import LogInModal from './components/LogInModal.vue'
 import Builder from './components/decks/Builder.vue'
@@ -107,8 +106,8 @@ import LinkAlike from './components/shared/LinkAlike.vue'
 import emitter from './events.js'
 
 // Set up sensible Axios defaults for query string array handling
-// (it uses bracketed property names, which the backend doesn't support)
-axios.defaults.paramsSerializer = params => qs.stringify(params, {arrayFormat: 'repeat'})
+// (`null` means "don't show brackets")
+axios.defaults.paramsSerializer = {indexes: null}
 
 function siteTitle(routeObject) {
   // Returns the title that should be used based on the $route object

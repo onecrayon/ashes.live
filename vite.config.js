@@ -6,5 +6,6 @@ module.exports = {
       'vue': 'vue/dist/vue.esm-bundler.js'
     },
   },
-  plugins: [vue()]
+  plugins: [vue()],
+  server: {port: 3000},
 }
