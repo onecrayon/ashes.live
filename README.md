@@ -5,7 +5,7 @@ and community site for the card game Ashes Reborn. The site uses the following f
 to make developing easier:
 
 * [VueJS 3](https://v3.vuejs.org) for Javascript logic
-* [Tailwind CSS 2](https://tailwindcss.com/) for utility-first styling
+* [Tailwind CSS](https://tailwindcss.com/) for utility-first styling
 
 ## Installation
 
