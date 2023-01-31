@@ -1,18 +1,29 @@
 <template>
-  <div class="md:flex md:flex-nowrap mb-4">
-    <clearable-search
-      class="flex-auto h-10 mb-4 md:pr-4 md:mb-0"
-      placeholder="Filter by title..."
-      v-model:search="filterText"
-      :is-disabled="isDisabled"></clearable-search>
-    <phoenixborn-picker
-      class="flex-auto h-10 mb-4 md:pr-4 md:mb-0"
-      placeholder="Filter by Phoenixborn..."
-      v-model:filter="phoenixborn"
-      :is-legacy="showLegacy"
-    />
-    <div v-if="!showMine" class="flex flex-col justify-center h-10 mb-4">
-      <toggle v-model="preconOnly"><span class="ml-2 text-sm">Preconstructed Only</span></toggle>
+  <div class="mb-4">
+    <div class="md:flex md:flex-nowrap">
+      <clearable-search
+        class="flex-auto h-10 mb-4 md:pr-4 md:mb-0"
+        placeholder="Filter by title..."
+        v-model:search="filterText"
+        :is-disabled="isDisabled"></clearable-search>
+      <phoenixborn-picker
+        class="flex-auto h-10 mb-4 md:pr-4 md:mb-0"
+        placeholder="Filter by Phoenixborn..."
+        v-model:filter="phoenixborn"
+        :is-legacy="showLegacy"
+      />
+      <div v-if="!showMine" class="flex flex-col justify-center h-10 mb-4">
+        <toggle v-model="preconOnly"><span class="ml-2 text-sm">Preconstructed Only</span></toggle>
+      </div>
+    </div>
+    <!-- TODO: Replace this with an actual filter control (with auto-complete!) -->
+    <div v-if="cardFilters" class="text-sm">
+      Decks including:
+      <ul class="inline-block">
+        <li v-for="stub of cardFilters" class="inline-block rounded-full bg-blue-light text-gray-dark px-2 mr-2">
+          {{ cardDetails(stub).name }} <i class="fas fa-times-circle cursor-pointer" @click="removeFromCardFilters(stub)"></i>
+        </li>
+      </ul>
     </div>
   </div>
   <deck-table
@@ -87,7 +98,11 @@ export default {
     },
     totalPage() {
       return Math.ceil(this.deckCount / DECKS_PER_PAGE)
-    }
+    },
+    cardFilters () {
+      if (!this.card || !this.card.length) return null
+      return Array.isArray(this.card) ? this.card : [this.card]
+    },
   },
   created () {
     // Before we do anything, we need to translate any query parameters into filters if we have any
@@ -158,6 +173,8 @@ export default {
     clearFilters () {
       this.filterText = ''
       this.phoenixborn = null
+      this.player = null
+      this.card = null
       this.offset = 0
       this.preconOnly = false
     },
@@ -237,6 +254,17 @@ export default {
     },
     loadPrevious () {
       this.offset -= DECKS_PER_PAGE
+      this.filterList()
+    },
+    cardDetails (stub) {
+      const details = this.$store.state.cards.stubMap[stub]
+      return details ? details : {name: stub}
+    },
+    removeFromCardFilters (stub) {
+      if (this.card == stub) this.card = null
+      else {
+        this.card.splice(this.card.indexOf(stub), 1)
+      }
       this.filterList()
     },
   },
