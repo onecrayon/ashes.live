@@ -11,6 +11,9 @@
   </div>
   <div v-else>
     <h1 class="phg-main-action mb-6 pl-px" :class="{'italic font-normal': !deck.title}">{{ title }}</h1>
+    <p v-if="deck.is_legacy" class="border-red border-2 rounded bg-red-lightest px-4 py-2 mb-4">
+      This is a <strong class="text-red">legacy Ashes 1.0 deck</strong>. It cannot be played using Ashes Reborn cards.
+    </p>
     <p
       v-if="showMine"
       class="text-l border-2 rounded px-4 py-2 mb-8"
@@ -80,7 +83,7 @@
           <deck-edit-buttons :deck="savedDeck" @deleted="$router.push('/decks/' + (showMine ? '/mine/' : ''))" @refresh="loadDeck()" standalone-buttons></deck-edit-buttons>
         </div>
 
-        <button v-if="isAuthenticated" class="btn py-1 w-full" @click="copyAndEdit" :disabled="isTalkingToServer">
+        <button v-if="isAuthenticated && !deck.is_legacy" class="btn py-1 w-full" @click="copyAndEdit" :disabled="isTalkingToServer">
           <i class="far fa-copy"></i>
           Clone &amp; Edit
         </button>
