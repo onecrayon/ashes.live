@@ -2,12 +2,12 @@
   <div v-if="!isDisabled && (!decks || !decks.length)" class="text-center bg-inexhaustible border border-gray-light my-4 py-8">
     <div v-if="!haveFilters && showMine && !showLegacy">
       <p class="text-lg mb-8">
-        You have not created any decks yet!
+        You have not created any <span v-if="showRedRains">Red Rains</span><span v-else>competitive</span> decks yet!
       </p>
       <p>
         <button class="btn btn-green px-4 py-2" @click="newDeck">
           <i class="fas fa-plus"></i>
-          Create your first deck
+          Create your first <span v-if="showRedRains">Red Rains</span><span v-else>competitive</span> deck
         </button>
       </p>
     </div>
@@ -72,9 +72,13 @@ export default {
     showLegacy () {
       return !!this.$route.meta.showLegacy
     },
+    showRedRains () {
+      return !!this.$route.meta.showRedRains
+    },
   },
   methods: {
     newDeck () {
+      // TODO: figure out how to automatically create a Red Rains deck when appropriate
       this.$store.commit('builder/enable')
     },
   },

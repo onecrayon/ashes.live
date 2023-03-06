@@ -63,6 +63,15 @@ const router = createRouter({
       meta: { title: 'Decks' },
     },
     {
+      path: '/decks/red-rains/',
+      name: 'RedRainsDecks',
+      component: PublicDecks,
+      meta: {
+        title: 'Red Rains Decks',
+        showRedRains: true,
+      },
+    },
+    {
       path: '/decks/preconstructed/',
       redirect: {
         name: 'Decks',
@@ -90,8 +99,18 @@ const router = createRouter({
       },
     },
     {
+      path: '/decks/mine/red-rains/',
+      name: 'RedRainsPlayerDecks',
+      component: PlayerDecks,
+      meta: {
+        title: 'My Red Rains Decks',
+        needsAuth: true,
+        showRedRains: true,
+      },
+    },
+    {
       path: '/decks/mine/legacy/',
-      name: 'PlayerLegacyDecks',
+      name: 'LegacyPlayerDecks',
       component: PlayerDecks,
       meta: {
         title: 'My Legacy Decks',
