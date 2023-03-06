@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'phg-ashes';
-  src: url('./phg-ashes.woff2?62521253') format('woff2'),
-	   url('./phg-ashes.woff?62521253') format('woff');
+  src: url('./phg-ashes.woff2?53018092') format('woff2'),
+       url('./phg-ashes.woff?53018092') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -74,5 +74,6 @@ button[class*=" phg-"]::before {
 .phg-time-power-alt:before { content: '\e813'; } /* '' */
 .phg-basic-magic-alt:before { content: '\e814'; } /* '' */
 .phg-time-class:before { content: '\e815'; } /* '' */
+.phg-red-rain:before { content: '\e816'; } /* '' */
 .phg-sympathy-class:before { content: '\e81e'; } /* '' */
 .phg-sympathy-power:before { content: '\e81f'; } /* '' */
