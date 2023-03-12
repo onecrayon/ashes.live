@@ -87,6 +87,9 @@ export default {
     showLegacy () {
       return !!this.$route.meta.showLegacy
     },
+    showRedRains () {
+      return !!this.$route.meta.showRedRains
+    },
     havePreviousDecks () {
       return this.offset > 0
     },
@@ -239,6 +242,9 @@ export default {
       // Show legacy cards, if necessary
       if (this.showLegacy) {
         params['show_legacy'] = true
+      }
+      if (this.showRedRains) {
+        params['show_red_rains'] = true
       }
       const filterText = trimmed(this.filterText)
       if (this.phoenixborn) params.phoenixborn = this.phoenixborn

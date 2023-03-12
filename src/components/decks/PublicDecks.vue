@@ -1,15 +1,36 @@
 <template>
-  <h1 class="phg-main-action">Browse decks</h1>
+  <h1 :class="{'phg-exhaust': showLegacy, 'phg-red-rain': showRedRains, 'phg-main-action': !showLegacy && !showRedRains}">
+    Browse Decks
+  </h1>
 
-  <p v-if="!showLegacy" class="text-l mb-8">
-    <!-- Using a named view because this is one of the more likely ones to move to a different route -->
-    You are viewing <strong class="text-red">Ashes Reborn</strong> decks. <router-link :to="{name: 'LegacyDecks'}">View Ashes Legacy decks instead</router-link>.
-  </p>
-  <div v-else>
-    <p class="text-l border-2 border-orange rounded bg-inexhaustible px-4 py-2 mb-2">
-      You are viewing <strong class="text-gray-darker">Ashes Legacy</strong> decks. <router-link to="/decks/">View Ashes Reborn decks instead</router-link>.
-    </p>
-  </div>
+  <nav role="group" aria-label="Deck types">
+    <ul class="sm:flex text-center text-lg mb-4">
+      <li class="sm:flex-auto">
+        <router-link
+          :to="{name: 'Decks'}"
+          class="phg-main-action block mb-2 sm:mb-0 btn sm:btn-first hover:no-underline text-black"
+          :class="{'active cursor-text': !showLegacy && !showRedRains}">
+          Competitive
+        </router-link>
+      </li>
+      <li class="flex-auto">
+        <router-link
+          :to="{name: 'RedRainsDecks'}"
+          class="phg-red-rain block mb-2 sm:mb-0 btn sm:btn-inner hover:no-underline text-black"
+          :class="{'active cursor-text': showRedRains}">
+          Red Rains
+        </router-link>
+      </li>
+      <li class="flex-auto">
+        <router-link
+          :to="{name: 'LegacyDecks'}"
+          class="phg-exhaust block mb-2 sm:mb-0 btn sm:btn-last hover:no-underline text-black"
+          :class="{'active cursor-text': showLegacy}">
+          Legacy
+        </router-link>
+      </li>
+    </ul>
+  </nav>
 
   <deck-listing></deck-listing>
 </template>
@@ -25,6 +46,9 @@ export default {
   computed: {
     showLegacy () {
       return !!this.$route.meta.showLegacy
+    },
+    showRedRains () {
+      return !!this.$route.meta.showRedRains
     },
   },
 }

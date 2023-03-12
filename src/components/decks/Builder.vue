@@ -20,7 +20,9 @@
         <i class="fas" :class="{'fa-chevron-double-right': paneOpen, 'fa-chevron-double-left': !paneOpen}"></i>
         <span class="alt-text">Toggle pane</span>
       </button>
-      <h1 class="phg-ceremonial-class m-0 flex-grow">Build your deck</h1>
+      <h1 class="m-0 flex-grow" :class="{'phg-ceremonial-class': !deck.is_red_rains, 'phg-red-rain': deck.is_red_rains}">
+        Build your <span v-if="deck.is_red_rains" class="alt-text">Red Rains</span> deck
+      </h1>
       <button
         class="text-3xl pl-2 leading-none"
         :class="{'text-blue': showActions}"
@@ -32,23 +34,33 @@
     </div>
     <!-- Once I have an animation; test closing the actions after clicking one -->
     <transition-height>
-      <div v-if="showActions" class="text-right text-sm">
-        <button class="btn btn-first" @click="previewDeck">
-          <i class="fas fa-eye"></i>
-          Preview
-        </button>
-        <button class="btn btn-inner" @click="exportDeck">
-          <i class="fas fa-share-square"></i>
-          Share...
-        </button>
-        <button class="btn btn-inner" @click="snapshotDeck(false)">
-          <i class="far fa-camera"></i>
-          Snapshot...
-        </button>
-        <button class="btn btn-last mb-4 btn-green" @click="snapshotDeck(true)" :disabled="invalidDeck">
-          <i class="far fa-plus-square"></i>
-          Publish...
-        </button>
+      <div v-if="showActions" class="text-sm flex flex-wrap justify-end">
+        <div class="mb-2 flex-none">
+          <button class="btn btn-first" @click="previewDeck">
+            <i class="fas fa-eye"></i>
+            Preview
+          </button>
+          <button class="btn btn-last" @click="exportDeck">
+            <i class="fas fa-share-square"></i>
+            Share...
+          </button>
+        </div>
+        <div class="ml-2 flex-none">
+          <button class="btn btn-first" @click="snapshotDeck(false)">
+            <i class="far fa-camera"></i>
+            Snapshot...
+          </button>
+          <button class="btn btn-last btn-green" @click="snapshotDeck(true)" :disabled="invalidDeck">
+            <i class="far fa-plus-square"></i>
+            Publish...
+          </button>
+        </div>
+        <div class="ml-2 flex-none mb-4">
+          <button class="btn" :class="{'active': deck.is_red_rains}" @click="toggleRedRains">
+            <i class="phg-red-rain"></i> Red Rains
+            <span class="alt-text">{{ deck.is_red_rains ? ' (active)' : '' }}</span>
+          </button>
+        </div>
       </div>
     </transition-height>
     <deck-export-modal v-model:open="showExportModal" :deck="$store.state.builder.deck"></deck-export-modal>
@@ -240,6 +252,10 @@ export default {
       this.publishSnapshot = publishMode
       this.showSnapshotModal = true
       this.showActions = false
+    },
+    toggleRedRains () {
+      this.$store.commit('builder/setRedRains', !this.deck.is_red_rains)
+      this.saveDeck()
     },
   },
   watch: {

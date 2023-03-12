@@ -38,6 +38,7 @@ const getBaseState = () => ({
     first_five: [],
     effect_costs: [],
     tutor_map: {},
+    is_red_rains: false,
     // These aren't necessary for saving the deck, but cacheing them improves display logic
     conjurations: [],
     direct_share_uuid: null,
@@ -58,6 +59,12 @@ const getters = {
   deckSections (state) {
     return deckToSections(state.deck)
   },
+  phoenixbornUniqueCount (state) {
+    return state.deck.cards.reduce((value, card) => {
+      if (card.phoenixborn) return value + card.count
+      else return value
+    }, 0)
+  },
 }
 
 // Actions
@@ -73,6 +80,7 @@ const actions = {
       commit('setDescription', deck.description)
       commit('setPhoenixborn', deck.phoenixborn)
       commit('setModified', deck.modified)
+      commit('setRedRains', deck.is_red_rains)
       for (const dieObject of deck.dice) {
         commit('setDieCount', dieObject)
       }
@@ -127,6 +135,7 @@ const actions = {
         first_five: state.deck.first_five,
         effect_costs: state.deck.effect_costs,
         tutor_map: state.deck.tutor_map,
+        is_red_rains: state.deck.is_red_rains,
       }
       if (state.deck.id) {
         data.id = state.deck.id
@@ -195,10 +204,13 @@ const actions = {
       })
     })
   },
-  cloneDeck ({ commit, dispatch, state }, { id, directShareUuid = null }) {
+  cloneDeck ({ commit, dispatch, state }, { id, directShareUuid = null, isRedRains = null }) {
     return new Promise((resolve, reject) => {
       let url = `/v2/decks/${id}/clone`
-      if (directShareUuid) url += `?direct_share_uuid=${directShareUuid}`
+      const parameters = []
+      if (directShareUuid) parameters.push(`direct_share_uuid=${directShareUuid}`)
+      if (isRedRains !== null) parameters.push(`red_rains=${isRedRains}`)
+      if (parameters.length) url += `?${parameters.join('&')}`
       request(url).then(response => {
         // Load the cloned copy for editing
         commit('RESET_STATE')
@@ -279,8 +291,11 @@ const mutations = {
     Object.assign(state, getBaseState())
   },
   // One of the few mutations intended to be used publicly for this store; enables the deckbuilder
-  enable (state) {
-    if (!state.enabled) state.enabled = true
+  enable (state, isRedRains = false) {
+    if (!state.enabled) {
+      state.deck.is_red_rains = isRedRains
+      state.enabled = true
+    }
   },
   // These are all private; don't use them
   disable (state) {
@@ -297,6 +312,9 @@ const mutations = {
   },
   setModified (state, value) {
     state.deck.modified = value
+  },
+  setRedRains (state, value) {
+    state.deck.is_red_rains = value
   },
   setPhoenixborn (state, card) {
     if (state.deck.phoenixborn && state.deck.phoenixborn.stub === card.stub) return
