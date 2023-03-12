@@ -71,7 +71,7 @@
                 <i class="fas fa-times text-xl"></i> Exit builder
               </link-alike>
               <link-alike v-else use-underline @click="newDeck" class="right-0 whitespace-nowrap">
-                <i class="fas fa-plus text-xl"></i> New deck
+                <i class="fas fa-plus text-xl"></i> New <span v-if="isRedRains">Red Rains</span> deck
               </link-alike>
             </transition>
           </div>
@@ -158,7 +158,10 @@ export default {
     },
     isDeckbuilding () {
       return this.$store.state.builder.enabled
-    }
+    },
+    isRedRains () {
+      return !!this.$route.meta.showRedRains
+    },
   },
   watch: {
     $route(to, from) {
@@ -169,7 +172,7 @@ export default {
   },
   methods: {
     newDeck () {
-      this.$store.commit('builder/enable')
+      this.$store.commit('builder/enable', this.isRedRains)
     },
     exitDeckbuilder () {
       this.$store.dispatch('builder/reset')

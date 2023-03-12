@@ -78,8 +78,7 @@ export default {
   },
   methods: {
     newDeck () {
-      // TODO: figure out how to automatically create a Red Rains deck when appropriate
-      this.$store.commit('builder/enable')
+      this.$store.commit('builder/enable', !!this.$route.meta.showRedRains)
     },
   },
 }
