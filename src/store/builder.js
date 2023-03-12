@@ -204,10 +204,13 @@ const actions = {
       })
     })
   },
-  cloneDeck ({ commit, dispatch, state }, { id, directShareUuid = null }) {
+  cloneDeck ({ commit, dispatch, state }, { id, directShareUuid = null, isRedRains = null }) {
     return new Promise((resolve, reject) => {
       let url = `/v2/decks/${id}/clone`
-      if (directShareUuid) url += `?direct_share_uuid=${directShareUuid}`
+      const parameters = []
+      if (directShareUuid) parameters.push(`direct_share_uuid=${directShareUuid}`)
+      if (isRedRains !== null) parameters.push(`red_rains=${isRedRains}`)
+      if (parameters.length) url += `?${parameters.join('&')}`
       request(url).then(response => {
         // Load the cloned copy for editing
         commit('RESET_STATE')

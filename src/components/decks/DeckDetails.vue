@@ -83,9 +83,13 @@
           <deck-edit-buttons :deck="savedDeck" @deleted="$router.push('/decks/' + (showMine ? '/mine/' : ''))" @refresh="loadDeck()" standalone-buttons></deck-edit-buttons>
         </div>
 
-        <button v-if="isAuthenticated && !deck.is_legacy" class="btn py-1 w-full" @click="copyAndEdit" :disabled="isTalkingToServer">
+        <button v-if="isAuthenticated && !deck.is_legacy" class="btn py-1 mb-4 w-full" @click="copyAndEdit(this.deck.is_red_rains)" :disabled="isTalkingToServer">
           <i class="far fa-copy"></i>
           Clone &amp; Edit
+        </button>
+        <button v-if="isAuthenticated && !deck.is_legacy" class="btn py-1 w-full" @click="copyAndEdit(!this.deck.is_red_rains)" :disabled="isTalkingToServer">
+          <i class="fas fa-copy"></i>
+          Clone as <span v-if="deck.is_red_rains">PvP</span><span v-else>PvE</span>
         </button>
       </div>
       <div
@@ -247,9 +251,9 @@ export default {
         this.error = true
       })
     },
-    copyAndEdit () {
+    copyAndEdit (isRedRains) {
       this.isTalkingToServer = true
-      this.$store.dispatch('builder/cloneDeck', { id: this.deck.id }).catch(this.handleResponseError).finally(() => {
+      this.$store.dispatch('builder/cloneDeck', { id: this.deck.id, isRedRains }).catch(this.handleResponseError).finally(() => {
         this.isTalkingToServer = false
       })
     },
