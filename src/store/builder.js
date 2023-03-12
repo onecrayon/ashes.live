@@ -58,6 +58,12 @@ const getters = {
   deckSections (state) {
     return deckToSections(state.deck)
   },
+  phoenixbornUniqueCount (state) {
+    return state.deck.cards.reduce((value, card) => {
+      if (card.phoenixborn) return value + card.count
+      else return value
+    }, 0)
+  },
 }
 
 // Actions

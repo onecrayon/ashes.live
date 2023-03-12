@@ -39,7 +39,7 @@
           [$style.standalone]: standalone,
         }"
         @click="setCardCount(card, count)"
-        :disabled="isSaving">
+        :disabled="isSaving || (card.phoenixborn && count + phoenixbornUniqueCount - deckCount > 3)">
           <i v-if="count === 0 && zeroRemovesCard" class="fas fa-times"><span class="alt-text">Remove</span></i>
           <span v-else>{{ count }}</span>
         </button>
@@ -79,6 +79,9 @@ export default {
     },
     deckPhoenixborn () {
       return this.$store.state.builder.deck.phoenixborn
+    },
+    phoenixbornUniqueCount () {
+      return this.$store.getters['builder/phoenixbornUniqueCount']
     },
     deckCount () {
       return this.$store.state.builder.countMap[this.card.stub] || 0
