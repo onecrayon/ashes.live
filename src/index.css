@@ -38,55 +38,240 @@
 }
 
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
 
-@layer base {
-  html, body {
-    min-width: 360px;
-  }
+/**
+ * CUSTOM CSS
+ *
+ * These styles must be placed directly in the CSS file (rather than in TailwindCSS @layers) because many of them
+ * are dynamically applied at runtime, and thus would be removed by the tree shaking algorithm at build time.
+ */
+html, body {
+  min-width: 360px;
+}
 
-  a {
-    @apply text-blue;
-  }
+a {
+  @apply text-blue;
+}
 
-  a:hover, a:active {
-    @apply underline;
-  }
+a:hover, a:active {
+  @apply underline;
+}
 
-  h1 {
-    @apply text-3xl font-bold mb-4;
-  }
+h1 {
+  @apply text-3xl font-bold mb-4;
+}
 
-  h2 {
-    @apply text-2xl mb-4;
-  }
+h2 {
+  @apply text-2xl mb-4;
+}
 
-  h3 {
-    @apply text-lg font-bold mb-4;
-  }
+h3 {
+  @apply text-lg font-bold mb-4;
+}
 
-  h4 {
-    @apply mb-2;
-  }
+h4 {
+  @apply mb-2;
+}
 
-  p {
-    @apply my-4;
-  }
+p {
+  @apply my-4;
+}
 
-  button, input {
-    @apply transition-opacity duration-200 ease-in-out;
+button, input {
+  @apply transition-opacity duration-200 ease-in-out;
 
-    &[readonly], &[disabled] {
-      @apply opacity-50 cursor-not-allowed;
-    }
-  }
-
-  hr {
-    color: var(--color-gray);
+  &[readonly], &[disabled] {
+    @apply opacity-50 cursor-not-allowed;
   }
 }
 
+hr {
+  color: var(--color-gray);
+}
+
+.nanobar .bar {
+  @apply bg-blue opacity-50;
+}
+
+.divider {
+  background: url('./assets/icon-diamond-bullet.png') no-repeat center center;
+  display: inline-block;
+  height: 7px;
+  width: 7px;
+  vertical-align: middle;
+}
+
+.alt-text {
+  display: inline-block;
+  width: 0px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.inexhaustible-effects {
+  @apply bg-inexhaustible border border-inexhaustible-dark px-2 py-px my-2 relative clear-both;
+}
+
+.inexhaustible-effects::before {
+  content: '';
+  background: url('./assets/icon-inexhaustible.png') no-repeat left top;
+  width: 11px;
+  height: 11px;
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  margin-left: -6px;
+}
+
+.reaction-effects {
+  @apply bg-reaction border border-reaction-dark px-2 py-px my-2 relative clear-both;
+}
+
+.reaction-effects::before {
+  content: '';
+  background: url('./assets/icon-reaction.png') no-repeat left top;
+  width: 19px;
+  height: 11px;
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  margin-left: -10px;
+}
+
+.parsed-text ul {
+  @apply list-disc pl-4;
+}
+
+.die {
+  line-height: 1.5em;
+  flex: 0 0 auto;
+  border-radius: 3px;
+  margin: 0.1em;
+  text-align: center;
+
+  &:before {
+    padding: 0;
+  }
+
+  &:hover, &:active {
+    @apply no-underline;
+  }
+}
+
+.die.basic {
+  @apply text-gray border-gray bg-gray-light;
+}
+
+.die.ceremonial {
+  @apply text-dice-ceremonial border-dice-ceremonial bg-dice-ceremonial-bg;
+}
+
+.die.charm {
+  @apply text-dice-charm border-dice-charm bg-dice-charm-bg;
+}
+
+.die.illusion {
+  @apply text-dice-illusion border-dice-illusion bg-dice-illusion-bg;
+}
+
+.die.natural {
+  @apply text-dice-natural border-dice-natural bg-dice-natural-bg;
+}
+
+.die.divine {
+  @apply text-dice-divine border-dice-divine bg-dice-divine-bg;
+}
+
+.die.sympathy {
+  @apply text-dice-sympathy border-dice-sympathy bg-dice-sympathy-bg;
+}
+
+.die.time {
+  @apply text-dice-time border-dice-time bg-dice-time-bg;
+}
+
+/* Usage: <transition name="fade"> */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .25s ease-out;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+/* Usage: <transition name="fade-swap"> */
+.fade-swap-enter-active, .fade-swap-leave-active {
+  position: absolute;
+  width: 100%;
+  transition: opacity .25s ease-out;
+}
+
+.fade-swap-enter-from, .fade-swap-leave-to {
+  opacity: 0;
+}
+
+/* Usage: <transition name="slide-vertical"> */
+.slide-vertical-enter-active {
+  transition: transform .25s ease-out .15s, opacity .25s ease-out .15s;
+}
+
+.slide-vertical-leave-active {
+  position: absolute;
+  transition: transform .25s ease-out, opacity .25s ease-out;
+}
+
+.slide-vertical-enter-from {
+  opacity: 0;
+  transform: translateY(-35%);
+}
+
+.slide-vertical-leave-to {
+  opacity: 0;
+  transform: translateY(35%);
+}
+
+/* Usage: <transition name="right-sidebar"> */
+.right-sidebar-enter-active, .right-sidebar-leave-active {
+  position: absolute;
+  right: 6px;
+  transition: transform .25s ease-in-out .15s, opacity .25s ease-in-out .15s;
+}
+
+.right-sidebar-enter-from {
+  opacity: 0;
+  transform: translateX(150%);
+}
+
+.right-sidebar-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+/* Usage: <transition-height> (these are specific to that component's transition logic) */
+.height-auto-enter-active, .height-auto-leave-active {
+  transition: height .25s ease-in-out;
+  overflow: hidden;
+  /* Try to force hardware rendering for animated element */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.height-auto-enter-from, .height-auto-leave-to {
+  height: 0;
+}
+
+/* Because the above styles are not defined within @layer, we need to place the TailwindCSS stuff beneath it to allow
+ * overriding.
+ */
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * COMPONENT CSS
+ *
+ * These elements are located in the components to allow TailwindCSS to support modifiers
+ */
 @layer components {
   .btn {
     @apply appearance-none border-2 border-black bg-gray-light rounded-md px-2 text-black font-bold text-center;
@@ -130,177 +315,5 @@
     &.active {
       @apply bg-red text-red-lightest;
     }
-  }
-
-  .nanobar .bar {
-    @apply bg-blue opacity-50;
-  }
-
-  .divider {
-    background: url('./assets/icon-diamond-bullet.png') no-repeat center center;
-    display: inline-block;
-    height: 7px;
-    width: 7px;
-    vertical-align: middle;
-  }
-
-  .alt-text {
-    display: inline-block;
-    width: 0px;
-    height: 1px;
-    overflow: hidden;
-  }
-
-  .inexhaustible-effects {
-    @apply bg-inexhaustible border border-inexhaustible-dark px-2 py-px my-2 relative clear-both;
-  }
-
-  .inexhaustible-effects::before {
-    content: '';
-    background: url('./assets/icon-inexhaustible.png') no-repeat left top;
-    width: 11px;
-    height: 11px;
-    position: absolute;
-    top: -6px;
-    left: 50%;
-    margin-left: -6px;
-  }
-
-  .reaction-effects {
-    @apply bg-reaction border border-reaction-dark px-2 py-px my-2 relative clear-both;
-  }
-
-  .reaction-effects::before {
-    content: '';
-    background: url('./assets/icon-reaction.png') no-repeat left top;
-    width: 19px;
-    height: 11px;
-    position: absolute;
-    top: -6px;
-    left: 50%;
-    margin-left: -10px;
-  }
-
-  .parsed-text ul {
-    @apply list-disc pl-4;
-  }
-
-  .die {
-    line-height: 1.5em;
-    flex: 0 0 auto;
-    border-radius: 3px;
-    margin: 0.1em;
-    text-align: center;
-
-    &:before {
-      padding: 0;
-    }
-
-    &:hover, &:active {
-      @apply no-underline;
-    }
-  }
-
-  .die.basic {
-    @apply text-gray border-gray bg-gray-light;
-  }
-
-  .die.ceremonial {
-    @apply text-dice-ceremonial border-dice-ceremonial bg-dice-ceremonial-bg;
-  }
-
-  .die.charm {
-    @apply text-dice-charm border-dice-charm bg-dice-charm-bg;
-  }
-
-  .die.illusion {
-    @apply text-dice-illusion border-dice-illusion bg-dice-illusion-bg;
-  }
-
-  .die.natural {
-    @apply text-dice-natural border-dice-natural bg-dice-natural-bg;
-  }
-
-  .die.divine {
-    @apply text-dice-divine border-dice-divine bg-dice-divine-bg;
-  }
-
-  .die.sympathy {
-    @apply text-dice-sympathy border-dice-sympathy bg-dice-sympathy-bg;
-  }
-
-  .die.time {
-    @apply text-dice-time border-dice-time bg-dice-time-bg;
-  }
-
-  /* Usage: <transition name="fade"> */
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .25s ease-out;
-  }
-
-  .fade-enter-from, .fade-leave-to {
-    opacity: 0;
-  }
-
-  /* Usage: <transition name="fade-swap"> */
-  .fade-swap-enter-active, .fade-swap-leave-active {
-    position: absolute;
-    width: 100%;
-    transition: opacity .25s ease-out;
-  }
-
-  .fade-swap-enter-from, .fade-swap-leave-to {
-    opacity: 0;
-  }
-
-  /* Usage: <transition name="slide-vertical"> */
-  .slide-vertical-enter-active {
-    transition: transform .25s ease-out .15s, opacity .25s ease-out .15s;
-  }
-
-  .slide-vertical-leave-active {
-    position: absolute;
-    transition: transform .25s ease-out, opacity .25s ease-out;
-  }
-
-  .slide-vertical-enter-from {
-    opacity: 0;
-    transform: translateY(-35%);
-  }
-
-  .slide-vertical-leave-to {
-    opacity: 0;
-    transform: translateY(35%);
-  }
-
-  /* Usage: <transition name="right-sidebar"> */
-  .right-sidebar-enter-active, .right-sidebar-leave-active {
-    position: absolute;
-    right: 6px;
-    transition: transform .25s ease-in-out .15s, opacity .25s ease-in-out .15s;
-  }
-
-  .right-sidebar-enter-from {
-    opacity: 0;
-    transform: translateX(150%);
-  }
-
-  .right-sidebar-leave-to {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-
-  /* Usage: <transition-height> (these are specific to that component's transition logic) */
-  .height-auto-enter-active, .height-auto-leave-active {
-    transition: height .25s ease-in-out;
-    overflow: hidden;
-    /* Try to force hardware rendering for animated element */
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-  }
-
-  .height-auto-enter-from, .height-auto-leave-to {
-    height: 0;
   }
 }
