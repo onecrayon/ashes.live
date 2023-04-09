@@ -37,6 +37,7 @@
       <ul class="list-disc pl-4">
         <li><a :href="getCDNURL('/files/ashes-reborn-rules.pdf')">Ashes Reborn Rules</a> <span class="text-gray">(PDF)</span></li>
         <li><a :href="getCDNURL('/files/ashes-reborn-faq.pdf')">Ashes Reborn FAQ</a> <span class="text-gray">(PDF)</span></li>
+        <li><a :href="getCDNURL('/files/ashes-reborn-op-rules.pdf')">Ashes Reborn Organized Play Rules</a> <span class="text-gray">(PDF)</span></li>
         <li><a :href="getCDNURL('/files/ashes-red-rains-rules.pdf')">Ashes Red Rains Rules</a> or <a :href="getCDNURL('/files/ashes-red-rains-combined-rules.pdf')">Exhaustive Red Rains Rules</a> <span class="text-gray">(PDF)</span></li>
         <li>Dice reference cards:
           <div class="text-2xl mt-1">
