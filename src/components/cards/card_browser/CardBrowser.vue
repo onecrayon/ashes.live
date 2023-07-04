@@ -91,7 +91,7 @@ export default {
   data: () => {
     return {
       isDisabled: false,
-      diceFilterLogic: 'any',
+      diceFilterLogic: 'only',
       diceFilterList: [],
       filterText: '',
       typeFilterList: [],
@@ -257,7 +257,7 @@ export default {
         this.filterText = to.q === undefined ? '' : to.q
       }
       if (to.dice_logic !== from.dice_logic) {
-        this.diceFilterLogic = to.dice_logic === undefined ? 'any' : to.dice_logic
+        this.diceFilterLogic = to.dice_logic === undefined ? 'only' : to.dice_logic
       }
       if (to.dice !== from.dice) {
         this.diceFilterList = ensureArray(to.dice)
@@ -310,7 +310,7 @@ export default {
     // `watch` logic above
     clearFilters () {
       this.filterText = ''
-      this.diceFilterLogic = 'any'
+      this.diceFilterLogic = 'only'
       this.diceFilterList = []
       this.typeFilterList = []
       this.collectionReleaseList = []
@@ -339,7 +339,7 @@ export default {
         if (this.diceFilterList.length) {
           query.dice = this.diceFilterList
         }
-        if (this.diceFilterLogic && this.diceFilterLogic !== 'any') {
+        if (this.diceFilterLogic && this.diceFilterLogic !== 'only') {
           query.dice_logic = this.diceFilterLogic
         }
         if (this.typeFilterList.length) {
