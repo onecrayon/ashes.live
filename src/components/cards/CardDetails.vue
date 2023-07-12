@@ -126,10 +126,9 @@
             <card-related-cards v-if="phoenixbornUnique" :card="card" :summons="phoenixbornUnique" :conjurations="phoenixbornUniqueConjurations" :show-legacy="showLegacy"></card-related-cards>
           </ul>
         </div>
+        <card-usage :stub="stub"></card-usage>
       </div>
     </div>
-    <card-usage :stub="stub"></card-usage>
-
   </div>
 </template>
 
