@@ -15,80 +15,83 @@
     <h1 class="phg-side-action">{{ card.name }}</h1>
 
     <div class="lg:flex">
-      <div class="md:flex md:flex-nowrap lg:w-2/3">
-        <div class="md:flex-none md:mr-8 mb-8">
-          <deck-qty-buttons :card="card" class="mb-4" standalone></deck-qty-buttons>
-          <img
-            class="bg-gray-light"
-            :class="[!showLegacy ? 'rounded-lg shadow-lg' : '']"
-            :src="imageURL"
-            alt=""
-            :width="showLegacy ? 332 : 300"
-            :height="showLegacy ? 452 : 420">
-        </div>
-        <div class="md:flex-grow">
-          <h2>Card text</h2>
-
-          <h3 class="mb-0">
-            {{ card.name }}
-            <span v-if="card.phoenixborn" class="text-gray" :title="card.phoenixborn">
-              ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
-            </span>
-            <span v-if="card.release.is_phg === false" class="text-gray pl-1">†</span>
-          </h3>
-
-          <p class="mt-0 mb-2 text-sm">
-            {{ card.type }}
-            <span v-if="card.placement">
-              <span class="divider"><span class="alt-text">-</span></span>
-              {{ card.placement }}
-            </span>
-          </p>
-
-          <card-costs class="mb-4" :costs="card.cost" is-horizontal></card-costs>
-
-          <div v-if="isPhoenixborn" class="my-2">
-            <strong
-              v-if="card.battlefield !== undefined"
-              class="inline-block border border-red-light px-1">Battlefield {{ card.battlefield }}</strong>
-            <strong
-              v-if="card.life !== undefined"
-              class="inline-block border border-green-light px-1 mx-1">Life {{ card.life }}</strong>
-            <strong
-              v-if="card.spellboard !== undefined"
-              class="inline-block border border-blue-dark px-1">Spellboard {{ card.spellboard }}</strong>
+      <div class="lg:w-2/3">
+        <section class="md:flex md:flex-nowrap">
+          <div class="md:flex-none md:mr-8 mb-8">
+            <deck-qty-buttons :card="card" class="mb-4" standalone></deck-qty-buttons>
+            <img
+              class="bg-gray-light"
+              :class="[!showLegacy ? 'rounded-lg shadow-lg' : '']"
+              :src="imageURL"
+              alt=""
+              :width="showLegacy ? 332 : 300"
+              :height="showLegacy ? 452 : 420">
           </div>
-          <div v-if="card.text">
-            <hr v-if="!isPhoenixborn" class="my-4 border-gray-light">
-            <div class="leading-snug text-sm">
-              <card-codes
-                :content="card.text"
-                :is-legacy="showLegacy"
-                is-card-effect></card-codes>
+          <div class="md:flex-grow">
+            <h2>Card text</h2>
+
+            <h3 class="mb-0">
+              {{ card.name }}
+              <span v-if="card.phoenixborn" class="text-gray" :title="card.phoenixborn">
+                ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
+              </span>
+              <span v-if="card.release.is_phg === false" class="text-gray pl-1">†</span>
+            </h3>
+
+            <p class="mt-0 mb-2 text-sm">
+              {{ card.type }}
+              <span v-if="card.placement">
+                <span class="divider"><span class="alt-text">-</span></span>
+                {{ card.placement }}
+              </span>
+            </p>
+
+            <card-costs class="mb-4" :costs="card.cost" is-horizontal></card-costs>
+
+            <div v-if="isPhoenixborn" class="my-2">
+              <strong
+                v-if="card.battlefield !== undefined"
+                class="inline-block border border-red-light px-1">Battlefield {{ card.battlefield }}</strong>
+              <strong
+                v-if="card.life !== undefined"
+                class="inline-block border border-green-light px-1 mx-1">Life {{ card.life }}</strong>
+              <strong
+                v-if="card.spellboard !== undefined"
+                class="inline-block border border-blue-dark px-1">Spellboard {{ card.spellboard }}</strong>
+            </div>
+            <div v-if="card.text">
+              <hr v-if="!isPhoenixborn" class="my-4 border-gray-light">
+              <div class="leading-snug text-sm">
+                <card-codes
+                  :content="card.text"
+                  :is-legacy="showLegacy"
+                  is-card-effect></card-codes>
+              </div>
+            </div>
+            <div v-if="hasStats && !isPhoenixborn" class="my-2">
+              <!-- Placeholders ensure that our stats are always in about the same locations -->
+              <span
+                v-if="card.copies !== undefined"
+                class="inline-block border border-gray-dark px-1 mr-1">{{ card.copies }}</span>
+
+              <strong
+                v-if="card.attack !== undefined"
+                class="inline-block border border-red-light px-1">Attack {{ card.attack }}</strong>
+              <span v-else class="inline-block invisible">Attack --</span>
+
+              <strong
+                v-if="card.life !== undefined"
+                class="inline-block border border-green-light px-1 mx-1">Life {{ card.life }}</strong>
+              <span v-else class="inline-block invisible mx-1">Life --</span>
+
+              <strong
+                v-if="card.recover !== undefined"
+                class="inline-block border border-blue-dark px-1">Recover {{ card.recover }}</strong>
+              <span v-else class="inline-block invisible">Recover --</span>
             </div>
           </div>
-          <div v-if="hasStats && !isPhoenixborn" class="my-2">
-            <!-- Placeholders ensure that our stats are always in about the same locations -->
-            <span
-              v-if="card.copies !== undefined"
-              class="inline-block border border-gray-dark px-1 mr-1">{{ card.copies }}</span>
-
-            <strong
-              v-if="card.attack !== undefined"
-              class="inline-block border border-red-light px-1">Attack {{ card.attack }}</strong>
-            <span v-else class="inline-block invisible">Attack --</span>
-
-            <strong
-              v-if="card.life !== undefined"
-              class="inline-block border border-green-light px-1 mx-1">Life {{ card.life }}</strong>
-            <span v-else class="inline-block invisible mx-1">Life --</span>
-
-            <strong
-              v-if="card.recover !== undefined"
-              class="inline-block border border-blue-dark px-1">Recover {{ card.recover }}</strong>
-            <span v-else class="inline-block invisible">Recover --</span>
-          </div>
-        </div>
+        </section>
+        <comments />
       </div>
       <div class="lg:w-1/3 lg:pl-8">
         <hr class="my-4 border-gray-light lg:hidden">
@@ -137,6 +140,7 @@ import { request } from '/src/utils/index.js'
 import { capitalize } from '/src/utils/text.js'
 import CardCodes from '../shared/CardCodes.vue'
 import CardCosts from '../shared/CardCosts.vue'
+import Comments from '../shared/Comments.vue'
 import DeckQtyButtons from '../shared/DeckQtyButtons.vue'
 import CardMetaRow from './CardMetaRow.vue'
 import CardRelatedCards from './CardRelatedCards.vue'
@@ -148,6 +152,7 @@ export default {
   components: {
     CardCodes,
     CardCosts,
+    Comments,
     CardMetaRow,
     CardRelatedCards,
     DeckQtyButtons,
