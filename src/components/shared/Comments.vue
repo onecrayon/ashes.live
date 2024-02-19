@@ -18,9 +18,13 @@
           <span class="font-bold flex-grow">{{ comment.user.username }}</span>
           <span>{{ this.formatCommentDate(comment.modified) }}</span>
         </div>
-        <div>
-          {{ comment.text }}
-        </div>
+        <card-codes
+          class="px-2 py-1 m-0"
+          :content="comment.text"
+          :key="comment.id"
+          needs-paragraphs
+        >
+        </card-codes>
         <hr class="my-4 border-gray-light">
 
       </li>
@@ -28,12 +32,11 @@
 
     <div v-if="isAuthenticated">
       <form @submit.prevent="submitComment" class="flex flex-col">
-        <textarea
-          class="border-2 bg-white border-black rounded h-full px-4 py-2 mb-4 flex-auto"
+        <text-editor
           placeholder="Enter comment here"
           v-model="commentText"
         >
-        </textarea>
+        </text-editor>
         <button class="btn btn-blue px-2 py-1 mb-4">Submit</button>
       </form>
     </div>
@@ -47,6 +50,8 @@
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import { getRelativeDateString } from '/src/utils/dates.js'
 import { request } from '/src/utils/index.js'
+import CardCodes from './CardCodes.vue'
+import TextEditor from './TextEditor.vue'
 
 export default {
   name: 'Comments',
@@ -66,6 +71,10 @@ export default {
       formatCommentDate,
       ...useHandleResponseError()
     }
+  },
+  components: {
+    CardCodes,
+    TextEditor,
   },
   beforeMount () {
     request(`/v2/comments/${this.entityId}`).then(response => {
