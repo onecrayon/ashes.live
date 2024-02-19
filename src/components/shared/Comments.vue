@@ -13,14 +13,45 @@
     </div>
     <ol v-else>
       <li v-for="comment of comments">
-        {{ comment.text }}
+        <hr class="my-4 border-gray-light">
+        <div class="flex">
+          <span class="font-bold flex-grow">{{ comment.user.username }}</span>
+          <span>{{ this.formatCommentDate(comment.modified) }}</span>
+        </div>
+        <card-codes
+          class="px-2 py-1 m-0"
+          :content="comment.text"
+          :key="comment.id"
+          needs-paragraphs
+        >
+        </card-codes>
+        <hr class="my-4 border-gray-light">
+
       </li>
     </ol>
+
+    <div v-if="isAuthenticated">
+      <form @submit.prevent="submitComment" class="flex flex-col">
+        <text-editor
+          placeholder="Enter comment here"
+          v-model="commentText"
+        >
+        </text-editor>
+        <button class="btn btn-blue px-2 py-1 mb-4">Submit</button>
+      </form>
+    </div>
+    <div v-else class="text-gray text-2xl py-4 px-4">
+      Sign in to comment!
+    </div>
   </section>
 </template>
 
 <script>
+import useHandleResponseError from '/src/composition/useHandleResponseError.js'
+import { getRelativeDateString } from '/src/utils/dates.js'
 import { request } from '/src/utils/index.js'
+import CardCodes from './CardCodes.vue'
+import TextEditor from './TextEditor.vue'
 
 export default {
   name: 'Comments',
@@ -28,8 +59,23 @@ export default {
   data: () => ({
     loading: true,
     comments: null,
+    commentText: '',
     error: false,
   }),
+  setup () {
+    const formatCommentDate = (timestamp) => {
+      return getRelativeDateString(timestamp)
+    }
+    // Standard composite containing { toast, handleResponseError }
+    return {
+      formatCommentDate,
+      ...useHandleResponseError()
+    }
+  },
+  components: {
+    CardCodes,
+    TextEditor,
+  },
   beforeMount () {
     request(`/v2/comments/${this.entityId}`).then(response => {
       this.comments = response.data.results
@@ -38,6 +84,22 @@ export default {
       this.error = true
       this.loading = false
     })
+  },
+  computed: {
+    isAuthenticated () {
+      return this.$store.getters['player/isAuthenticated']
+    },
+    submitComment () {
+      request(`v2/comments/${this.entityId}`, {
+        method: 'post',
+        data: {text: this.commentText }
+      }).then(() => {
+        this.$router.go()  // Refresh current page
+      }).catch((error) => {
+        this.handleResponseError(error)
+        this.error = true
+      })
+    },
   }
 }
 </script>
