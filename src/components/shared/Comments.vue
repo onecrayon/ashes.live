@@ -11,37 +11,69 @@
     <div v-else-if="comments && !comments.length" class="text-gray mb-4">
       No comments yet!
     </div>
-    <ol v-else>
-      <li v-for="comment of comments">
-        <hr class="my-4 border-gray-light">
-        <div class="flex">
-          <span class="font-bold flex-grow">{{ comment.user.username }}</span>
-          <span>{{ this.formatCommentDate(comment.modified) }}</span>
-        </div>
-        <card-codes
-          class="px-2 py-1 m-0"
-          :content="comment.text"
-          :key="comment.id"
-          needs-paragraphs
-        >
-        </card-codes>
-        <hr class="my-4 border-gray-light">
-
-      </li>
-    </ol>
-
-    <div v-if="isAuthenticated">
-      <form @submit.prevent="submitComment" class="flex flex-col">
-        <text-editor
-          placeholder="Enter comment here"
-          v-model="commentText"
-        >
-        </text-editor>
-        <button class="btn btn-blue px-2 py-1 mb-4">Submit</button>
-      </form>
+    <div v-else>
+      <ol>
+        <li v-for="comment of comments" class="parsed-text">
+          <div class="flex">
+            <span class="flex-grow">
+              <player-badge :user="comment.user" class="font-bold"></player-badge>
+            </span>
+            <span>{{ this.formatCommentDate(comment.modified) }}</span>
+          </div>
+          <card-codes
+            class="px-2 py-1 m-0"
+            :content="comment.text"
+            :key="comment.id"
+            needs-paragraphs
+          >
+          </card-codes>
+        </li>
+      </ol>
+      <p>(pagination TBD)</p>
     </div>
-    <div v-else class="text-gray text-2xl py-4 px-4">
-      Sign in to comment!
+
+    <div v-if="isAuthenticated && !loading && !error">
+      <h3>Post a comment</h3>
+
+      <div class="flex flex-nowrap mb-4">
+        <button class="btn btn-first"
+          :class="{active: commentWriteMode}"
+          @click="commentWriteMode = true">
+          Write
+        </button
+        ><button class="btn btn-last"
+          :class="{active: !commentWriteMode}"
+          :disabled="!commentText"
+          @click="commentWriteMode = false">
+          Preview
+        </button>
+        <link-alike class="ml-2 py-1" use-color use-underline>
+          <i class="fas fa-question-circle"></i>
+          Formatting help
+        </link-alike>
+      </div>
+
+      <!-- TODO: update this to use the standard editing form controls; add old-style card code stuff? Inline help modal? -->
+      <div v-if="commentWriteMode">
+        <form @submit.prevent="submitComment" class="flex flex-col">
+          <text-editor
+            placeholder="Enter comment here"
+            v-model="commentText"
+          >
+          </text-editor>
+          <p class="text-gray text-sm mb-4 mt-1">Please respect the <router-link to="/policies/">Ashes.live Content Policies</router-link>.</p>
+          <button class="btn btn-blue px-2 py-1 mb-4">Publish</button>
+        </form>
+      </div>
+      <div v-else>
+        <card-codes
+          :content="commentText"
+          class="px-2 py-1 m-0 border-2 rounded px-4 py-2 border-inexhaustible-dark bg-inexhaustible"
+          needs-paragraphs></card-codes>
+      </div>
+    </div>
+    <div v-else>
+      <button class="btn btn-blue px-4 py-1 mb-4" @click="triggerLogin">Log in to comment</button>
     </div>
   </section>
 </template>
@@ -50,8 +82,11 @@
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import { getRelativeDateString } from '/src/utils/dates.js'
 import { request } from '/src/utils/index.js'
+import emitter from '/src/events.js'
 import CardCodes from './CardCodes.vue'
+import LinkAlike from './LinkAlike.vue'
 import TextEditor from './TextEditor.vue'
+import PlayerBadge from './PlayerBadge.vue'
 
 export default {
   name: 'Comments',
@@ -61,6 +96,7 @@ export default {
     comments: null,
     commentText: '',
     error: false,
+    commentWriteMode: true,
   }),
   setup () {
     const formatCommentDate = (timestamp) => {
@@ -74,6 +110,8 @@ export default {
   },
   components: {
     CardCodes,
+    LinkAlike,
+    PlayerBadge,
     TextEditor,
   },
   beforeMount () {
@@ -100,6 +138,11 @@ export default {
         this.error = true
       })
     },
+  },
+  methods: {
+    triggerLogin () {
+      emitter.emit("login:required")
+    }
   }
 }
 </script>
