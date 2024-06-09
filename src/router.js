@@ -16,6 +16,7 @@ import PlayerRegistration from './components/players/PlayerRegistration.vue'
 import NewPlayer from './components/players/NewPlayer.vue'
 import RequestReset from './components/players/RequestReset.vue'
 import ResetPassword from './components/players/ResetPassword.vue'
+import ContentPolicies from './components/ContentPolicies.vue'
 import ProjectPhoenix from './components/ProjectPhoenix.vue'
 
 const router = createRouter({
@@ -211,6 +212,12 @@ const router = createRouter({
       name: 'PlayerPublicProfile',
       component: PlayerPublicProfile,
       props: true,
+    },
+    {
+      path: '/policies/',
+      name: 'ContentPolicies',
+      component: ContentPolicies,
+      meta: { title: 'Content Policies' },
     },
     {
       path: '/:pathMatch(.*)*',
