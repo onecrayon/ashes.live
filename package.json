@@ -11,7 +11,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.5",
     "axios": "^1.2.6",
-    "date-fns": "^2.21.3",
+    "date-fns": "^3.6.0",
     "mitt": "^3.0.0",
     "moment": "^2.30.1",
     "nanobar": "^0.4.2",
@@ -21,11 +21,11 @@
     "vuex": "^4.0.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.0.0",
+    "@vitejs/plugin-vue": "^5.0.0",
     "autoprefixer": "^10.4.7",
     "postcss": "^8.4.14",
     "postcss-nesting": "^12.0.0",
     "tailwindcss": "^3.1.4",
-    "vite": "^4.0.4"
+    "vite": "^5.2.13"
   }
 }
