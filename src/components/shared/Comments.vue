@@ -12,24 +12,44 @@
       No comments yet!
     </div>
     <div v-else>
-      <ol>
-        <li v-for="comment of comments" class="parsed-text">
-          <div class="flex">
-            <span class="flex-grow">
-              <player-badge :user="comment.user" class="font-bold"></player-badge>
-            </span>
-            <span>{{ this.formatCommentDate(comment.modified) }}</span>
+      <ol class="comments">
+        <li v-for="comment of comments" class="border border-gray mb-4">
+          <div v-if="comment.is_deleted" class="bg-gray text-gray-dark font-bold">
+            <i class="fas fa-trash"></i>
+            <span v-if="comment.is_moderated">Deleted by moderator.</span>
+            <span v-else>Deleted by author.</span>
           </div>
-          <card-codes
-            class="px-2 py-1 m-0"
-            :content="comment.text"
-            :key="comment.id"
-            needs-paragraphs
-          >
-          </card-codes>
+          <div v-else>
+            <div class="flex flex-wrap bg-reaction border-b-2 border-reaction-dark p-2 text-sm">
+              <span class="grow">
+                <player-badge :user="comment.user" class="font-bold"></player-badge> says:
+              </span>
+              <span>{{ this.formatCommentDate(comment.created) }}</span>
+            </div>
+            <card-codes
+              class="px-2 py-1 m-0"
+              :content="comment.text"
+              :key="comment.id"
+              needs-paragraphs
+            >
+            </card-codes>
+          </div>
+          <!-- TODO: add link to form for managing the comment -->
         </li>
       </ol>
-      <p>(pagination TBD)</p>
+      <div v-if="comments && comments.length">
+        <div class="my-4 text-center">
+          Page {{ currentPage }} of {{ totalPages }}
+        </div>
+        <div v-show="previousUrl || nextUrl" class="my-4 text-center">
+          <button v-show="previousUrl" class="btn btn-blue py-2 px-4 mr-4" :disabled="isDisabled" @click="loadComments(previousUrl)">
+            Previous
+          </button>
+          <button  v-show="nextUrl" class="btn btn-blue py-2 px-4" :disabled="isDisabled" @click="loadComments(nextUrl)">
+            Next
+          </button>
+        </div>
+      </div>
     </div>
 
     <div v-if="isAuthenticated && !loading && !error">
@@ -107,24 +127,26 @@ import Modal from './Modal.vue'
 import TextEditor from './TextEditor.vue'
 import PlayerBadge from './PlayerBadge.vue'
 
+const COMMENTS_PER_PAGE = 30
+
 export default {
   name: 'Comments',
   props: ['entityId'],
   data: () => ({
     loading: true,
     comments: null,
+    commentCount: 0,
+    offset: 0,
+    previousUrl: null,
+    nextUrl: null,
     commentText: '',
     error: false,
     commentWriteMode: true,
     formattingHelpOpen: false,
   }),
   setup () {
-    const formatCommentDate = (timestamp) => {
-      return getRelativeDateString(timestamp)
-    }
     // Standard composite containing { toast, handleResponseError }
     return {
-      formatCommentDate,
       ...useHandleResponseError()
     }
   },
@@ -143,16 +165,39 @@ export default {
     isAuthenticated () {
       return this.$store.getters['player/isAuthenticated']
     },
+    currentPage () {
+      return (this.offset / COMMENTS_PER_PAGE) + 1
+    },
+    totalPages () {
+      return Math.ceil(this.commentCount / COMMENTS_PER_PAGE)
+    },
   },
   methods: {
-    refreshComments () {
+    formatCommentDate (timestamp) {
+      return getRelativeDateString(timestamp)
+    },
+    refreshComments (url) {
       this.loading = true
-      request(`/v2/comments/${this.entityId}`).then(response => {
+      if (!url) {
+        url = `/v2/comments/${this.entityId}`
+        this.offset = 0
+      } else {
+        const offset = url.replace(/^.+[?&]offset=(\d+).*$/, '$1')
+        this.offset = offset ? parseInt(offset) : 0
+      }
+      request(url).then(response => {
         this.comments = response.data.results
+        this.commentCount = response.data.count
+        this.previousUrl = response.data.previous
+        this.nextUrl = response.data.next
         this.loading = false
       }).catch(error => {
         this.error = true
         this.loading = false
+        this.comments = null
+        this.commentCount = 0
+        this.previousUrl = null
+        this.nextUrl = null
       })
     },
     triggerLogin () {
@@ -163,6 +208,8 @@ export default {
         method: 'post',
         data: { text: this.commentText }
       }).then(() => {
+        this.commentText = ""
+        this.toast.success("Your comment has been posted!")
         this.refreshComments()
       }).catch((error) => {
         this.handleResponseError(error)
