@@ -91,6 +91,7 @@
             </div>
           </div>
         </section>
+        <hr class="my-4 border-gray-light lg:hidden">
         <comments :entity-id="entity_id" />
       </div>
       <div class="lg:w-1/3 lg:pl-8">

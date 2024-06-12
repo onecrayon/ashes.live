@@ -2,7 +2,7 @@
   <section id="comments">
     <h2>Comments</h2>
 
-    <div v-if="loading" class="text-gray text-2xl py-8 px-4">
+    <div v-if="loading && (!comments || !comments.length)" class="text-gray text-2xl py-8 px-4">
       <i class="fas fa-circle-notch fa-spin"></i> Loading...
     </div>
     <div v-else-if="error" class="text-red bg-red-lightest border border-red my-4 p-2">
@@ -26,13 +26,13 @@
               </span>
               <time :datetime="comment.created">{{ this.formatCommentDate(comment.created) }}</time>
             </div>
+            <!-- The only reason we have a loading state is because otherwise the comment text doesn't update (it isn't possible to be properly reactive) -->
+            <div v-if="loading" class="m-2 bg-gray-light opacity-40 h-24"></div>
             <card-codes
+              v-else
               class="comment-body px-2 py-1 m-0"
               :content="comment.text"
-              :key="comment.id"
-              needs-paragraphs
-            >
-            </card-codes>
+              needs-paragraphs></card-codes>
           </div>
           <!-- TODO: add link to form for managing the comment -->
         </li>
@@ -42,10 +42,10 @@
           Page {{ currentPage }} of {{ totalPages }}
         </div>
         <div v-show="previousUrl || nextUrl" class="my-4 text-center">
-          <button v-show="previousUrl" class="btn btn-blue py-2 px-4 mr-4" :disabled="isDisabled" @click="loadComments(previousUrl)">
+          <button v-show="previousUrl" class="btn btn-blue py-2 px-4 mr-4" :disabled="loading" @click="loadComments(previousUrl)">
             Previous
           </button>
-          <button  v-show="nextUrl" class="btn btn-blue py-2 px-4" :disabled="isDisabled" @click="loadComments(nextUrl)">
+          <button  v-show="nextUrl" class="btn btn-blue py-2 px-4" :disabled="loading" @click="loadComments(nextUrl)">
             Next
           </button>
         </div>
@@ -159,7 +159,7 @@ export default {
     TextEditor,
   },
   beforeMount () {
-    this.refreshComments()
+    this.loadComments()
   },
   computed: {
     isAuthenticated () {
@@ -176,22 +176,27 @@ export default {
     formatCommentDate (timestamp) {
       return getRelativeDateString(timestamp)
     },
-    refreshComments (url) {
+    loadComments (url) {
       this.loading = true
       if (!url) {
         url = `/v2/comments/${this.entityId}`
         this.offset = 0
       } else {
-        const offset = url.replace(/^.+[?&]offset=(\d+).*$/, '$1')
-        this.offset = offset ? parseInt(offset) : 0
+        const offset = url.replace(/^.+[?&]offset=(\d+).*$/i, '$1')
+        if (offset !== url) {
+          this.offset = offset ? parseInt(offset) : 0
+        } else {
+          this.offset = 0
+        }
       }
       request(url).then(response => {
+        this.loading = false
         this.comments = response.data.results
         this.commentCount = response.data.count
         this.previousUrl = response.data.previous
         this.nextUrl = response.data.next
-        this.loading = false
       }).catch(error => {
+        console.log(error)
         this.error = true
         this.loading = false
         this.comments = null
@@ -210,7 +215,7 @@ export default {
       }).then(() => {
         this.commentText = ""
         this.toast.success("Your comment has been posted!")
-        this.refreshComments()
+        this.loadComments()
       }).catch((error) => {
         this.handleResponseError(error)
       })
