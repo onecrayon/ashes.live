@@ -30,7 +30,7 @@
                 <player-badge :user="comment.user" class="font-bold"></player-badge> says:
               </span>
               <a :href="`#comment-${comment.entity_id}`" class="text-gray-dark">
-                <time :datetime="comment.created">{{ this.formatCommentDate(comment.created) }}</time>&nbsp;<i class="fas fa-link"></i>
+                <time :datetime="comment.created">{{ this.formatCommentDate(comment.created) }} ago</time>&nbsp;<i class="fas fa-link"></i>
               </a>
             </div>
             <!-- The only reason we have a loading state is because otherwise the comment text doesn't update (it isn't possible to be properly reactive) -->
@@ -123,8 +123,8 @@
 </template>
 
 <script>
+import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
-import { getRelativeDateString } from '/src/utils/dates.js'
 import { request } from '/src/utils/index.js'
 import emitter from '/src/events.js'
 import CardCodes from './CardCodes.vue'
@@ -181,7 +181,7 @@ export default {
   },
   methods: {
     formatCommentDate (timestamp) {
-      return getRelativeDateString(timestamp)
+      return formatDistanceToNowStrict(parseISO(timestamp))
     },
     loadComments (url) {
       this.loading = true
