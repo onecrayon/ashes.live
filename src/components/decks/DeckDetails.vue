@@ -132,7 +132,7 @@
 
       <card-codes :content="deck.description" :is-legacy="deck.is_legacy" needs-paragraphs></card-codes>
     </div>
-    <!-- <comments v-if="deck.is_public" :entity-id="deck.source_entity_id" /> -->
+    <comments v-if="deck.is_public && deck.comments_entity_id" :entity-id="deck.comments_entity_id" :last-seen-entity-id="last_seen_entity_id" />
   </div>
 </template>
 
@@ -168,6 +168,7 @@ export default {
   data () {
     return {
       _deck: null,
+      last_seen_entity_id: null,
       releases: null,
       hasPublishedSnapshot: false,
       error: false,
@@ -247,6 +248,7 @@ export default {
         }
         this.releases = response.data.releases
         this.hasPublishedSnapshot = !!response.data.has_published_snapshot
+        this.last_seen_entity_id = response.data.last_seen_entity_id
         // And set the site title
         document.title = `${deckTitle(this._deck)} - Ashes.live`
       }).catch(error => {
