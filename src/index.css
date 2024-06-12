@@ -150,6 +150,14 @@ hr {
   @apply list-decimal pl-6 my-4;
 }
 
+.comment-body :first-child {
+  @apply mt-0;
+}
+
+.comment-body :last-child {
+  @apply mb-0;
+}
+
 .no-margins p, .no-margins ul, .no-margins ol, .no-margins blockquote {
   @apply m-0;
 }

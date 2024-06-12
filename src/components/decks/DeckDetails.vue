@@ -132,6 +132,7 @@
 
       <card-codes :content="deck.description" :is-legacy="deck.is_legacy" needs-paragraphs></card-codes>
     </div>
+    <!-- <comments v-if="deck.is_public" :entity-id="deck.source_entity_id" /> -->
   </div>
 </template>
 
@@ -140,6 +141,7 @@ import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import { request, getPhoenixbornImageUrl } from '/src/utils/index.js'
 import { deckTitle } from '/src/utils/decks.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
+import Comments from '../shared/Comments.vue'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
 import DeckExportModal from './DeckExportModal.vue'
@@ -156,6 +158,7 @@ export default {
   },
   components: {
     CardCodes,
+    Comments,
     DeckCardsPreview,
     DeckDice,
     DeckEditButtons,

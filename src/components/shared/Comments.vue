@@ -24,10 +24,10 @@
               <span class="grow">
                 <player-badge :user="comment.user" class="font-bold"></player-badge> says:
               </span>
-              <span>{{ this.formatCommentDate(comment.created) }}</span>
+              <time :datetime="comment.created">{{ this.formatCommentDate(comment.created) }}</time>
             </div>
             <card-codes
-              class="px-2 py-1 m-0"
+              class="comment-body px-2 py-1 m-0"
               :content="comment.text"
               :key="comment.id"
               needs-paragraphs
