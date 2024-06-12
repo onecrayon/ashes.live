@@ -107,17 +107,17 @@
         </li>
         <li class="flex flex-nowrap">
           <span class="pr-2">
-            <i class="far fa-square"></i>
+            <i class="far fa-check-square"></i>
           </span>
-          <span class="text-gray-dark">
-            Private snapshots; deckbuilding improvements
+          <span>
+            Private snapshots
           </span>
         </li>
         <li class="flex flex-nowrap">
           <span class="pr-2">
-            <i class="far fa-square"></i>
+            <i class="far fa-check-square"></i>
           </span>
-          <span class="text-gray-dark">
+          <span>
             Comments (on decks and cards)
           </span>
         </li>
@@ -126,7 +126,15 @@
             <i class="far fa-square"></i>
           </span>
           <span class="text-gray-dark">
-            Posts
+            Homepage stream &amp; content subscriptions
+          </span>
+        </li>
+        <li class="flex flex-nowrap">
+          <span class="pr-2">
+            <i class="far fa-square"></i>
+          </span>
+          <span class="text-gray-dark">
+            First five tools
           </span>
         </li>
       </ul>
