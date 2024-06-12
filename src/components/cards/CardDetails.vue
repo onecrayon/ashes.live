@@ -92,7 +92,7 @@
           </div>
         </section>
         <hr class="my-4 border-gray-light lg:hidden">
-        <comments :entity-id="entity_id" />
+        <comments :entity-id="entity_id" :last-seen-entity-id="last_seen_entity_id" />
       </div>
       <div class="lg:w-1/3 lg:pl-8">
         <hr class="my-4 border-gray-light lg:hidden">
@@ -162,6 +162,7 @@ export default {
   data: () => ({
     card: null,
     entity_id: null,
+    last_seen_entity_id: null,
     usage: null,
     preconstructedDeck: null,
     relatedSummons: null,
@@ -176,6 +177,7 @@ export default {
     request(`/v2/cards/${this.stub}/details${this.showLegacy ? '?show_legacy=true' : ''}`).then(response => {
       this.card = response.data.card
       this.entity_id = response.data.entity_id
+      this.last_seen_entity_id = response.data.last_seen_entity_id
       this.usage = response.data.usage
       this.preconstructedDeck = response.data.preconstructed_deck
       if (response.data.related_cards.phoenixborn !== undefined) {

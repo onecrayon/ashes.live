@@ -13,18 +13,25 @@
     </div>
     <div v-else>
       <ol class="comments">
-        <li v-for="comment of comments" class="border border-gray mb-4">
+        <li v-for="comment of comments" class="border border-gray mb-4" :id="`comment-${comment.entity_id}`">
           <div v-if="comment.is_deleted" class="bg-gray text-gray-dark font-bold">
             <i class="fas fa-trash"></i>
             <span v-if="comment.is_moderated">Deleted by moderator.</span>
             <span v-else>Deleted by author.</span>
           </div>
           <div v-else>
-            <div class="flex flex-wrap bg-reaction border-b-2 border-reaction-dark p-2 text-sm">
+            <div
+              class="flex flex-wrap border-b-2 p-2 text-sm"
+              :class="{
+                'bg-reaction border-reaction-dark': !lastSeenEntityId || comment.entity_id <= lastSeenEntityId,
+                'bg-inexhaustible border-inexhaustible-dark': lastSeenEntityId && comment.entity_id > lastSeenEntityId,
+              }">
               <span class="grow">
                 <player-badge :user="comment.user" class="font-bold"></player-badge> says:
               </span>
-              <time :datetime="comment.created">{{ this.formatCommentDate(comment.created) }}</time>
+              <a :href="`#comment-${comment.entity_id}`" class="text-gray-dark">
+                <time :datetime="comment.created">{{ this.formatCommentDate(comment.created) }}</time>&nbsp;<i class="fas fa-link"></i>
+              </a>
             </div>
             <!-- The only reason we have a loading state is because otherwise the comment text doesn't update (it isn't possible to be properly reactive) -->
             <div v-if="loading" class="m-2 bg-gray-light opacity-40 h-24"></div>
@@ -131,7 +138,7 @@ const COMMENTS_PER_PAGE = 30
 
 export default {
   name: 'Comments',
-  props: ['entityId'],
+  props: ['entityId', 'lastSeenEntityId'],
   data: () => ({
     loading: true,
     comments: null,
@@ -178,6 +185,7 @@ export default {
     },
     loadComments (url) {
       this.loading = true
+      // TODO: figure out how to update the query parameters with the page number
       if (!url) {
         url = `/v2/comments/${this.entityId}`
         this.offset = 0
