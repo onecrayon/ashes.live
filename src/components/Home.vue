@@ -118,7 +118,7 @@
             <i class="far fa-check-square"></i>
           </span>
           <span>
-            Comments (on decks and cards)
+            Comments &amp; subscriptions
           </span>
         </li>
         <li class="flex flex-nowrap">
@@ -126,7 +126,7 @@
             <i class="far fa-square"></i>
           </span>
           <span class="text-gray-dark">
-            Homepage stream &amp; content subscriptions
+            Chimera card browser
           </span>
         </li>
         <li class="flex flex-nowrap">
