@@ -46,7 +46,7 @@
       </ol>
       <div v-if="comments && comments.length">
         <div class="my-4 text-center">
-          Page {{ currentPage }} of {{ totalPages }}
+          Page {{ page }} of {{ totalPages }}
         </div>
         <div v-show="previousUrl || nextUrl" class="my-4 text-center">
           <button v-show="previousUrl" class="btn btn-blue py-2 px-4 mr-4" :disabled="loading" @click="loadComments(previousUrl)">
@@ -143,7 +143,7 @@ export default {
     loading: true,
     comments: null,
     commentCount: 0,
-    offset: 0,
+    page: 1,
     previousUrl: null,
     nextUrl: null,
     commentText: '',
@@ -165,15 +165,25 @@ export default {
     PlayerBadge,
     TextEditor,
   },
+  created () {
+    if (this.$route.query.page) {
+      this.page = this.$route.query.page
+    }
+  },
   beforeMount () {
     this.loadComments()
+  },
+  watch: {
+    '$route.query' (to, from) {
+      // Make sure to update our page setting if we navigate here via browser back/forward
+      if (to.page !== from.page) {
+        this.page = to.page === undefined ? 1 : to.page
+      }
+    },
   },
   computed: {
     isAuthenticated () {
       return this.$store.getters['player/isAuthenticated']
-    },
-    currentPage () {
-      return (this.offset / COMMENTS_PER_PAGE) + 1
     },
     totalPages () {
       return Math.ceil(this.commentCount / COMMENTS_PER_PAGE)
@@ -185,24 +195,36 @@ export default {
     },
     loadComments (url) {
       this.loading = true
-      // TODO: figure out how to update the query parameters with the page number
       if (!url) {
-        url = `/v2/comments/${this.entityId}`
-        this.offset = 0
+        const offset = (this.page - 1) * COMMENTS_PER_PAGE
+        url = `/v2/comments/${this.entityId}?limit=${COMMENTS_PER_PAGE}&offset=${offset}`
       } else {
         const offset = url.replace(/^.+[?&]offset=(\d+).*$/i, '$1')
         if (offset !== url) {
-          this.offset = offset ? parseInt(offset) : 0
+          this.page = offset ? Math.floor(this.commentCount / offset) + 1 : 1
         } else {
-          this.offset = 0
+          this.page = 1
         }
+      }
+      const query = {}
+      if (this.page > 1) {
+        query.page = this.page
       }
       request(url).then(response => {
         this.loading = false
+        // This means they tried to advance to a page beyond what we have results for
+        if (response.data.count && !response.data.results.length) {
+          this.toast.error("Page number for comments too high!")
+          return
+        }
         this.comments = response.data.results
         this.commentCount = response.data.count
         this.previousUrl = response.data.previous
         this.nextUrl = response.data.next
+        this.$router.push ({
+          path: this.$route.path,
+          query: query,
+        })
       }).catch(error => {
         console.log(error)
         this.error = true
