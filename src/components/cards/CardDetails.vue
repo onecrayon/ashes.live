@@ -130,6 +130,10 @@
             <card-related-cards v-if="phoenixbornUnique" :card="card" :summons="phoenixbornUnique" :conjurations="phoenixbornUniqueConjurations" :show-legacy="showLegacy"></card-related-cards>
           </ul>
         </div>
+        <button v-if="isAuthenticated" class="btn py-1 mb-8 w-full" :class="{'btn-blue': !last_seen_entity_id}" @click="toggleSubscription()">
+          <i class="fa-bookmark" :class="{'far': last_seen_entity_id, 'fas': !last_seen_entity_id}"></i>
+          <span v-if="last_seen_entity_id"> Unsubscribe</span><span v-else> Subscribe</span>
+        </button>
         <card-usage :stub="stub"></card-usage>
       </div>
     </div>
@@ -139,6 +143,7 @@
 <script>
 import { request } from '/src/utils/index.js'
 import { capitalize } from '/src/utils/text.js'
+import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import CardCodes from '../shared/CardCodes.vue'
 import CardCosts from '../shared/CardCosts.vue'
 import Comments from '../shared/Comments.vue'
@@ -150,6 +155,10 @@ import CardUsage from './CardUsage.vue'
 export default {
   name: 'CardDetails',
   props: ['stub'],
+  setup () {
+    // Standard composite containing { toast, handleResponseError }
+    return useHandleResponseError()
+  },
   components: {
     CardCodes,
     CardCosts,
@@ -216,9 +225,24 @@ export default {
         || this.card.copies !== undefined
       )
     },
+    isAuthenticated () {
+      return this.$store.getters['player/isAuthenticated']
+    },
   },
   methods: {
     capitalize,
+    toggleSubscription () {
+      const method = this.last_seen_entity_id ? "delete" : "post"
+      request(`/v2/subscription/${this.entity_id}`, {method}).then(response => {
+        if (method === "delete") {
+          this.last_seen_entity_id = null
+          this.toast.info("You have unsubscribed from this card!")
+        } else {
+          this.last_seen_entity_id = response.data.last_seen_entity_id
+          this.toast.info("You have subscribed to this card's comments!")
+        }
+      })
+    },
   },
 }
 </script>
