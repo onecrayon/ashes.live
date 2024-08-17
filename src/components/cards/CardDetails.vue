@@ -124,7 +124,7 @@
         <div v-if="phoenixborn || (relatedConjurations && relatedConjurations.length)">
           <h3>Related cards</h3>
 
-          <ul class="list-disc pl-4">
+          <ul class="list-disc pl-4 mb-6">
             <card-related-cards v-if="relatedSummons" :card="card" :summons="relatedSummons" :conjurations="relatedConjurations" :show-legacy="showLegacy"></card-related-cards>
             <card-related-cards v-if="phoenixborn" :card="card" :summons="phoenixborn" :conjurations="phoenixbornConjurations" :show-legacy="showLegacy"></card-related-cards>
             <card-related-cards v-if="phoenixbornUnique" :card="card" :summons="phoenixbornUnique" :conjurations="phoenixbornUniqueConjurations" :show-legacy="showLegacy"></card-related-cards>
