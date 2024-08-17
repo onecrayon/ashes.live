@@ -5,7 +5,7 @@
 
       <p>To support Ashes Reborn and make it possible for me to keep the site maintained long-term, I am rewriting everything from the ground up. I will be implementing the majority of the original site's functionality over the coming months, but do please let me know if you have any requests or run into any problems!</p>
 
-      <p>You can find me on <a href="https://discord.gg/UU5bduq">Discord</a> (<span class="font-mono text-red">Skaak<span class="text-gray-dark">#0007</span></span>) or <a href="https://www.boardgamegeek.com/user/Skaak">BoardGameGeek</a> if you need to contact me about anything related to Ashes.live, your account, or whatever else!</p>
+      <p>You can find me on <a href="https://discord.gg/UU5bduq">Discord</a> (<span class="font-mono text-red">Skaak</span>) or <a href="https://www.boardgamegeek.com/user/Skaak">BoardGameGeek</a> if you need to contact me about anything related to Ashes.live, your account, or whatever else!</p>
 
       <h2>Resources</h2>
 
@@ -107,10 +107,18 @@
         </li>
         <li class="flex flex-nowrap">
           <span class="pr-2">
-            <i class="far fa-square"></i>
+            <i class="far fa-check-square"></i>
           </span>
-          <span class="text-gray-dark">
-            Private snapshots; deckbuilding improvements
+          <span>
+            Private snapshots
+          </span>
+        </li>
+        <li class="flex flex-nowrap">
+          <span class="pr-2">
+            <i class="far fa-check-square"></i>
+          </span>
+          <span>
+            Comments &amp; subscriptions
           </span>
         </li>
         <li class="flex flex-nowrap">
@@ -118,7 +126,7 @@
             <i class="far fa-square"></i>
           </span>
           <span class="text-gray-dark">
-            Comments (on decks and cards)
+            Chimera card browser
           </span>
         </li>
         <li class="flex flex-nowrap">
@@ -126,7 +134,7 @@
             <i class="far fa-square"></i>
           </span>
           <span class="text-gray-dark">
-            Posts
+            First five tools
           </span>
         </li>
       </ul>

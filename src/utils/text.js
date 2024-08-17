@@ -97,7 +97,7 @@ export function parseFormattedText (text, ensureParagraphs=false, isLegacy=false
     return `<i class="phg-${lowerPrimary}-${secondary}" title="${primary}${secondary ? ' ' + secondary : ''}"><span class="alt-text">${input}</span></i>`
   })
   // Parse blockquotes
-  text = text.replace(/(^> ?.+?)(?=\n[^>\n])/gm, (match) => {
+  text = text.replace(/(^> ?.+?)(?:(?=\n[^>\n])|$(?![^]))/gms, (match) => {
     return `<blockquote>${match.replace(/^>[ \t]*/gm, '')}</blockquote>`
   })
   text = text.replace('\n</blockquote>', '</blockquote>\n')

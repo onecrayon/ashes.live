@@ -1,30 +1,28 @@
 <template>
-  <h1>Recent Decks using this card</h1>
-  <div v-if="loading" class="text-center text-gray text-2xl py-8 px-4">
-    <i class="fas fa-circle-notch fa-spin"></i> Loading...
-  </div>
-  <div v-else-if="(!decks || !decks.length)" class="text-center bg-inexhaustible border border-gray-light my-4 py-8">
-    <h2>No Decks found</h2>
-  </div>
-  <div v-else-if="decks && decks.length">
-      <deck v-for="deck of decks" :key="deck.id" :deck="deck" />
+  <div v-if="loading || (decks && decks.length)">
+    <h2>Recent decks</h2>
+    <div v-if="loading" class="text-center text-gray text-2xl py-8 px-4">
+      <i class="fas fa-circle-notch fa-spin"></i> Loading...
+    </div>
+    <div v-else>
+        <deck-stub v-for="deck of decks" :key="deck.id" :deck="deck" />
 
-      <router-link v-if="hasMoreDecks" :to="'/decks?card=' + stub">
-        See all decks using this card
-      </router-link>
+        <router-link v-if="hasMoreDecks" :to="'/decks?card=' + stub">
+          See all decks using this card
+        </router-link>
+    </div>
   </div>
-
 </template>
 
 <script>
 import { request } from '/src/utils/index.js'
-import Deck from '/src/components/decks/Deck.vue'
+import DeckStub from '/src/components/decks/DeckStub.vue'
 
 export default {
   name: 'CardUsage',
   props: ['stub'],
   components: {
-    Deck,
+    DeckStub,
   },
   data: () => ({
     loading: true,

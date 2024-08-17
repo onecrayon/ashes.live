@@ -1,9 +1,15 @@
 <template>
-  <ul class="flex m-0 mb-2 sm:mb-0" :aria-label="legibleDiceCount">
+  <ul
+    class="m-0 mb-2 sm:mb-0"
+    :class="{
+      'flex': !autoFit,
+      'grid gap-1': autoFit,
+    }"
+    :style="gridStyle"
+    :aria-label="legibleDiceCount">
     <li v-for="(die, index) of diceList" :key="index"
         class="w-6 h-6 text-sm sm:w-8 sm:h-8 sm:text-xl die"
-        :class="[die ? die : 'basic', 'phg-' + (die ? die + '-power' : 'basic-magic')]"
-        @click="reduceDieCount(die)">
+        :class="[die ? die : 'basic', 'phg-' + (die ? die + '-power' : 'basic-magic')]">
         <span class="alt-text">{{ die ? `${capitalize(die)} Die` : '(missing die)' }}</span>
     </li>
   </ul>
@@ -14,7 +20,14 @@ import { capitalize } from '/src/utils/text.js'
 
 export default {
   name: 'DeckDice',
-  props: ['dice'],
+  props: {
+    dice: {
+      required: true,
+    },
+    autoFit: {
+      default: false,
+    },
+  },
   computed: {
     diceList () {
       let diceArray = new Array(10)
@@ -42,6 +55,13 @@ export default {
         return diceValues.join('; ')
       } else {
         return "(No dice assigned)"
+      }
+    },
+    gridStyle () {
+      if (this.autoFit) {
+        return {
+          'grid-template-columns': 'repeat( auto-fit, minmax(32px, 1fr) )'
+        }
       }
     },
   },

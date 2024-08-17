@@ -76,8 +76,6 @@
           History
         </router-link>
 
-        <!-- TODO: implement generic controls like Subscribe, etc. -->
-
         <!-- Owner's controls -->
         <div v-if="(showMine || user.badge === currentUserBadge) && !deck.is_legacy" class="mb-4">
           <deck-edit-buttons :deck="savedDeck" @deleted="$router.push('/decks/' + (showMine ? '/mine/' : ''))" @refresh="loadDeck()" standalone-buttons></deck-edit-buttons>
@@ -90,6 +88,10 @@
         <button v-if="isAuthenticated && !deck.is_legacy" class="btn py-1 w-full" @click="copyAndEdit(!this.deck.is_red_rains)" :disabled="isTalkingToServer">
           <i class="fas fa-copy"></i>
           Clone as <span v-if="deck.is_red_rains">PvP</span><span v-else>PvE</span>
+        </button>
+        <button v-if="isAuthenticated && !deck.is_legacy" class="btn py-1 mt-8 w-full" :class="{'btn-blue': !last_seen_entity_id}" @click="toggleSubscription()" :disabled="isTalkingToServer">
+          <i class="fa-bookmark" :class="{'far': last_seen_entity_id, 'fas': !last_seen_entity_id}"></i>
+          <span v-if="last_seen_entity_id"> Unsubscribe</span><span v-else> Subscribe</span>
         </button>
       </div>
       <div
@@ -132,6 +134,7 @@
 
       <card-codes :content="deck.description" :is-legacy="deck.is_legacy" needs-paragraphs></card-codes>
     </div>
+    <comments v-if="deck.is_public && deck.comments_entity_id" :entity-id="deck.comments_entity_id" :last-seen-entity-id="last_seen_entity_id" />
   </div>
 </template>
 
@@ -140,6 +143,7 @@ import { parseISO, formatDistanceToNowStrict } from 'date-fns'
 import { request, getPhoenixbornImageUrl } from '/src/utils/index.js'
 import { deckTitle } from '/src/utils/decks.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
+import Comments from '../shared/Comments.vue'
 import DeckCardsPreview from './DeckCardsPreview.vue'
 import DeckDice from './DeckDice.vue'
 import DeckExportModal from './DeckExportModal.vue'
@@ -156,6 +160,7 @@ export default {
   },
   components: {
     CardCodes,
+    Comments,
     DeckCardsPreview,
     DeckDice,
     DeckEditButtons,
@@ -165,6 +170,7 @@ export default {
   data () {
     return {
       _deck: null,
+      last_seen_entity_id: null,
       releases: null,
       hasPublishedSnapshot: false,
       error: false,
@@ -244,6 +250,7 @@ export default {
         }
         this.releases = response.data.releases
         this.hasPublishedSnapshot = !!response.data.has_published_snapshot
+        this.last_seen_entity_id = response.data.last_seen_entity_id
         // And set the site title
         document.title = `${deckTitle(this._deck)} - Ashes.live`
       }).catch(error => {
@@ -254,6 +261,21 @@ export default {
     copyAndEdit (isRedRains) {
       this.isTalkingToServer = true
       this.$store.dispatch('builder/cloneDeck', { id: this.deck.id, isRedRains }).catch(this.handleResponseError).finally(() => {
+        this.isTalkingToServer = false
+      })
+    },
+    toggleSubscription () {
+      const method = this.last_seen_entity_id ? "delete" : "post"
+      this.isTalkingToServer = true
+      request(`/v2/subscription/${this._deck.comments_entity_id}`, {method}).then(response => {
+        if (method === "delete") {
+          this.last_seen_entity_id = null
+          this.toast.info("You have unsubscribed from this deck!")
+        } else {
+          this.last_seen_entity_id = response.data.last_seen_entity_id
+          this.toast.info("You have subscribed to this deck's updates and comments!")
+        }
+      }).finally(() => {
         this.isTalkingToServer = false
       })
     },

@@ -77,6 +77,10 @@ p {
   @apply my-4;
 }
 
+blockquote {
+  @apply mb-4 bg-reaction px-2 border-l-4 border-reaction-dark;
+}
+
 button, input {
   @apply transition-opacity duration-200 ease-in-out;
 
@@ -139,7 +143,23 @@ hr {
 }
 
 .parsed-text ul {
-  @apply list-disc pl-4;
+  @apply list-disc pl-4 my-4;
+}
+
+.parsed-text ol {
+  @apply list-decimal pl-6 my-4;
+}
+
+.comment-body :first-child {
+  @apply mt-0;
+}
+
+.comment-body :last-child {
+  @apply mb-0;
+}
+
+.no-margins p, .no-margins ul, .no-margins ol, .no-margins blockquote {
+  @apply m-0;
 }
 
 .die {
@@ -274,10 +294,10 @@ hr {
  */
 @layer components {
   .btn {
-    @apply appearance-none border-2 border-black bg-gray-light rounded-md px-2 text-black font-bold text-center;
+    @apply appearance-none border-2 border-black bg-gray-light rounded-md px-2 text-black font-bold text-center cursor-pointer;
 
     &.active {
-      @apply bg-black text-white;
+      @apply bg-black text-white cursor-default;
     }
   }
 
