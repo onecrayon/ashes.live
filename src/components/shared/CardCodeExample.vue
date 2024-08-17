@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-wrap md:flex-nowrap items-center">
-    <div class="basis-0 grow mb-2 md:w-1/2 font-mono whitespace-pre-line break-words border-2 rounded px-4 py-2 border-reaction-dark bg-reaction">
+    <div class="basis-0 grow mb-2 md:w-1/2 font-mono whitespace-pre-line break-words max-width-full border-2 rounded px-4 py-2 border-reaction-dark bg-reaction">
       {{ text }}
     </div>
     <div class="flex-none px-2 mb-2">
