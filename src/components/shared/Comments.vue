@@ -225,6 +225,17 @@ export default {
           path: this.$route.path,
           query: query,
         })
+
+        // Finally, update the user's subscription to this content, if they have one
+        const finalComment = this.comments[this.comments.length - 1]
+        if (this.lastSeenEntityId && this.lastSeenEntityId < finalComment.entity_id) {
+          request(`/v2/subscription/${this.entityId}`, {
+            method: 'patch',
+            data: {
+              last_seen_entity_id: finalComment.entity_id
+            }
+          })
+        }
       }).catch(error => {
         console.log(error)
         this.error = true
