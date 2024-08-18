@@ -116,7 +116,7 @@
         </div>
       </form>
     </div>
-    <div v-else>
+    <div v-else-if="!isAuthenticated">
       <button class="btn btn-blue px-4 py-1 mb-4" @click="triggerLogin">Log in to comment</button>
     </div>
   </section>
@@ -227,14 +227,16 @@ export default {
         })
 
         // Finally, update the user's subscription to this content, if they have one
-        const finalComment = this.comments[this.comments.length - 1]
-        if (this.lastSeenEntityId && this.lastSeenEntityId < finalComment.entity_id) {
-          request(`/v2/subscription/${this.entityId}`, {
-            method: 'patch',
-            data: {
-              last_seen_entity_id: finalComment.entity_id
-            }
-          })
+        if (this.comments && this.comments.length) {
+          const finalComment = this.comments[this.comments.length - 1]
+          if (this.lastSeenEntityId && this.lastSeenEntityId < finalComment.entity_id) {
+            request(`/v2/subscription/${this.entityId}`, {
+              method: 'patch',
+              data: {
+                last_seen_entity_id: finalComment.entity_id
+              }
+            })
+          }
         }
       }).catch(error => {
         console.log(error)
