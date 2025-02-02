@@ -1,26 +1,26 @@
 <template>
   <div class="sm:flex">
     <div class="sm:pr-8 pb-8 sm:w-2/3">
-      <h1 class="phg-time-class">Ongoing migration</h1>
+      <h1 class="phg-time-class">Welcome to Ashes.live!</h1>
 
-      <p>To support Ashes Reborn and make it possible for me to keep the site maintained long-term, I am rewriting everything from the ground up. I will be implementing the majority of the original site's functionality over the coming months, but do please let me know if you have any requests or run into any problems!</p>
+      <p>Ashes.live is a deck-building tool for the card game <a href="https://www.plaidhatgames.com/board-games/ashes-rise-phoenixborn/">Ashes Reborn: Rise of the Phoenixborn</a>. If you need to contact me about anything related to Ashes.live, your account, or whatever else you can find me on <a href="https://discord.gg/UU5bduq">Discord</a> (<span class="font-mono text-red">Skaak</span>) or <a href="https://www.boardgamegeek.com/user/Skaak">BoardGameGeek</a>!</p>
 
-      <p>You can find me on <a href="https://discord.gg/UU5bduq">Discord</a> (<span class="font-mono text-red">Skaak</span>) or <a href="https://www.boardgamegeek.com/user/Skaak">BoardGameGeek</a> if you need to contact me about anything related to Ashes.live, your account, or whatever else!</p>
+      <p>Ashes was originally released in 2015 and distributed with white box expansions. It was re-released in 2021 as Ashes Reborn with an updated ruleset and significant changes to cards and is now distributed in red boxes. The two versions are not compatible, but if you own original white box content you can purchase an upgrade kit to bring it into the Reborn era.</p>
 
       <h2>Resources</h2>
 
       <h3 class="my-4">Play Online</h3>
 
       <ul class="list-disc pl-4">
-        <li><a href="https://ashteki.com">Ashteki</a> <span class="text-gray">(Play Ashes in your browser! Under active development, so there may be rough edges)</span></li>
-        <li><a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2386753960">Ashes Reborn for Tabletop Simulator</a> <span class="text-gray">(requires Tabletop Simulator on Steam)</span></li>
-        <li><a href="https://felttable.com/ashes">Felt Table</a> <span class="text-gray">(Play against an AI bot in your browser)</span></li>
+        <li><a href="https://ashteki.com">Ashteki</a> <span class="text-gray">(Play Ashes in your browser!)</span></li>
+        <li><a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2386753960">Ashes Reborn for Tabletop Simulator</a> <span class="text-gray">(requires Tabletop Simulator on Steam; <strong>no longer maintained!</strong>)</span></li>
+        <li><a href="https://felttable.com/ashes">Felt Table</a> <span class="text-gray">(Play against an AI bot in your browser; <strong>no longer maintained!</strong>)</span></li>
       </ul>
 
       <h3 class="font-bold my-4">Community</h3>
 
       <ul class="list-disc pl-4">
-        <li><a href="https://discord.gg/UU5bduq">Community Discord</a> <span class="text-gray">(TTS, Ashteki, or webcam matchmaking + general discussion)</span></li>
+        <li><a href="https://discord.gg/UU5bduq">Community Discord</a> <span class="text-gray">(matchmaking + general discussion)</span></li>
         <li><a href="https://boardgamegeek.com/boardgame/167400/ashes-rise-phoenixborn/forums/0">Ashes on BoardGameGeek</a></li>
       </ul>
 
@@ -56,6 +56,8 @@
 
       <h3 class="font-bold my-4">Legacy 1.0 content</h3>
 
+      <p><strong>Please note:</strong> these resources are only useful if you <em>only</em> own original Ashes "white box" content. If you have purchased the upgrade kit, or only own "red box" Reborn content, then these resources are out of date.</p>
+
       <ul class="list-disc pl-4">
         <li><a :href="getCDNURL('/legacy/files/ashes-core-rules.pdf')">Legacy Rules</a> <span class="text-gray">(PDF)</span></li>
         <li><a :href="getCDNURL('/legacy/files/ashes-raven-rules.pdf')">Raven Rules</a> <span class="text-gray">(PDF; fan-made replacement for official FAQ)</span></li>
@@ -76,70 +78,9 @@
         <li><a href="https://jaysonsethlindley.medium.com/colorful-cubes-foundations-of-deckbuilding-in-ashes-reborn-c49cd1abbe29">Colorful Cubes: Foundations of Deckbuilding in Ashes Reborn</a> (text)</li>
       </ul>
 
-      <hr class="border-gray-light mt-8 mb-4">
+      <hr class="border-gray-light mt-6 mb-4">
 
-      <h2>Current site progress</h2>
-
-      <ul>
-        <li class="flex flex-nowrap">
-          <span class="pr-2">
-            <i class="far fa-check-square"></i>
-          </span>
-          <span>
-            Card browsers: <router-link to="/cards/">Reborn</router-link> and <router-link to="/cards/legacy/">legacy</router-link>
-          </span>
-        </li>
-        <li class="flex flex-nowrap">
-          <span class="pr-2">
-            <i class="far fa-check-square"></i>
-          </span>
-          <span>
-            Private deck building
-          </span>
-        </li>
-        <li class="flex flex-nowrap">
-          <span class="pr-2">
-            <i class="far fa-check-square"></i>
-          </span>
-          <span>
-            Publishing decks; TTS &amp; Ashteki integration
-          </span>
-        </li>
-        <li class="flex flex-nowrap">
-          <span class="pr-2">
-            <i class="far fa-check-square"></i>
-          </span>
-          <span>
-            Private snapshots
-          </span>
-        </li>
-        <li class="flex flex-nowrap">
-          <span class="pr-2">
-            <i class="far fa-check-square"></i>
-          </span>
-          <span>
-            Comments &amp; subscriptions
-          </span>
-        </li>
-        <li class="flex flex-nowrap">
-          <span class="pr-2">
-            <i class="far fa-square"></i>
-          </span>
-          <span class="text-gray-dark">
-            Chimera card browser
-          </span>
-        </li>
-        <li class="flex flex-nowrap">
-          <span class="pr-2">
-            <i class="far fa-square"></i>
-          </span>
-          <span class="text-gray-dark">
-            First five tools
-          </span>
-        </li>
-      </ul>
-
-      <p>If you are a web developer interested in contributing, please <a href="https://github.com/onecrayon/ashes.live">visit the GitHub repo</a>.</p>
+      <p>If you are a web developer interested in contributing to Ashes.live, please <a href="https://github.com/onecrayon/ashes.live">visit the GitHub repo</a>.</p>
     </div>
   </div>
 </template>
