@@ -39,7 +39,7 @@
           <player-badge :user="user" />
 
           <span class="text-gray-darker">Updated:</span>
-          <span>{{ lastUpdatedDateFormatted }} ago</span>
+          <time :datetime="deck.modified" :title="format(parsedDate, 'yyyy-MM-dd kk:mm OOO')">{{ formatDistanceToNowStrict(parsedDate) }} ago</time>
 
           <span class="text-gray-darker">Requires:</span>
           <span>
@@ -139,7 +139,7 @@
 </template>
 
 <script>
-import { parseISO, formatDistanceToNowStrict } from 'date-fns'
+import { parseISO, format, formatDistanceToNowStrict } from 'date-fns'
 import { request, getPhoenixbornImageUrl } from '/src/utils/index.js'
 import { deckTitle } from '/src/utils/decks.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
@@ -217,8 +217,8 @@ export default {
     phoenixbornImagePath () {
       return getPhoenixbornImageUrl(this.deck.phoenixborn.stub, true, this.deck.is_legacy)
     },
-    lastUpdatedDateFormatted () {
-      return formatDistanceToNowStrict(parseISO(this.deck.modified))
+    parsedDate () {
+      return parseISO(this.deck.modified)
     },
     cardsCount () {
       return this.deck.cards.reduce((prev, card) => {
@@ -237,6 +237,8 @@ export default {
     },
   },
   methods: {
+    format,
+    formatDistanceToNowStrict,
     loadDeck () {
       const options = {}
       if (this.showMine) {
