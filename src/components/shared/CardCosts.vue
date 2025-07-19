@@ -1,5 +1,5 @@
 <template>
-  <ol v-if="costs && costs.length" :class="[isHorizontal ? $style.horizontal : '']">
+  <ol v-if="costs && costs.length" :class="['card-costs', isHorizontal ? $style.horizontal : '']">
     <li v-for="(cost, index) of costs" :class="$style.cost" :key="index">
       <span v-if="Array.isArray(cost)" :class="$style.parallelCosts">
         <!-- If we ever have a parallel cost with more than 2 costs this is going to break -->

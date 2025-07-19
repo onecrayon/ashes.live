@@ -146,7 +146,7 @@ hr {
   @apply list-disc pl-4 my-4;
 }
 
-.parsed-text ol {
+.parsed-text ol:not(.card-costs) {
   @apply list-decimal pl-6 my-4;
 }
 
