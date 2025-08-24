@@ -24,6 +24,7 @@
             <span v-if="card.phoenixborn" class="text-gray font-normal" :title="card.phoenixborn">
               ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
             </span>
+            <card-chain-flag v-if="card.chained" />
           </p>
           <p class="m-0 text-xs">
             {{ card.type }}
@@ -82,6 +83,7 @@
 <script>
 import { typeToFontAwesome } from '/src/constants.js'
 import { debounce } from '/src/utils/index.js'
+import CardChainFlag from './CardChainFlag.vue'
 import CardCodes from './CardCodes.vue'
 import CardCosts from './CardCosts.vue'
 import DeckQtyButtons from './DeckQtyButtons.vue'
@@ -101,6 +103,7 @@ export default {
     },
   },
   components: {
+    CardChainFlag,
     CardCodes,
     CardCosts,
     DeckQtyButtons,

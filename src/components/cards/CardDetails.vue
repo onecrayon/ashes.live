@@ -35,6 +35,7 @@
               <span v-if="card.phoenixborn" class="text-gray" :title="card.phoenixborn">
                 ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
               </span>
+              <card-chain-flag v-if="card.chained" />
               <span v-if="card.release.is_phg === false" class="text-gray pl-1">†</span>
             </h3>
 
@@ -145,6 +146,7 @@
 import { request } from '/src/utils/index.js'
 import { capitalize } from '/src/utils/text.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
+import CardChainFlag from '../shared/CardChainFlag.vue'
 import CardCodes from '../shared/CardCodes.vue'
 import CardCosts from '../shared/CardCosts.vue'
 import Comments from '../shared/Comments.vue'
@@ -161,6 +163,7 @@ export default {
     return useHandleResponseError()
   },
   components: {
+    CardChainFlag,
     CardCodes,
     CardCosts,
     Comments,

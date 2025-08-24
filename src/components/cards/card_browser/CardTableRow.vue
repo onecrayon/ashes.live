@@ -11,6 +11,7 @@
     <span v-if="card.phoenixborn" class="text-gray" :title="card.phoenixborn">
       ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
     </span>
+    <card-chain-flag v-if="card.chained" />
     <span v-if="card.release.is_phg === false" class="text-gray pl-1">†</span>
   </div>
   <div class="py-1 sm:border-b sm:border-r border-gray-light text-gray-light text-right">
@@ -50,6 +51,7 @@
 
 <script>
 import { typeToFontAwesome } from '/src/constants.js'
+import CardChainFlag from '../../shared/CardChainFlag.vue'
 import CardCosts from '../../shared/CardCosts.vue'
 import DeckQtyButtons from '../../shared/DeckQtyButtons.vue'
 
@@ -61,6 +63,7 @@ export default {
     }
   },
   components: {
+    CardChainFlag,
     CardCosts,
     DeckQtyButtons,
   },
