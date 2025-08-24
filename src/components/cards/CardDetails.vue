@@ -128,6 +128,7 @@
             <card-related-cards v-if="relatedSummons" :card="card" :summons="relatedSummons" :conjurations="relatedConjurations" :show-legacy="showLegacy"></card-related-cards>
             <card-related-cards v-if="phoenixborn" :card="card" :summons="phoenixborn" :conjurations="phoenixbornConjurations" :show-legacy="showLegacy"></card-related-cards>
             <card-related-cards v-if="phoenixbornUnique" :card="card" :summons="phoenixbornUnique" :conjurations="phoenixbornUniqueConjurations" :show-legacy="showLegacy"></card-related-cards>
+            <card-related-cards v-if="phoenixbornUnique2" :card="card" :summons="phoenixbornUnique2" :conjurations="phoenixbornUnique2Conjurations" :show-legacy="showLegacy"></card-related-cards>
           </ul>
         </div>
         <button v-if="isAuthenticated" class="btn py-1 mb-8 w-full" :class="{'btn-blue': !last_seen_entity_id}" @click="toggleSubscription()">
@@ -180,6 +181,8 @@ export default {
     phoenixbornConjurations: null,
     phoenixbornUnique: null,
     phoenixbornUniqueConjurations: null,
+    phoenixbornUnique2: null,
+    phoenixbornUnique2Conjurations: null,
     error: false,
   }),
   beforeMount () {
@@ -194,6 +197,8 @@ export default {
         this.phoenixbornConjurations = response.data.related_cards.phoenixborn_conjurations
         this.phoenixbornUnique = response.data.related_cards.phoenixborn_unique
         this.phoenixbornUniqueConjurations = response.data.related_cards.phoenixborn_unique_conjurations
+        this.phoenixbornUnique2 = response.data.related_cards.phoenixborn_unique_2
+        this.phoenixbornUnique2Conjurations = response.data.related_cards.phoenixborn_unique_2_conjurations
       } else if (response.data.related_cards.summoning_cards !== undefined) {
         this.relatedSummons = response.data.related_cards.summoning_cards
         this.relatedConjurations = response.data.related_cards.conjurations
