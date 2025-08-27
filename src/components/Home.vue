@@ -3,9 +3,17 @@
     <div class="sm:pr-8 pb-8 sm:w-2/3">
       <h1 class="phg-time-class">Welcome to Ashes.live!</h1>
 
-      <p>Ashes.live is a deck-building tool for the card game <a href="https://www.plaidhatgames.com/board-games/ashes-rise-phoenixborn/">Ashes Reborn: Rise of the Phoenixborn</a>. If you need to contact me about anything related to Ashes.live, your account, or whatever else you can find me on <a href="https://discord.gg/UU5bduq">Discord</a> (<span class="font-mono text-red">Skaak</span>) or <a href="https://www.boardgamegeek.com/user/Skaak">BoardGameGeek</a>!</p>
+      <p class="text-lg">Ashes.live is a deck-building tool for the card game <a href="https://www.plaidhatgames.com/board-games/ashes-rise-phoenixborn/">Ashes Reborn: Rise of the Phoenixborn</a>. Use this site to build decks with every card available! However, if you want to print copies of your decks and don't mind being unable to build with the most recent release, you should try <a href="https://ashesdb.plaidhatgames.com/">Plaid Hat's AshesDB website</a> instead!</p>
 
-      <p>Ashes was originally released in 2015 and distributed with white box expansions. It was re-released in 2021 as Ashes Reborn with an updated ruleset and significant changes to cards and is now distributed in red boxes. The two versions are not compatible, but if you own original white box content you can purchase an upgrade kit to bring it into the Reborn era.</p>
+      <p>If you need to contact me about anything related to Ashes.live, your account, or whatever else you can find me on <a href="https://discord.gg/UU5bduq">Discord</a> (<span class="font-mono text-red">Skaak</span>) or <a href="https://www.boardgamegeek.com/user/Skaak">BoardGameGeek</a>!</p>
+
+      <h2>Versions of Ashes</h2>
+
+      <p>Ashes was originally released in 2015 and distributed with white packaging under the title <strong>Ashes: Rise of the Phoenixborn</strong>. After its cancellation in 2019, it was re-released in 2021 as <strong>Ashes Reborn</strong> with an updated ruleset, significant changes to cards, and new red packaging. Original Ashes and Ashes Reborn are not compatible, but if you own original white box content Plaid Hat <a href="https://www.plaidhatgames.com/product/ashes-reborn-15-upgrade-kit/">sells an upgrade kit</a> to bring it into the Reborn era.</p>
+
+      <p>The first new content released for Ashes Reborn were the decks that added Time dice to the pool, but following that Plaid Hat released a cycle of expansions called <strong>Red Rains</strong> in which players can battle either one another or against automated opponents called Chimera.</p>
+
+      <p>In 2025, Plaid Hat announced the next cycle: <strong>Ashes Ascendancy</strong>. Ashes Ascendancy is fully backwards compatible with Ashes Reborn but introduces a new automated opponent called the Dragonborn (with slightly different rules than Red Rains Chimera) and two new dice types: astral and artifice dice. Additionally, Ashes Ascendancy has a new distribution method: new expansions will initially go to normal retail but once they are out of print, they will join all other Ashes cards available as "print on demand" through <a href="https://ashesdb.plaidhatgames.com/">Plaid Hat's AshesDB website</a>.</p>
 
       <h2>Resources</h2>
 
