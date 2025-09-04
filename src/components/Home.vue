@@ -43,6 +43,7 @@
       <h3 class="font-bold my-4">Files</h3>
 
       <ul class="list-disc pl-4">
+        <li><a :href="getCDNURL('/files/ashes-ascendancy-rules.pdf')">Ashes Ascendancy Rules</a> <span class="text-gray">(PDF)</span></li>
         <li><a :href="getCDNURL('/files/ashes-reborn-rules.pdf')">Ashes Reborn Rules</a> <span class="text-gray">(PDF)</span></li>
         <li><a :href="getCDNURL('/files/ashes-reborn-faq.pdf')">Ashes Reborn FAQ</a> <span class="text-gray">(PDF)</span></li>
         <li><a :href="getCDNURL('/files/ashes-reborn-op-rules.pdf')">Ashes Reborn Organized Play Rules</a> <span class="text-gray">(PDF)</span></li>
