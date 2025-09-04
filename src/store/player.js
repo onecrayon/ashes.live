@@ -184,7 +184,16 @@ const actions = {
         dispatch('LOG_IN', response.data).then(resolve)
       }).catch(reject)
     })
-  }
+  },
+  loadExportToken(_) {
+    return new Promise((resolve, reject) => {
+      request(`/v2/players/me/export`, {
+        method: 'get',
+      }).then(response => {
+        resolve(response.data.export_token)
+      }).catch(reject)
+    })
+  },
 }
 
 // Mutations

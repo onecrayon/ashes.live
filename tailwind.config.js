@@ -30,7 +30,11 @@ module.exports = {
         light: 'var(--color-red-light)',
         lightest: 'var(--color-red-lightest)',
       },
-      orange: 'var(--color-orange)',
+      orange: {
+        DEFAULT: 'var(--color-orange)',
+        light: 'var(--color-orange-light)',
+        lightest: 'var(--color-orange-lightest)',
+      },
       green: {
         DEFAULT: 'var(--color-green)',
         light: 'var(--color-green-light)',
