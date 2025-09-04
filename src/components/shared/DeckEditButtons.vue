@@ -48,6 +48,18 @@
       <span v-else>Delete</span>
     </transition>
   </button>
+  <button
+    v-if="deck.direct_share_uuid && !deck.is_public"
+    class="btn btn-orange px-2"
+    :class="{
+      'block py-1 w-full': standaloneButtons,
+      'inline-block ml-2': !standaloneButtons,
+    }"
+    title="Export to AshesDB"
+    @click="exportThisDeck">
+    <i class="fas fa-cloud-upload mr-1"></i>
+    <span v-if="standaloneButtons">Export to AshesDB</span>
+  </button>
   <router-link
     v-if="includeShareLink && deck.direct_share_uuid && !deck.is_public"
     :to="`/decks/share/${deck.direct_share_uuid}/`"
@@ -131,6 +143,13 @@ export default {
           this.isTalkingToServer = false
         })
       }
+    },
+    exportThisDeck () {
+      this.$store.dispatch('player/loadExportToken').then(exportToken => {
+        window.open(`https://ashesdb.plaidhatgames.com/players/me/import/${exportToken}?deck_share_uuid=${this.deck.deck_share_uuid}`)
+      }).catch(() => {
+        this.toast.error('Unable to load export token; please report this!')
+      })
     },
   },
 }
