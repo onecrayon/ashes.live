@@ -33,6 +33,9 @@
               {{ card.placement }}
             </span>
           </p>
+          <p v-if="showCardReleases" class="text-gray-dark text-xs m-0 mt-1">
+            {{ card.release.name }}
+          </p>
           <div v-if="isPhoenixborn" class="text-center my-2">
             <span
               v-if="card.battlefield !== undefined"
@@ -161,6 +164,9 @@ export default {
     },
     deckPhoenixborn () {
       return this.$store.state.builder.deck.phoenixborn
+    },
+    showCardReleases () {
+      return this.$store.state.options.showCardReleases
     },
   },
   methods: {
