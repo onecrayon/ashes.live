@@ -49,16 +49,11 @@
     </transition>
   </button>
   <button
-    v-if="deck.direct_share_uuid && !deck.is_public"
-    class="btn btn-orange px-2"
-    :class="{
-      'block py-1 w-full': standaloneButtons,
-      'inline-block ml-2': !standaloneButtons,
-    }"
+    v-if="standaloneButtons && deck.direct_share_uuid && !deck.is_public"
+    class="btn btn-orange px-2 block py-1 w-full"
     title="Export to AshesDB"
     @click="exportThisDeck">
-    <i class="fas fa-cloud-upload mr-1"></i>
-    <span v-if="standaloneButtons">Export to AshesDB</span>
+    <i class="fas fa-cloud-upload mr-1"></i> Export to AshesDB
   </button>
   <router-link
     v-if="includeShareLink && deck.direct_share_uuid && !deck.is_public"
@@ -146,7 +141,7 @@ export default {
     },
     exportThisDeck () {
       this.$store.dispatch('player/loadExportToken').then(exportToken => {
-        window.open(`https://ashesdb.plaidhatgames.com/players/me/import/${exportToken}?deck_share_uuid=${this.deck.deck_share_uuid}`)
+        window.open(`https://ashesdb.plaidhatgames.com/players/me/import/${exportToken}?deck_share_uuid=${this.deck.direct_share_uuid}`)
       }).catch(() => {
         this.toast.error('Unable to load export token; please report this!')
       })
