@@ -48,9 +48,8 @@
       <span v-else>Delete</span>
     </transition>
   </button>
-  <!-- TODO: enable this once PHG supports single deck exports -->
   <button
-    v-if="false && deck.direct_share_uuid && !deck.is_public"
+    v-if="deck.direct_share_uuid && !deck.is_public"
     class="btn btn-orange px-2"
     :class="{
       'block py-1 w-full': standaloneButtons,
