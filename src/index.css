@@ -37,6 +37,10 @@
   --color-dice-sympathy-bg: #119981;
   --color-dice-time: #dfdfdf;
   --color-dice-time-bg: #9a2e36;
+  --color-dice-artifice: #77d0e5;
+  --color-dice-artifice-bg: #4c5257;
+  --color-dice-astral: #fcf7cb;
+  --color-dice-astral-bg: #685ea9;
 }
 
 @tailwind base;
@@ -210,6 +214,14 @@ hr {
 
 .die.time {
   @apply text-dice-time border-dice-time bg-dice-time-bg;
+}
+
+.die.artifice {
+  @apply text-dice-artifice border-dice-artifice bg-dice-artifice-bg;
+}
+
+.die.astral {
+  @apply text-dice-astral border-dice-astral bg-dice-astral-bg;
 }
 
 /* Usage: <transition name="fade"> */

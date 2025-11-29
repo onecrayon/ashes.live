@@ -1,4 +1,4 @@
-export const diceList = ["ceremonial", "charm", "illusion", "natural", "divine", "sympathy", "time"]
+export const diceList = ["ceremonial", "charm", "illusion", "natural", "divine", "sympathy", "time", "artifice", "astral"]
 
 export const typeToFontAwesome = {
   'Ally': 'fas fa-users',

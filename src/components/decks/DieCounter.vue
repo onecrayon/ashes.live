@@ -12,6 +12,8 @@
         'border-dice-divine-bg': name === 'divine',
         'border-dice-sympathy-bg': name === 'sympathy',
         'border-dice-time-bg': name === 'time',
+        'border-dice-artifice-bg': name == 'artifice',
+        'border-dice-astral-bg': name == 'astral',
       }"
       type="number"
       min="0"
@@ -44,6 +46,12 @@
         'text-dice-time': name === 'time',
         'border-dice-time-bg': name === 'time',
         'bg-dice-time-bg': name === 'time',
+        'text-dice-artifice': name === 'artifice',
+        'border-dice-artifice-bg': name === 'artifice',
+        'bg-dice-artifice-bg': name === 'artifice',
+        'text-dice-astral': name === 'astral',
+        'border-dice-astral-bg': name === 'astral',
+        'bg-dice-astral-bg': name === 'astral',
         // This isn't managed by TailwindCSS, so just toss it in there on its own
         [`phg-${name}-power`]: true,
       }"
