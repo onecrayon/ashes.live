@@ -3,7 +3,7 @@
     <div class="sm:pr-8 pb-8 sm:w-2/3">
       <h1 class="phg-time-class">Welcome to Ashes.live!</h1>
 
-      <p class="text-lg">Ashes.live is a deck-building tool for the card game <a href="https://www.plaidhatgames.com/board-games/ashes-rise-phoenixborn/">Ashes Reborn: Rise of the Phoenixborn</a>. Use this site to build decks with every card available! However, if you want to print copies of your decks and don't mind being unable to build with the most recent release, you should try <a href="https://ashesdb.plaidhatgames.com/">Plaid Hat's AshesDB website</a> instead!</p>
+      <p class="text-lg">Ashes.live is a deck-building tool for the card game <a href="https://www.plaidhatgames.com/board-games/ashes-rise-phoenixborn/">Ashes Ascendancy</a> (formerly Ashes Reborn: Rise of the Phoenixborn). Use this site to build decks with every card available! However, if you want to print copies of your decks and don't mind being unable to build with the most recent release, you should try <a href="https://ashesdb.plaidhatgames.com/">Plaid Hat's AshesDB website</a> instead!</p>
 
       <p>If you need to contact me about anything related to Ashes.live, your account, or whatever else you can find me on <a href="https://discord.gg/UU5bduq">Discord</a> (<span class="font-mono text-red">Skaak</span>) or <a href="https://www.boardgamegeek.com/user/Skaak">BoardGameGeek</a>!</p>
 
@@ -36,6 +36,7 @@
 
       <ul class="list-disc pl-4">
         <li><a href="https://wiki.ashes.live">Ashes Community Wiki</a></li>
+        <li><a href="https://www.youtube.com/@thejankyardpodcast">The Jankyard Podcast</a> <span class="text-gray">(YouTube)</span></li>
         <li><a href="https://www.youtube.com/watch?v=zvvX1HQgwNU&list=PLmHifZPFC_JtixhVcpyDwXv4y6vKN0BUr">Team Covenant</a> <span class="text-gray">(YouTube)</span></li>
         <li><a href="https://www.plaidhatgames.com/plaid-hat-podcast/">The Plaid Hat Podcast</a></li>
       </ul>
