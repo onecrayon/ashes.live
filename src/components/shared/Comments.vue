@@ -14,14 +14,14 @@
     <div v-else>
       <ol class="comments">
         <li v-for="comment of comments" class="border border-gray mb-4" :id="`comment-${comment.entity_id}`">
-          <div v-if="comment.is_deleted" class="bg-gray text-gray-dark font-bold">
-            <i class="fas fa-trash"></i>
-            <span v-if="comment.is_moderated">Deleted by moderator.</span>
-            <span v-else>Deleted by author.</span>
+          <div v-if="comment.is_deleted" class="bg-gray-light text-gray-dark font-bold px-2">
+            <i class="fas fa-trash pr-2"></i>
+            <span v-if="comment.is_moderated">Comment deleted by moderator.</span>
+            <span v-else>Comment deleted by author.</span>
           </div>
           <div v-else>
             <div
-              class="flex flex-wrap border-b-2 p-2 text-sm"
+              class="flex flex-wrap border-b-2 p-2 text-sm items-center"
               :class="{
                 'bg-reaction border-reaction-dark': !lastSeenEntityId || comment.entity_id <= lastSeenEntityId,
                 'bg-inexhaustible border-inexhaustible-dark': lastSeenEntityId && comment.entity_id > lastSeenEntityId,
@@ -32,16 +32,57 @@
               <a :href="`#comment-${comment.entity_id}`" class="text-gray-dark">
                 <time :datetime="comment.created">{{ this.formatCommentDate(comment.created) }} ago</time>&nbsp;<i class="fas fa-link"></i>
               </a>
+              <div v-if="!comment.is_deleted && (isMyComment(comment) || isAdmin)" class="ml-2">
+                <button class="btn btn-first px-2 pr-1" :class="{active: commentBeingEdited === comment.entity_id}" title="Edit" @click="editComment(comment)" :disabled="commentBeingEdited === comment.entity_id">
+                  <i class="fas fa-edit"></i>
+                </button><button v-if="commentBeingDeleted === comment.entity_id" class="btn btn-last btn-red px-2" title="Confirm Delete" @click="submitCommentDelete" :disabled="isAdmin && !isMyComment(comment) && !commentModerationNotes">
+                  <i class="far fa-trash-alt"></i>
+                </button><button v-else class="btn btn-last px-2" title="Delete" @click="deleteComment(comment)">
+                  <i class="far fa-trash-alt"></i>
+                </button>
+              </div>
             </div>
             <!-- The only reason we have a loading state is because otherwise the comment text doesn't update (it isn't possible to be properly reactive) -->
             <div v-if="loading" class="m-2 bg-gray-light opacity-40 h-24"></div>
+            <div v-else-if="commentBeingEdited === comment.entity_id">
+              <form @submit.prevent="submitCommentEdit" class="flex flex-col p-2 m-0">
+                <text-editor
+                  placeholder="Enter comment here"
+                  v-model="commentEditText"
+                ></text-editor>
+                <text-input
+                  placeholder="Moderation notes"
+                  v-model="commentModerationNotes"
+                  v-if="isAdmin && !isMyComment(comment)"
+                ></text-input>
+                <div class="mt-2 md:flex">
+                  <p class="text-gray text-sm mb-4 mt-0 md:flex-1 md:order-2 md:pt-2 md:text-right">
+                    Please respect the <router-link to="/policies/">Ashes.live Content Policies</router-link>.
+                  </p>
+                  <button class="btn btn-blue py-1 mb-2 mr-2 w-full md:flex-none md:px-4 md:w-auto" :disabled="!commentEditText || (isAdmin && !isMyComment(comment) && !commentModerationNotes)">Save</button>
+                  <button class="btn py-1 mb-2 w-full md:flex-none md:px-4 md:w-auto" @click="editComment(null)">Cancel</button>
+                </div>
+              </form>
+            </div>
+            <div v-else-if="commentBeingDeleted === comment.entity_id" class="px-2 py-1 m-0">
+              <p class="text-red"><strong>Are you sure you want to delete this comment?</strong></p>
+              <form @submit.prevent="submitCommentDelete">
+                <text-input
+                  placeholder="Moderation notes"
+                  v-model="commentModerationNotes"
+                  v-if="isAdmin && !isMyComment(comment)"
+                  class="mb-4"
+                ></text-input>
+                <button class="btn btn-red py-1 mb-2 mr-2 w-full md:flex-none md:px-4 md:w-auto" :disabled="isAdmin && !isMyComment(comment) && !commentModerationNotes">Delete</button>
+                <button class="btn py-1 mb-2 w-full md:flex-none md:px-4 md:w-auto" @click="deleteComment(null)">Cancel</button>
+              </form>
+            </div>
             <card-codes
               v-else
               class="comment-body px-2 py-1 m-0"
               :content="comment.text"
               needs-paragraphs></card-codes>
           </div>
-          <!-- TODO: add link to form for managing the comment -->
         </li>
       </ol>
       <div v-if="comments && comments.length">
@@ -132,6 +173,7 @@ import CardCodeExample from './CardCodeExample.vue'
 import LinkAlike from './LinkAlike.vue'
 import Modal from './Modal.vue'
 import TextEditor from './TextEditor.vue'
+import TextInput from './TextInput.vue'
 import PlayerBadge from './PlayerBadge.vue'
 
 const COMMENTS_PER_PAGE = 30
@@ -150,6 +192,10 @@ export default {
     error: false,
     commentWriteMode: true,
     formattingHelpOpen: false,
+    commentBeingEdited: null,
+    commentEditText: '',
+    commentBeingDeleted: null,
+    commentModerationNotes: '',
   }),
   setup () {
     // Standard composite containing { toast, handleResponseError }
@@ -164,6 +210,7 @@ export default {
     Modal,
     PlayerBadge,
     TextEditor,
+    TextInput,
   },
   created () {
     if (this.$route.query.page) {
@@ -184,6 +231,13 @@ export default {
   computed: {
     isAuthenticated () {
       return this.$store.getters['player/isAuthenticated']
+    },
+    isAdmin () {
+      return this.$store.getters['player/isAdmin']
+    },
+    currentUserBadge () {
+      const loggedInUser = this.$store.getters['player/user']
+      return (loggedInUser && loggedInUser.badge) || null
     },
     totalPages () {
       return Math.ceil(this.commentCount / COMMENTS_PER_PAGE)
@@ -258,6 +312,61 @@ export default {
       }).then(() => {
         this.commentText = ""
         this.toast.success("Your comment has been posted!")
+        this.loadComments()
+      }).catch((error) => {
+        this.handleResponseError(error)
+      })
+    },
+    isMyComment (comment) {
+      return comment.user.badge == this.currentUserBadge
+    },
+    editComment (comment) {
+      if (comment === null) {
+        this.commentBeingEdited = null
+        this.commentEditText = ''
+      } else {
+        this.deleteComment(null)
+        this.commentBeingEdited = comment.entity_id
+        this.commentEditText = comment.text
+        this.commentModerationNotes = ''
+      }
+    },
+    deleteComment (comment) {
+      if (comment === null) {
+        this.commentBeingDeleted = null
+      } else {
+        this.editComment(null)
+        this.commentBeingDeleted = comment.entity_id
+        this.commentModerationNotes = ''
+      }
+    },
+    submitCommentEdit () {
+      const data = { text: this.commentEditText }
+      if (this.commentModerationNotes) {
+        data["moderation_notes"] = this.commentModerationNotes
+      }
+      request(`/v2/comment/${this.commentBeingEdited}`, {
+        method: 'patch',
+        data: data,
+      }).then(() => {
+        this.editComment(null)
+        this.toast.success("Your comment has been edited!")
+        this.loadComments()
+      }).catch((error) => {
+        this.handleResponseError(error)
+      })
+    },
+    submitCommentDelete () {
+      const query = {}
+      if (this.commentModerationNotes) {
+        query["moderation_notes"] = this.commentModerationNotes
+      }
+      request(`/v2/comment/${this.commentBeingDeleted}`, {
+        method: 'delete',
+        query: query,
+      }).then(() => {
+        this.deleteComment(null)
+        this.toast.success("Your comment has been deleted!")
         this.loadComments()
       }).catch((error) => {
         this.handleResponseError(error)
