@@ -119,12 +119,15 @@
           <deck-dice class="my-2" :dice="deck.dice" />
           <hr class="mb-4 mt-4" />
           <h3 class="text-lg flex mb-1">
-            <span class="flex-grow">Cards</span>
+            <span class="flex-grow">
+              Cards
+              <gallery-picker v-if="!deck.is_legacy" class="my-2"></gallery-picker>
+            </span>
             <span class="flex-none text-sm font-bold" :class="[ cardsCount != 30 ? 'text-red' : 'text-gray-darker']">
               {{ cardsCount }}/30
             </span>
           </h3>
-          <deck-cards-preview :deck="deck" :columnLayout="true"/>
+          <deck-cards-preview :deck="deck" :columnLayout="true" :gallery-style="galleryStyle" />
         </div>
       </div>
     </div>
@@ -150,6 +153,7 @@ import DeckExportModal from './DeckExportModal.vue'
 import DeckEditButtons from '../shared/DeckEditButtons.vue'
 import CardCodes from '../shared/CardCodes.vue'
 import PlayerBadge from '../shared/PlayerBadge.vue'
+import GalleryPicker from '../shared/GalleryPicker.vue'
 
 export default {
   name: 'DeckDetails',
@@ -166,6 +170,7 @@ export default {
     DeckEditButtons,
     DeckExportModal,
     PlayerBadge,
+    GalleryPicker,
   },
   data () {
     return {
@@ -235,14 +240,25 @@ export default {
     isAuthenticated () {
       return this.$store.getters['player/isAuthenticated']
     },
+    galleryStyle () {
+      if (this.deck && this.deck.is_legacy) return 'list'
+      return this.$store.state.options.galleryStyle
+    },
   },
   methods: {
     format,
     formatDistanceToNowStrict,
     loadDeck () {
-      const options = {}
+      const params = {}
       if (this.showMine) {
-        options.params = { show_saved: true }
+        params.show_saved = true
+      }
+      if (this.galleryStyle == "binder") {
+        params.full_cards = true
+      }
+      const options = {}
+      if (params) {
+        options.params = params
       }
       request(`/v2/decks/${this.id}`, options).then(response => {
         this._deck = response.data.deck

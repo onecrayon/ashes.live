@@ -16,9 +16,9 @@ export function deckTitle (deck) {
 
 /**
  * deckToSections(deck)
- * 
- * Parses the given deck object, and returns alist of section objects like:
- * 
+ *
+ * Parses the given deck object, and returns a list of section objects like:
+ *
  *     [
  *       {
  *         title: 'Section Title',

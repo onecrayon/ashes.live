@@ -4,8 +4,9 @@
       v-for="section of deckSections" :key="section.title"
       :cards="section.contents"
       class="mb-4"
-      :typeLabel="section.title" />
-    <deck-cards-type-list :cards="this.deck.conjurations" class="mb-4" typeLabel="Conjurations" />
+      :typeLabel="section.title"
+      :gallery-style="galleryStyle" />
+    <deck-cards-type-list :cards="this.deck.conjurations" class="mb-4" typeLabel="Conjurations" :gallery-style="galleryStyle" />
   </div>
 </template>
 
@@ -18,6 +19,7 @@ export default {
   props: {
     deck: null,
     columnLayout: false,
+    galleryStyle: 'list',
   },
   components: {
     DeckCardsTypeList,
