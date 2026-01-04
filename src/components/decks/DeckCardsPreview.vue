@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { deckToSections } from '/src/utils/decks.js'
+import { cardsByType, cardsByRelease } from '/src/utils/decks.js'
 import DeckCardsTypeList from './DeckCardsTypeList.vue'
 
 export default {
@@ -26,7 +26,12 @@ export default {
   },
   computed: {
     deckSections () {
-      return deckToSections(this.deck)
+      const isAsc = this.$store.state.options.deckOrder == 'asc'
+      if (this.$store.state.options.deckSort === 'type') {
+        return cardsByType(this.deck, isAsc)
+      } else {
+        return cardsByRelease(this.deck, isAsc)
+      }
     },
   },
 }

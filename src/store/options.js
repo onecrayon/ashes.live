@@ -27,6 +27,9 @@ const state = () => ({
   exportShowCardCounts: typeof defaultExportShowCardCounts === 'boolean' ? defaultExportShowCardCounts : true,
   exportSortByType: typeof defaultExportSortByType === 'boolean' ? defaultExportSortByType : true,
   exportShowAttribution: typeof defaultExportShowAttribution === 'boolean' ? defaultExportShowAttribution : true,
+  // Controls sorting options specific for deck detail pages
+  deckSort: storeGet('deckSort') || 'type',
+  deckOrder: storeGet('deckOrder') || 'asc',
 })
 
 // Getters
@@ -71,6 +74,14 @@ const mutations = {
   setExportShowAttribution (state, value) {
     state.exportShowAttribution = value
     storeSet('exportShowAttribution', value)
+  },
+  setDeckSort (state, value) {
+    state.deckSort = value
+    storeSet('deckSort', value)
+  },
+  setDeckOrder (state, value) {
+    state.deckOrder = value
+    storeSet('deckOrder', value)
   },
 }
 

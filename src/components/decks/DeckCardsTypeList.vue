@@ -1,8 +1,8 @@
 <template>
   <div v-if="cards && cards.length" class="mt-1">
     <h3 class="text-base m-0" :class="{'font-bold border-b border-gray-light pb-1': isBinderView, 'font-normal': !isBinderView}">
-      <i :class="[typeIcon]"></i>
-      <span class="pl-1">{{typeLabel}}</span> <span class="text-gray-darker font-normal">({{ count }})</span>
+      <i v-if="sortedByType" :class="[typeIcon]"></i>
+      <span :class="{'pl-1': sortedByType}">{{typeLabel}}</span> <span class="text-gray-darker font-normal">({{ count }})</span>
     </h3>
     <ul class="mt-1" v-if="!isBinderView">
       <li v-for="(card, index) of cards" :key="index" class="flex">
@@ -43,6 +43,9 @@ export default {
     },
     isBinderView () {
       return this.galleryStyle == "binder"
+    },
+    sortedByType () {
+      return this.$store.state.options.deckSort == 'type'
     },
   },
 }
