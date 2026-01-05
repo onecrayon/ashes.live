@@ -51,7 +51,7 @@
             {{ cardsCount }} / 30
           </span>
         </div>
-        <deck-cards-preview :deck="deckData" />
+        <deck-cards-preview :deck="deckData" inline-display />
       </div>
     </div>
   </div>

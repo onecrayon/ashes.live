@@ -5,8 +5,9 @@
       :cards="section.contents"
       class="mb-4"
       :typeLabel="section.title"
-      :gallery-style="deck.is_legacy ? 'list' : galleryStyle" />
-    <deck-cards-type-list :cards="deck.conjurations" class="mb-4" typeLabel="Conjurations" :gallery-style="galleryStyle" />
+      :gallery-style="deck.is_legacy ? 'list' : galleryStyle"
+      :inline-display="inlineDisplay" />
+    <deck-cards-type-list :cards="deck.conjurations" class="mb-4" typeLabel="Conjurations" :gallery-style="galleryStyle" :inline-display="inlineDisplay" />
   </div>
 </template>
 
@@ -17,9 +18,21 @@ import DeckCardsTypeList from './DeckCardsTypeList.vue'
 export default {
   name: 'DeckCardsPreview',
   props: {
-    deck: null,
-    columnLayout: false,
-    galleryStyle: 'list',
+    deck: {
+      required: true
+    },
+    columnLayout: {
+      type: Boolean,
+      default: false,
+    },
+    galleryStyle: {
+      type: String,
+      default: 'list',
+    },
+    inlineDisplay: {
+      type: Boolean,
+      default: false,
+    },
   },
   data () {
     return {
@@ -31,8 +44,8 @@ export default {
   },
   computed: {
     deckSections () {
-      const isAsc = this.$store.state.options.deckOrder == 'asc'
-      if (this.deck.is_legacy || this.$store.state.options.deckSort === 'type') {
+      const isAsc = this.inlineDisplay || this.$store.state.options.deckOrder == 'asc'
+      if (this.deck.is_legacy || this.inlineDisplay || this.$store.state.options.deckSort === 'type') {
         return cardsByType(this.deck, isAsc)
       } else {
         return cardsByRelease(this.deck, isAsc, this.releases ? this.releases.map((release) => release.name) : null)

@@ -10,9 +10,9 @@
       <span class="hidden sm:inline"> Releases</span>
       <span v-if="filtersActive" class="alt-text"> (active)</span>
     </button>
-    <div 
-      ref="popup" 
-      class="absolute z-50 right-0" 
+    <div
+      ref="popup"
+      class="absolute z-50 right-0"
       :class="{ hidden: !popup }"
       tabindex="0"
       @focusout="focusOutPopup">
@@ -161,11 +161,12 @@ export default {
       if (this.loadingCollections) return
       this.loadingCollections = true
       try {
-        const params = {}
+        // We only need to fetch releases if they are legacy; otherwise, they might be cached in the store
         if (this.showLegacy) {
-          params.show_legacy = true
+          this.allCollections = (await request('/v2/releases', {params: {show_legacy: true}})).data
+        } else {
+          this.allCollections = await this.$store.dispatch('cards/fetchReleases')
         }
-        this.allCollections = (await request('/v2/releases', { params })).data
       } catch (e) {
         this.handleResponseError(e)
         return

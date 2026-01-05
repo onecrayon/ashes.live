@@ -1,6 +1,6 @@
 <template>
   <div v-if="cards && cards.length" class="mt-1">
-    <h3 class="text-base m-0 font-normal border-b border-gray-light pb-1" :class="{'mb-4': isBinderView}">
+    <h3 class="text-base m-0 font-normal border-gray-light" :class="{'mb-4': isBinderView, 'border-b pb-1': !inlineDisplay}">
       <span v-if="!sortedByType && releases && typeLabel != 'Conjurations'">
         <router-link :to="{name: 'Cards', query: {r: releaseNameToStub[typeLabel]}}" class="text-black">
           {{typeLabel}}
@@ -36,7 +36,22 @@ const countCards = cards => cards.reduce((acc, card) => acc + card.count, 0)
 
 export default {
   name: 'DeckCardsTypeList',
-  props: ['typeLabel', 'cards', 'galleryStyle'],
+  props: {
+    typeLabel: {
+      required: true
+    },
+    cards: {
+      required: true
+    },
+    galleryStyle: {
+      type: String,
+      default: 'list',
+    },
+    inlineDisplay: {
+      type: Boolean,
+      default: false,
+    },
+  },
   components: {
     Card,
   },
@@ -52,7 +67,7 @@ export default {
       return this.galleryStyle == "binder"
     },
     sortedByType () {
-      return this.$store.state.options.deckSort == 'type'
+      return this.inlineDisplay || this.$store.state.options.deckSort == 'type'
     },
     releases () {
       const releases = this.$store.state.cards.releases
