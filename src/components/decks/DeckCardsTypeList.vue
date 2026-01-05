@@ -1,6 +1,6 @@
 <template>
   <div v-if="cards && cards.length" class="mt-1">
-    <h3 class="text-base m-0 font-normal border-b border-gray-light pb-1">
+    <h3 class="text-base m-0 font-normal border-b border-gray-light pb-1" :class="{'mb-4': isBinderView}">
       <span v-if="!sortedByType && releases && typeLabel != 'Conjurations'">
         <router-link :to="{name: 'Cards', query: {r: releaseNameToStub[typeLabel]}}" class="text-black">
           {{typeLabel}}
@@ -22,8 +22,7 @@
     </ul>
     <ul v-else class="mt-1 grid gap-4 grid-flow-row auto-cols-auto" :class="[$style.cardColumns]">
       <li v-for="card of cards" :key="card.stub">
-        <strong>{{ card.count }}<span class="text-gray-darker">&times;</span></strong>
-        <card :card="card"></card>
+        <card :card="card" :qty="card.count"></card>
       </li>
     </ul>
   </div>
