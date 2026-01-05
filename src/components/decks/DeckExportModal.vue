@@ -46,7 +46,7 @@
 <script>
 import { useToast } from 'vue-toastification'
 import { capitalize } from '/src/utils/text.js'
-import { deckToSections, deckTitle } from '/src/utils/decks.js'
+import { cardsByType, deckTitle } from '/src/utils/decks.js'
 import InputButton from '../shared/InputButton.vue'
 import Modal from '../shared/Modal.vue'
 import Toggle from '../shared/Toggle.vue'
@@ -140,7 +140,7 @@ export default {
             text.push('\n')
           }
         }
-        const deckSections = deckToSections(this.deck)
+        const deckSections = cardsByType(this.deck)
         for (const section of deckSections) {
           if (this.sortByType) {
             text.push(section.title)

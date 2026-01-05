@@ -6,7 +6,7 @@
  * auto-saved.
  */
 import { debounce, request } from '/src/utils/index.js'
-import { deckToSections } from '/src/utils/decks.js'
+import { cardsByType } from '/src/utils/decks.js'
 import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 
 // Debounced request so that we can ensure our save actions are spaced out
@@ -57,7 +57,7 @@ const getters = {
     return state.deck.cards.reduce((value, card) => value + card.count, 0)
   },
   deckSections (state) {
-    return deckToSections(state.deck)
+    return cardsByType(state.deck)
   },
   phoenixbornUniqueCount (state) {
     return state.deck.cards.reduce((value, card) => {

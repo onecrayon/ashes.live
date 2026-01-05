@@ -12,11 +12,16 @@ import { request } from '/src/utils/index.js'
 
 const toast = useToast()
 
+// Used internally to ensure that a bunch of components requesting releases all get the same Promise
+//  (this ensures that we do not query the API more than once per page display)
+let fetchReleasePromise = null
+
 // Initial state
 const state = () => ({
   stubMap: {},
   phoenixborns: null,
   legacyPhoenixborns: null,
+  releases: null,
 })
 
 // Getters
@@ -64,7 +69,23 @@ const actions = {
         resolve(phoenixborns)
       }).catch(reject)
     })
-  }
+  },
+  fetchReleases ({ commit, state }) {
+    if (fetchReleasePromise === null) {
+      fetchReleasePromise = new Promise((resolve, reject) => {
+        // Exit with stored version, if we already have the list
+        if (state.releases) return resolve(state.releases)
+        // Otherwise, fetch our list of releases
+        request('/v2/releases').then(response => {
+          const releases = response.data
+          commit('saveReleases', releases)
+          resolve(releases)
+          fetchReleasePromise = null
+        }).catch(reject)
+      })
+    }
+    return fetchReleasePromise
+  },
 }
 
 // Mutations
@@ -82,6 +103,9 @@ const mutations = {
   },
   saveLegacyPhoenixborns (state, phoenixborns) {
     state.legacyPhoenixborns = phoenixborns
+  },
+  saveReleases (state, releases) {
+    state.releases = releases
   },
 }
 

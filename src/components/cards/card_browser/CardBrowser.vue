@@ -70,7 +70,7 @@ import DiceFilter from './DiceFilter.vue'
 import TypeFilter from './TypeFilter.vue'
 import ClearableSearch from '../../shared/ClearableSearch.vue'
 import CardSort from './CardSort.vue'
-import GalleryPicker from './GalleryPicker.vue'
+import GalleryPicker from '../../shared/GalleryPicker.vue'
 import CardTable from './CardTable.vue'
 
 function ensureArray (value) {

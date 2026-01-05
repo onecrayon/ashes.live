@@ -119,12 +119,35 @@
           <deck-dice class="my-2" :dice="deck.dice" />
           <hr class="mb-4 mt-4" />
           <h3 class="text-lg flex mb-1">
-            <span class="flex-grow">Cards</span>
+            <span class="flex-grow">
+              Cards
+              <div v-if="!deck.is_legacy" class="flex flex-nowrap text-sm my-2">
+                <gallery-picker v-if="!deck.is_legacy" class="flex-none"></gallery-picker>
+                <div class="flex flex-nowrap ml-2" role="group" aria-label="Sorting logic">
+                  <button class="btn btn-first py-1 px-2 font-normal"
+                    :title="sortingLogicTooltip"
+                    @click="toggleOrder">
+                    Sort<span class="alt-text"> {{ deckOrder === 'asc' ? 'ascending' : 'descending' }} by:</span>
+                    <i v-if="deckOrder === 'asc'" class="fad fa-sort-up ml-1"></i>
+                    <i v-else class="fad fa-sort-down ml-1"></i>
+                  </button
+                  ><button
+                    class="btn btn-inner py-1 px-2 font-normal"
+                    :class="{active: deckSort === 'type'}"
+                    @click="deckSort = 'type'">Type<span v-if="deckSort === 'type'" class="alt-text"> (active)</span></button
+                  ><button
+                    class="btn btn-last py-1 px-2 font-normal"
+                    :class="{active: deckSort === 'release'}"
+                    @click="deckSort = 'release'">Release<span v-if="deckSort === 'release'" class="alt-text"> (active)</span></button
+                  >
+                </div>
+              </div>
+            </span>
             <span class="flex-none text-sm font-bold" :class="[ cardsCount != 30 ? 'text-red' : 'text-gray-darker']">
               {{ cardsCount }}/30
             </span>
           </h3>
-          <deck-cards-preview :deck="deck" :columnLayout="true"/>
+          <deck-cards-preview :deck="deck" :columnLayout="true" :gallery-style="galleryStyle" />
         </div>
       </div>
     </div>
@@ -150,6 +173,7 @@ import DeckExportModal from './DeckExportModal.vue'
 import DeckEditButtons from '../shared/DeckEditButtons.vue'
 import CardCodes from '../shared/CardCodes.vue'
 import PlayerBadge from '../shared/PlayerBadge.vue'
+import GalleryPicker from '../shared/GalleryPicker.vue'
 
 export default {
   name: 'DeckDetails',
@@ -166,6 +190,7 @@ export default {
     DeckEditButtons,
     DeckExportModal,
     PlayerBadge,
+    GalleryPicker,
   },
   data () {
     return {
@@ -225,26 +250,45 @@ export default {
         return prev + card.count
       }, 0)
     },
-    formatReleases() {
-      const releaseNames = this.releases.map(r => r.name)
-      return releaseNames.join(', ')
-    },
     title () {
       return deckTitle(this.deck)
     },
     isAuthenticated () {
       return this.$store.getters['player/isAuthenticated']
     },
+    galleryStyle () {
+      if (this.deck && this.deck.is_legacy) return 'list'
+      return this.$store.state.options.galleryStyle
+    },
+    deckSort: {
+      get () {
+        return this.$store.state.options.deckSort
+      },
+      set (value) {
+        this.$store.commit('options/setDeckSort', value)
+      }
+    },
+    deckOrder: {
+      get () {
+        return this.$store.state.options.deckOrder
+      },
+      set (value) {
+        this.$store.commit('options/setDeckOrder', value)
+      }
+    },
+    sortingLogicTooltip () {
+      return `Sorted in ${this.deckOrder === 'asc' ? 'ascending' : 'descending'} order`
+    },
   },
   methods: {
     format,
     formatDistanceToNowStrict,
     loadDeck () {
-      const options = {}
+      const params = { full_cards: true }
       if (this.showMine) {
-        options.params = { show_saved: true }
+        params.show_saved = true
       }
-      request(`/v2/decks/${this.id}`, options).then(response => {
+      request(`/v2/decks/${this.id}`, { params }).then(response => {
         this._deck = response.data.deck
         // Redirect to the public URL if they try to access a public deck through the private link
         if (this._deck.is_public && this.showMine) {
@@ -280,6 +324,10 @@ export default {
       }).finally(() => {
         this.isTalkingToServer = false
       })
+    },
+    toggleOrder () {
+      const newOrder = this.deckOrder == 'asc' ? 'desc' : 'asc'
+      this.deckOrder = newOrder
     },
   },
 }

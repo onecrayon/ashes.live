@@ -15,6 +15,10 @@
           height="75"
           alt=" "
           :src="cardImageURL">
+        <!-- min-width of 33 ensures that we match the standard size of the deck-building buttons for happy aesthetics, but can extend larger with larger font sizes -->
+        <strong v-if="qty !== null" class="absolute top-0 left-0 text-black text-xl text-center bg-gray-light border-gray border-r border-b rounded-br-md" style="min-width: 33px;">
+          {{ qty }}<span class="text-gray-darker">&times;</span>
+        </strong>
       </div>
       <div class="flow-root">
         <card-costs class="p-2 float-right text-right" :costs="card.cost"></card-costs>
@@ -103,6 +107,10 @@ export default {
     isPopup: {
       type: Boolean,
       default: false,
+    },
+    qty: {
+      type: Number,
+      default: null,
     },
   },
   components: {
