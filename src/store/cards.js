@@ -17,6 +17,7 @@ const state = () => ({
   stubMap: {},
   phoenixborns: null,
   legacyPhoenixborns: null,
+  releases: null,
 })
 
 // Getters
@@ -64,7 +65,19 @@ const actions = {
         resolve(phoenixborns)
       }).catch(reject)
     })
-  }
+  },
+  fetchReleases ({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      // Exit with stored version, if we already have the list
+      if (state.releases) return resolve(state.releases)
+      // Otherwise, fetch our list of releases
+      request('/v2/releases').then(response => {
+        const releases = response.data
+        commit('saveReleases', releases)
+        resolve(releases)
+      }).catch(reject)
+    })
+  },
 }
 
 // Mutations
@@ -82,6 +95,9 @@ const mutations = {
   },
   saveLegacyPhoenixborns (state, phoenixborns) {
     state.legacyPhoenixborns = phoenixborns
+  },
+  saveReleases (state, releases) {
+    state.releases = releases
   },
 }
 

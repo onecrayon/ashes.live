@@ -121,7 +121,7 @@
           <h3 class="text-lg flex mb-1">
             <span class="flex-grow">
               Cards
-              <div class="flex flex-nowrap text-sm my-2">
+              <div v-if="!deck.is_legacy" class="flex flex-nowrap text-sm my-2">
                 <gallery-picker v-if="!deck.is_legacy" class="flex-none"></gallery-picker>
                 <div class="flex flex-nowrap ml-2" role="group" aria-label="Sorting logic">
                   <button class="btn btn-first py-1 px-2 font-normal"
@@ -249,10 +249,6 @@ export default {
       return this.deck.cards.reduce((prev, card) => {
         return prev + card.count
       }, 0)
-    },
-    formatReleases() {
-      const releaseNames = this.releases.map(r => r.name)
-      return releaseNames.join(', ')
     },
     title () {
       return deckTitle(this.deck)

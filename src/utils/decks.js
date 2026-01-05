@@ -87,7 +87,7 @@ export function cardsByType (deck, isAscending = true) {
  *       }
  *     ]
  */
-export function cardsByRelease (deck, isAscending = true) {
+export function cardsByRelease (deck, isAscending = true, releaseSort = null) {
   const sections = {}
   for (const card of deck.cards) {
     if (!sections[card.release.name]) {
@@ -96,9 +96,16 @@ export function cardsByRelease (deck, isAscending = true) {
     sections[card.release.name].push(card)
   }
   const sectionTitles = Object.keys(sections)
-  sectionTitles.sort()
-  if (!isAscending) {
-    sectionTitles.reverse()
+  if (releaseSort) {
+    sectionTitles.sort((a, b) => {
+        if (isAscending) return releaseSort.indexOf(a) < releaseSort.indexOf(b) ? -1 : 1
+        else return releaseSort.indexOf(a) > releaseSort.indexOf(b) ? -1 : 1
+      })
+  } else {
+    sectionTitles.sort()
+    if (!isAscending) {
+      sectionTitles.reverse()
+    }
   }
   const sortedSections = []
   for (const section of sectionTitles) {

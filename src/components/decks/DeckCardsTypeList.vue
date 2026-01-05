@@ -1,8 +1,16 @@
 <template>
   <div v-if="cards && cards.length" class="mt-1">
-    <h3 class="text-base m-0" :class="{'font-bold border-b border-gray-light pb-1': isBinderView, 'font-normal': !isBinderView}">
-      <i v-if="sortedByType" :class="[typeIcon]"></i>
-      <span :class="{'pl-1': sortedByType}">{{typeLabel}}</span> <span class="text-gray-darker font-normal">({{ count }})</span>
+    <h3 class="text-base m-0 font-normal border-b border-gray-light pb-1">
+      <span v-if="!sortedByType && releases && typeLabel != 'Conjurations'">
+        <router-link :to="{name: 'Cards', query: {r: releaseNameToStub[typeLabel]}}" class="text-black">
+          {{typeLabel}}
+        </router-link>
+        <span class="text-gray-darker font-normal"> ({{ count }})</span>
+      </span>
+      <span v-else>
+        <i v-if="sortedByType || typeLabel == 'Conjurations'" :class="[typeIcon]"></i>
+        <span :class="{'pl-1': sortedByType || typeLabel == 'Conjurations'}">{{typeLabel}}</span> <span class="text-gray-darker font-normal">({{ count }})</span>
+      </span>
     </h3>
     <ul class="mt-1" v-if="!isBinderView">
       <li v-for="(card, index) of cards" :key="index" class="flex">
@@ -46,6 +54,14 @@ export default {
     },
     sortedByType () {
       return this.$store.state.options.deckSort == 'type'
+    },
+    releases () {
+      const releases = this.$store.state.cards.releases
+      return releases ? releases : []
+    },
+    releaseNameToStub () {
+      // The releases state is guaranteed to be populated because the DeckCardsPreview component further up the chain fetches them
+      return Object.fromEntries(this.releases.map((release) => [release.name, release.stub]))
     },
   },
 }

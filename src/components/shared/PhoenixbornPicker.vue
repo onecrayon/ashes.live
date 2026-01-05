@@ -21,7 +21,7 @@ export default {
     placeholder: '',
     isLegacy: false,
     filter: '',
-	},
+  },
   data () {
     return {
       phoenixborns: null,
