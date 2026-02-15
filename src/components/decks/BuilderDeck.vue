@@ -32,11 +32,20 @@
     <div class="grid gap-2" :class="$style.autoFitControlsGrid">
       <die-counter v-for="dieName of allDiceTypes" :key="dieName" :name="dieName"></die-counter>
     </div>
-    <!-- TODO: do I want to implement the "Clear dice" and "Set filters" buttons? Not sure anyone actually used them... -->
+    <!-- TODO: add card costs stats after I design them; probably located here -->
     <hr class="mt-6 mb-4">
 
     <div class="flex mb-4">
       <h3 class="flex-grow m-0">Cards <span class="text-gray">(<span :class="{'text-red': totalCards > 30}">{{ totalCards }} / 30</span>)</span></h3>
+      <div class="text-md px-2">
+        <button class="btn btn-first" :class="{active: activeTab === 'edit'}" @click="activeTab = 'edit'" title="Edit cards">
+          <i class="fas fa-edit"></i>
+          <span class="alt-text">Edit{{ activeTab === 'edit' ? 'ing' : '' }} cards</span>
+        </button><button class="btn btn-last" :class="{active: activeTab === 'first-five'}" @click="activeTab = 'first-five'" title="Edit First Five">
+          <i class="far fa-hand-sparkles"></i>
+          <span class="alt-text">Edit{{ activeTab === 'first-five' ? 'ing' : '' }} first five</span>
+        </button>
+      </div>
       <button class="text-lg text-black px-1" title="Add cards..." @click="addCards">
         <i class="fas fa-plus"></i>
         <span class="alt-text">Add cards...</span>
@@ -48,12 +57,24 @@
       <ul class="mb-4">
         <li v-for="card of section.contents" :key="card.stub" class="mb-1">
           <div class="flex">
-            <deck-qty-buttons class="flex-none mr-1" :card="card" standalone zero-removes-card></deck-qty-buttons>
-            <div class="flex-grow pt-0.5">
-              <card-link :card="card"></card-link>
-              <span v-if="card.phoenixborn" class="text-gray" :title="card.phoenixborn">
-                ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
-              </span>
+            <deck-qty-buttons v-if="activeTab === 'edit'" class="flex-none mr-1" :card="card" standalone zero-removes-card></deck-qty-buttons>
+            <div v-else class="flex-none mr-1">
+              <!-- TODO: hook these up to the deck's first five tracking -->
+              <button class="btn btn-first" :disabled="card.chained">
+                <i class="far fa-hand-paper"></i>
+              </button><button class="btn btn-last" :disabled="card.chained || !card.effectMagicCost">
+                <i class="far fa-plus-square"></i>
+              </button>
+              {{ cardCount(card) }}&times;
+            </div>
+            <div class="flex flex-grow pt-0.5">
+              <div class="flex-grow">
+                <card-link :card="card"></card-link>
+                <span v-if="card.phoenixborn" class="text-gray" :title="card.phoenixborn">
+                  ({{ card.phoenixborn.split(/,?[ ]/)[0] }})
+                </span>
+              </div>
+              <!-- TODO: add card magic costs...somehow. I'm not sure how to format these, honestly -->
             </div>
           </div>
         </li>
@@ -93,6 +114,9 @@ export default {
     DieCounter,
     DeckQtyButtons,
   },
+  data: () => ({
+    activeTab: 'edit'
+  }),
   emits: ['closePane'],
   computed: {
     allDiceTypes () {
@@ -152,6 +176,9 @@ export default {
     addCards () {
       this.$emit('closePane')
       this.$router.push('/cards/')
+    },
+    cardCount (card) {
+      return this.$store.state.builder.countMap[card.stub] || 0
     },
   },
 }

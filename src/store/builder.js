@@ -109,7 +109,7 @@ const actions = {
     // This method debounces the save (unless forceSave is true) so it resolves its promise prior
     // to the save request completing.
     //
-    // forceSave will immediatley save (canceling any pending debounced call), and the promise will
+    // forceSave will immediately save (canceling any pending debounced call), and the promise will
     // resolve after the full save is complete.
     //
     // skipRepopulate will prevent the builder's state from being repopulated after the save is
@@ -191,7 +191,7 @@ const actions = {
       if (state.deck.id === id) return resolve()
       commit('setIsSaving', true)
       request(`/v2/decks/${id}`, {
-        params: { show_saved: true },
+        params: { show_saved: true, full_cards: true },
       }).then(response => {
         // Load in our new deck!
         commit('RESET_STATE')
@@ -365,6 +365,9 @@ const mutations = {
         name: card.name,
         stub: card.stub,
         type: card.type,
+        magicCost: card.magicCost,
+        effectMagicCost: card.effectMagicCost,
+        chained: card.chained,
       }
       if (card.phoenixborn) {
         cardData.phoenixborn = card.phoenixborn
