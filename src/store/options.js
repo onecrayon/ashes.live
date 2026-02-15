@@ -30,6 +30,8 @@ const state = () => ({
   // Controls sorting options specific for deck detail pages
   deckSort: storeGet('deckSort') || 'type',
   deckOrder: storeGet('deckOrder') || 'asc',
+  // Controls for defaults to "my decks" page
+  myDecksSort: storeGet('myDecksSort') || null,
 })
 
 // Getters
@@ -83,6 +85,10 @@ const mutations = {
     state.deckOrder = value
     storeSet('deckOrder', value)
   },
+  setMyDecksSort(state, value) {
+    state.myDecksSort = value
+    storeSet('myDecksSort', value)
+  }
 }
 
 export default {

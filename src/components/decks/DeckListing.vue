@@ -14,10 +14,10 @@
           :is-legacy="showLegacy"
         />
         <div v-if="showMine" class="flex flex-none h-10 text-lg">
-          <button class="btn btn-first px-3" :class="{active: !sort || sort === 'created'}" @click="sort = null" title="Sort by created date">
+          <button class="btn btn-first px-3" :class="{active: !sort || sort === 'created'}" @click="myDecksSort = null" title="Sort by created date">
             <i class="fas fa-calendar-plus"></i>
             <span class="alt-text">Sort{{ !sort ? 'ed by' : ' by' }} created date</span>
-          </button><button class="btn btn-last px-3" :class="{active: sort === 'modified'}" @click="sort = 'modified'" title="Sort by modified date">
+          </button><button class="btn btn-last px-3" :class="{active: sort === 'modified'}" @click="myDecksSort = 'modified'" title="Sort by modified date">
             <i class="fas fa-calendar-edit"></i>
             <span class="alt-text">Sort{{ !sort ? 'ed by' : ' by' }} modified date</span>
           </button>
@@ -118,15 +118,24 @@ export default {
       if (!this.card || !this.card.length) return null
       return Array.isArray(this.card) ? this.card : [this.card]
     },
+    myDecksSort: {
+      get () {
+        return this.$store.state.options.myDecksSort
+      },
+      set (value) {
+        this.$store.commit('options/setMyDecksSort', value)
+        this.sort = value
+      }
+    },
   },
   created () {
     // Before we do anything, we need to translate any query parameters into filters if we have any
+    this.sort = this.myDecksSort
     if (Object.keys(this.$route.query).length) {
       this.filterText = this.$route.query.q
       this.phoenixborn = this.$route.query.phoenixborn
       this.player = this.$route.query.player
       this.card = this.$route.query.card
-      this.sort = this.$route.query.sort
       this.offset = integerQueryParam(this.$route.query.offset)
       this.preconOnly = booleanQueryParam(this.$route.query.preconstructed)
     }
@@ -193,7 +202,6 @@ export default {
       this.player = null
       this.card = null
       this.offset = 0
-      this.sort = null
       this.preconOnly = false
     },
     fetchDecks ({endpoint = null, options = {}, failureCallback = null} = {}) {
@@ -219,9 +227,6 @@ export default {
         }
         if (this.offset) {
           query.offset = this.offset
-        }
-        if (this.sort) {
-          query.sort = this.sort
         }
         if (this.preconOnly) {
           // Setting to null makes it an opt-in parameter that doesn't show a value
