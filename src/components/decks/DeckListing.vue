@@ -6,13 +6,24 @@
         placeholder="Filter by title..."
         v-model:search="filterText"
         :is-disabled="isDisabled"></clearable-search>
-      <phoenixborn-picker
-        class="flex-auto h-10 mb-4 md:pr-4 md:mb-0"
-        placeholder="Filter by Phoenixborn..."
-        v-model:filter="phoenixborn"
-        :is-legacy="showLegacy"
-      />
-      <div v-if="!showMine" class="flex flex-col justify-center h-10 mb-4">
+      <div class="flex flex-auto mb-4 md:mb-0">
+        <phoenixborn-picker
+          class="flex-auto h-10" :class="{'md:pr-4': !showMine, 'pr-4': showMine}"
+          placeholder="Filter by Phoenixborn..."
+          v-model:filter="phoenixborn"
+          :is-legacy="showLegacy"
+        />
+        <div v-if="showMine" class="flex flex-none h-10 text-lg">
+          <button class="btn btn-first px-3" :class="{active: !sort || sort === 'created'}" @click="sort = null" title="Sort by created date">
+            <i class="fas fa-calendar-plus"></i>
+            <span class="alt-text">Sort{{ !sort ? 'ed by' : ' by' }} created date</span>
+          </button><button class="btn btn-last px-3" :class="{active: sort === 'modified'}" @click="sort = 'modified'" title="Sort by modified date">
+            <i class="fas fa-calendar-edit"></i>
+            <span class="alt-text">Sort{{ !sort ? 'ed by' : ' by' }} modified date</span>
+          </button>
+        </div>
+      </div>
+      <div v-if="!showMine" class="flex flex-col justify-center h-10 mb-4 md:mb-0">
         <toggle v-model="preconOnly"><span class="ml-2 text-sm">Preconstructed Only</span></toggle>
       </div>
     </div>
@@ -72,6 +83,7 @@ export default {
     player: null,
     card: null,
     offset: 0,
+    sort: null,
     // This is the list of decks currently shown
     decks: null,
     deckCount: 0,
@@ -114,6 +126,7 @@ export default {
       this.phoenixborn = this.$route.query.phoenixborn
       this.player = this.$route.query.player
       this.card = this.$route.query.card
+      this.sort = this.$route.query.sort
       this.offset = integerQueryParam(this.$route.query.offset)
       this.preconOnly = booleanQueryParam(this.$route.query.preconstructed)
     }
@@ -162,7 +175,8 @@ export default {
     watch(
       [
         () => this.phoenixborn,
-        () => this.preconOnly
+        () => this.preconOnly,
+        () => this.sort
       ],
       (curProps, prevProps) => {
         this.offset = 0
@@ -179,6 +193,7 @@ export default {
       this.player = null
       this.card = null
       this.offset = 0
+      this.sort = null
       this.preconOnly = false
     },
     fetchDecks ({endpoint = null, options = {}, failureCallback = null} = {}) {
@@ -204,6 +219,9 @@ export default {
         }
         if (this.offset) {
           query.offset = this.offset
+        }
+        if (this.sort) {
+          query.sort = this.sort
         }
         if (this.preconOnly) {
           // Setting to null makes it an opt-in parameter that doesn't show a value
@@ -252,6 +270,7 @@ export default {
       if (this.card) params.card = this.card
       if (filterText) params.q = filterText
       if (this.preconOnly) params.show_preconstructed = true
+      if (this.sort) params.sort = this.sort
       this.fetchDecks({ options: { params }, failureCallback })
     },
     loadNext () {
