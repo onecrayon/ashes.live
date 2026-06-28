@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'phg-ashes';
-  src: url('./phg-ashes.woff2?51220583') format('woff2'),
-       url('./phg-ashes.woff?51220583') format('woff');
+  src: url('./phg-ashes.woff2?23595927') format('woff2'),
+       url('./phg-ashes.woff?23595927') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -11,7 +11,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
 	font-family: 'phg-ashes';
-	src: url('./phg-ashes.svg?62521253#phg-ashes') format('svg');
+	src: url('./phg-ashes.svg?23595927#phg-ashes') format('svg');
   }
 }
 */
@@ -81,3 +81,5 @@ button[class*=" phg-"]::before {
 .phg-astral-class:before { content: '\e818'; } /* '' */
 .phg-artifice-power:before { content: '\e819'; } /* '' */
 .phg-artifice-class:before { content: '\e81a'; } /* '' */
+.phg-dragon-power:before { content: '\e81b'; } /* '' */
+.phg-dragon-class:before { content: '\e81c'; } /* '' */
