@@ -88,6 +88,8 @@ export function parseFormattedText (text, ensureParagraphs=false, isLegacy=false
       secondary = 'action'
     } else if (lowerPrimary === 'side') {
       secondary = 'action'
+    } else if (lowerPrimary === 'red') {
+      secondary = 'rains'
     } else if (secondary) {
       return `<i>${lowerPrimary} ${secondary}</i>`
     } else {
