@@ -49,7 +49,7 @@ const actions = {
       // Exit with stored version, if we already have the list
       if (state.phoenixborns) return resolve(state.phoenixborns)
       // Otherwise, fetch all phoenixborn cards
-      request('/v2/cards?types=phoenixborn').then(response => {
+      request('/v2/cards?types=phoenixborn&limit=100').then(response => {
         const cards = response.data.results
         const phoenixborns = cards.map(i => { return {name: i.name, stub: i.stub} })
         commit('savePhoenixborns', phoenixborns)
