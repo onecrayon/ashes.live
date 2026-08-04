@@ -46,10 +46,6 @@
           <span class="alt-text">Edit{{ activeTab === 'first-five' ? 'ing' : '' }} first five</span>
         </button>
       </div>
-      <button class="text-lg text-black px-1" title="Add cards..." @click="addCards">
-        <i class="fas fa-plus"></i>
-        <span class="alt-text">Add cards...</span>
-      </button>
     </div>
 
     <div v-for="section of deckSections" :key="section.title">
