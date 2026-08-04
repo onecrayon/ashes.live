@@ -1,4 +1,4 @@
-import { diceList } from '../constants.js'
+import { diceIcons } from '../constants.js'
 
 /**
  * trimmed(stringOrFalsey)
@@ -78,7 +78,7 @@ export function parseFormattedText (text, ensureParagraphs=false, isLegacy=false
     if (lowerPrimary === 'nature') {
       lowerPrimary = 'natural'
     }
-    if (diceList.indexOf(lowerPrimary) > -1) {
+    if (diceIcons.indexOf(lowerPrimary) > -1) {
       if (!secondary) {
         secondary = 'power'
       }
@@ -88,6 +88,8 @@ export function parseFormattedText (text, ensureParagraphs=false, isLegacy=false
       secondary = 'action'
     } else if (lowerPrimary === 'side') {
       secondary = 'action'
+    } else if (lowerPrimary === 'red') {
+      secondary = 'rains'
     } else if (secondary) {
       return `<i>${lowerPrimary} ${secondary}</i>`
     } else {
