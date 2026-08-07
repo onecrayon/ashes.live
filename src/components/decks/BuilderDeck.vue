@@ -48,6 +48,24 @@
       </div>
     </div>
 
+    <!-- TODO: started mocking up UI necessary for handling arbitrary numbers of First Fives; idea is that they will stack vertically and you can select them to edit which will expand them. In that case, do we even need the card list? Maybe instead we have everything handled via dropdown and that allows us space for our cost calculations. Though how to represent card costs in a dropdown? -->
+    <div v-if="activeTab === 'first-five'" class="mb-4">
+      <div class="flex">
+        <input-button
+          class="flex-grow"
+          placeholder="First Five"
+          :model-value="tempFirstFiveName"
+          button-title="Delete"
+          button-icon-class="far fa-trash-alt"
+          aria-label="First Five name..."
+        />
+        <button class="text-lg text-black px-1 ml-1" title="Add First Five...">
+          <i class="fas fa-plus"></i>
+          <span class="alt-text">Add First Five...</span>
+        </button>
+      </div>
+    </div>
+
     <div v-for="section of deckSections" :key="section.title">
       <h4><i :class="typeClass(section.contents[0].type)"></i> {{ section.title }} <span class="text-gray">({{ section.count }})</span></h4>
       <ul class="mb-4">
@@ -98,6 +116,7 @@ import useHandleResponseError from '/src/composition/useHandleResponseError.js'
 import CardCodes from '../shared/CardCodes.vue'
 import DieCounter from './DieCounter.vue'
 import DeckQtyButtons from '../shared/DeckQtyButtons.vue'
+import InputButton from '../shared/InputButton.vue'
 
 export default {
   name: 'BuilderDeck',
@@ -109,9 +128,11 @@ export default {
     CardCodes,
     DieCounter,
     DeckQtyButtons,
+    InputButton,
   },
   data: () => ({
-    activeTab: 'edit'
+    activeTab: 'edit',
+    tempFirstFiveName: "",
   }),
   emits: ['closePane'],
   computed: {
