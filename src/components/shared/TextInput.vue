@@ -2,8 +2,12 @@
   <div class="h-full">
     <div v-if="label" class="font-bold text-sm text-gray-darker pl-2">{{ label }}</div>
     <input
-      class="appearance-none border-2 bg-white rounded-md px-2 py-1 w-full"
-      :class="isInvalid ? 'border-red' : 'border-black'"
+      class="appearance-none border-2 bg-white rounded-md px-2 w-full"
+      :class="{
+        'border-red': isInvalid,
+        'border-black': !isInvalid,
+        'py-1': !inlineWithText,
+      }"
       :type="type"
       :placeholder="placeholder"
       :disabled="disabled"
@@ -36,6 +40,10 @@ export default {
       default: false,
     },
     isInvalid: {
+      type: Boolean,
+      default: false,
+    },
+    inlineWithText: {
       type: Boolean,
       default: false,
     },

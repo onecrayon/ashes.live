@@ -50,7 +50,7 @@
 
     <!-- TODO: started mocking up UI necessary for handling arbitrary numbers of First Fives; idea is that they will stack vertically and you can select them to edit which will expand them. In that case, do we even need the card list? Maybe instead we have everything handled via dropdown and that allows us space for our cost calculations. Though how to represent card costs in a dropdown? -->
     <div v-if="activeTab === 'first-five'" class="mb-4">
-      <div class="flex">
+      <div class="flex mb-2">
         <input-button
           class="flex-grow"
           placeholder="First Five"
@@ -63,6 +63,178 @@
           <i class="fas fa-plus"></i>
           <span class="alt-text">Add First Five...</span>
         </button>
+      </div>
+      <div class="slots pl-4 pr-8">
+        <div class="flex">
+          <text-input
+            class="w-1/5"
+            placeholder="#1"
+            inline-with-text
+          />:
+          <div class="choices flex-grow pl-2 mb-2">
+            <div class="card-slot flex mb-1">
+              <div class="flex-none mr-1">
+                <button class="btn btn-first active">
+                  <i class="far fa-hand-paper"></i>
+                </button><button class="btn btn-last" :disabled="!deckSections[0].contents[0].effectMagicCost">
+                  <i class="far fa-plus-square"></i>
+                </button>
+              </div>
+              <div class="flex-grow">
+                <card-link :card="deckSections[0].contents[0]"></card-link>
+                <span v-if="deckSections[0].contents[0].phoenixborn" class="text-gray" :title="deckSections[0].contents[0].phoenixborn">
+                  ({{ deckSections[0].contents[0].phoenixborn.split(/,?[ ]/)[0] }})
+                </span>
+              </div>
+              <div class="flex-none">
+                <card-codes content="1 [[sympathy:class]] - 1 [[basic]]"></card-codes>
+              </div>
+            </div>
+            <div class="add-slot">
+              <em class="text-gray">Choose card...</em>
+            </div>
+          </div>
+        </div>
+        <!-- TEMP: duplication for mockup -->
+        <div class="flex">
+          <text-input
+            class="w-1/5"
+            placeholder="#2"
+            inline-with-text
+          />:
+          <div class="choices flex-grow pl-2 mb-2">
+            <div class="card-slot flex mb-1">
+              <div class="flex-none mr-1">
+                <button class="btn btn-first active">
+                  <i class="far fa-hand-paper"></i>
+                </button><button class="btn btn-last" :disabled="!deckSections[0].contents[1].effectMagicCost">
+                  <i class="far fa-plus-square"></i>
+                </button>
+              </div>
+              <div class="flex-grow">
+                <card-link :card="deckSections[0].contents[1]"></card-link>
+                <span v-if="deckSections[0].contents[1].phoenixborn" class="text-gray" :title="deckSections[0].contents[1].phoenixborn">
+                  ({{ deckSections[0].contents[1].phoenixborn.split(/,?[ ]/)[0] }})
+                </span>
+              </div>
+              <div class="flex-none">
+                <card-codes content="1 [[time:class]]"></card-codes>
+              </div>
+            </div>
+            <div class="add-slot">
+              <em class="text-gray">Choose card...</em>
+            </div>
+          </div>
+        </div>
+        <div class="flex">
+          <text-input
+            class="w-1/5"
+            placeholder="#3"
+            inline-with-text
+          />:
+          <div class="choices flex-grow pl-2 mb-2">
+            <div class="card-slot flex mb-1">
+              <div class="flex-none mr-1">
+                <button class="btn btn-first active">
+                  <i class="far fa-hand-paper"></i>
+                </button><button class="btn btn-last active" :disabled="!deckSections[0].contents[2].effectMagicCost">
+                  <i class="far fa-plus-square"></i>
+                </button>
+              </div>
+              <div class="flex-grow">
+                <card-link :card="deckSections[0].contents[2]"></card-link>
+                <span v-if="deckSections[0].contents[2].phoenixborn" class="text-gray" :title="deckSections[0].contents[2].phoenixborn">
+                  ({{ deckSections[0].contents[2].phoenixborn.split(/,?[ ]/)[0] }})
+                </span>
+              </div>
+              <div class="flex-none">
+                <card-codes content="(1 [[charm:class]])"></card-codes>
+              </div>
+            </div>
+            <div class="card-slot flex mb-1">
+              <div class="flex-none mr-1">
+                <button class="btn btn-first">
+                  <i class="far fa-hand-paper"></i>
+                </button><button class="btn btn-last" :disabled="true">
+                  <i class="far fa-plus-square"></i>
+                </button>
+              </div>
+              <div class="flex-grow">
+                <card-link :card="deckSections[0].contents[3]"></card-link>
+                <span v-if="deckSections[0].contents[3].phoenixborn" class="text-gray" :title="deckSections[0].contents[3].phoenixborn">
+                  ({{ deckSections[0].contents[3].phoenixborn.split(/,?[ ]/)[0] }})
+                </span>
+              </div>
+              <div class="flex-none text-gray">
+                <card-codes content="(1 [[charm:class]])"></card-codes>
+              </div>
+            </div>
+            <div class="add-slot">
+              <em class="text-gray">Choose card...</em>
+            </div>
+          </div>
+        </div>
+        <div class="flex">
+          <text-input
+            class="w-1/5"
+            placeholder="#4"
+            inline-with-text
+          />:
+          <div class="choices flex-grow pl-2 mb-2">
+            <div class="card-slot flex mb-1">
+              <div class="flex-none mr-1">
+                <button class="btn btn-first active">
+                  <i class="far fa-hand-paper"></i>
+                </button><button class="btn btn-last" :disabled="!deckSections[1].contents[0].effectMagicCost">
+                  <i class="far fa-plus-square"></i>
+                </button>
+              </div>
+              <div class="flex-grow">
+                <card-link :card="deckSections[1].contents[0]"></card-link>
+                <span v-if="deckSections[1].contents[0].phoenixborn" class="text-gray" :title="deckSections[1].contents[0].phoenixborn">
+                  ({{ deckSections[1].contents[0].phoenixborn.split(/,?[ ]/)[0] }})
+                </span>
+              </div>
+              <div class="flex-none">
+                <card-codes content="1 [[sympathy:power]] - 1 [[charm:class]] - 1 [[basic]]"></card-codes>
+              </div>
+            </div>
+            <div class="add-slot">
+              <em class="text-gray">Choose card...</em>
+            </div>
+          </div>
+        </div>
+        <div class="flex">
+          <text-input
+            class="w-1/5"
+            placeholder="#5"
+            inline-with-text
+          />:
+          <div class="choices flex-grow pl-2 mb-2">
+            <div class="card-slot flex mb-1">
+              <div class="flex-none mr-1">
+                <button class="btn btn-first active">
+                  <i class="far fa-hand-paper"></i>
+                </button><button class="btn btn-last" :disabled="!deckSections[3].contents[1].effectMagicCost">
+                  <i class="far fa-plus-square"></i>
+                </button>
+              </div>
+              <div class="flex-grow">
+                <card-link :card="deckSections[3].contents[1]"></card-link>
+                <span v-if="deckSections[3].contents[1].phoenixborn" class="text-gray" :title="deckSections[3].contents[1].phoenixborn">
+                  ({{ deckSections[3].contents[1].phoenixborn.split(/,?[ ]/)[0] }})
+                </span>
+              </div>
+              <div class="flex-none">
+                <card-codes content="3 [[basic]]"></card-codes>
+              </div>
+            </div>
+            <div class="add-slot">
+              <em class="text-gray">Choose card...</em>
+            </div>
+          </div>
+        </div>
+        <!-- TEMP: end duplication -->
       </div>
     </div>
 
@@ -117,6 +289,7 @@ import CardCodes from '../shared/CardCodes.vue'
 import DieCounter from './DieCounter.vue'
 import DeckQtyButtons from '../shared/DeckQtyButtons.vue'
 import InputButton from '../shared/InputButton.vue'
+import TextInput from '../shared/TextInput.vue'
 
 export default {
   name: 'BuilderDeck',
@@ -129,6 +302,7 @@ export default {
     DieCounter,
     DeckQtyButtons,
     InputButton,
+    TextInput,
   },
   data: () => ({
     activeTab: 'edit',
